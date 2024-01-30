@@ -1,0 +1,448 @@
+<nz-modal
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="1360"
+>
+  <ng-template #modalTitle>
+    <div
+      class="fn-bg-header-default"
+      style="
+        display: flex;
+        align-items: center;
+        padding: 5px 0px 10px 16px;
+      "
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+      >
+        <g clip-path="url(#clip0_822_19458)">
+          <path
+            d="M21.6 0.5H2.4C1.08 0.5 0 1.58 0 2.9V24.5L4.8 19.7H21.6C22.92 19.7 24 18.62 24 17.3V2.9C24 1.58 22.92 0.5 21.6 0.5ZM12 11.3C11.34 11.3 10.8 10.76 10.8 10.1V5.3C10.8 4.64 11.34 4.1 12 4.1C12.66 4.1 13.2 4.64 13.2 5.3V10.1C13.2 10.76 12.66 11.3 12 11.3ZM13.2 16.1H10.8V13.7H13.2V16.1Z"
+            fill="#2A3884"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_822_19458">
+            <rect
+              width="24"
+              height="24"
+              fill="white"
+              transform="translate(0 0.5)"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+      <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+        {{ 'Cập nhật thông tin ' + inforTable.label | translate }}
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <div class="form-group">
+      <div
+        style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 70%;"
+      >
+        <ng-container *ngFor="let col of columns">
+          <ng-container *ngIf="col.hasUnit && col.keyName != 'status'">
+            <ng-container *ngIf="col.dataType == dataType.NUMBER">
+              <div style="width: 45%; margin-bottom: 20px;" class="fn-df-center">
+                <div style="width: 50%;">
+                  <label class="fn-label"
+                    >{{ col.keyTitle | translate
+                    }}<span *ngIf="col.isRequired == true" style="color: red"
+                      >*</span
+                    ></label
+                  >
+                  <br />
+                  <nz-input-number
+                    nz-input
+                    [(ngModel)]="inforMachine[col.keyName]"
+                    (ngModelChange)="checkValid()"
+                    (ngModelChange)="checkAction = true"
+                    style="width: 100%"
+                  />
+                  <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                    checkMachine[col.keyName]
+                  }}</span>
+                </div>
+                <div style="width: 45%;">
+                  <label class="fn-label"
+                    >{{ "Đơn vị tính" | translate }}</label
+                  >
+                  <br />
+                  <nz-select
+                    style="width: 100%"
+                    nzMode="default"
+                    nzPlaceHolder="Chọn"
+                    [(ngModel)]="inforMachine[col.keyName + '_u']"
+                    (nzOpenChange)="handleOpenChangeUnit($event, col)"
+                  >
+                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
+              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+                <div style="width: 50%;">
+                  <label class="fn-label"
+                    >{{ col.keyTitle | translate
+                    }}<span *ngIf="col.isRequired == true" style="color: red"
+                      >*</span
+                    ></label
+                  >
+                  <br />
+                  <nz-input-number
+                    [nzMin]="0"
+                    [nzStep]="1"
+                    [nzParser]="parser"
+                    [nzFormatter]="formatter"
+                    nz-input
+                    [(ngModel)]="inforMachine[col.keyName]"
+                    (ngModelChange)="checkValid()"
+                    (ngModelChange)="checkAction = true"
+                    style="width: 100%"
+                  />
+                  <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                    checkMachine[col.keyName]
+                  }}</span>
+                </div>
+                <div style="width: 45%;">
+                  <label class="fn-label"
+                    >{{ "Đơn vị tính" | translate }}</label
+                  >
+                  <br />
+                  <nz-select
+                    style="width: 100%"
+                    nzMode="default"
+                    nzPlaceHolder="Chọn"
+                    [(ngModel)]="inforMachine[col.keyName + '_u']"
+                    (nzOpenChange)="handleOpenChangeUnit($event, col)"
+                  >
+                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.STRING">
+              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+                <div style="width: 50%;">
+                  <label class="fn-label"
+                    >{{ col.keyTitle | translate
+                    }}<span *ngIf="col.isRequired == true" style="color: red"
+                      >*</span
+                    ></label
+                  >
+                  <br />
+                  <nz-input-number
+                    [nzMin]="0"
+                    [nzStep]="1"
+                    [nzParser]="parser"
+                    [nzFormatter]="formatter"
+                    nz-input
+                    [(ngModel)]="inforMachine[col.keyName]"
+                    (ngModelChange)="checkValid()"
+                    (ngModelChange)="checkAction = true"
+                    style="width: 100%"
+                  />
+                  <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                    checkMachine[col.keyName]
+                  }}</span>
+                </div>
+                <div style="width: 45%;">
+                  <label class="fn-label"
+                    >{{ "Đơn vị tính" | translate }}</label
+                  >
+                  <br />
+                  <nz-select
+                    style="width: 100%"
+                    nzMode="default"
+                    nzPlaceHolder="Chọn"
+                    [(ngModel)]="inforMachine[col.keyName + '_u']"
+                    (nzOpenChange)="handleOpenChangeUnit($event, col)"
+                  >
+                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
+              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+                <div style="width: 50%;">
+                  <label class="fn-label"
+                    >{{ col.keyTitle | translate
+                    }}<span *ngIf="col.isRequired == true" style="color: red"
+                      >*</span
+                    ></label
+                  >
+                  <br />
+                  <nz-input-number
+                    [nzMin]="0"
+                    [nzStep]="1"
+                    [nzParser]="parser"
+                    [nzFormatter]="formatter"
+                    nz-input
+                    [(ngModel)]="inforMachine[col.keyName]"
+                    (ngModelChange)="checkValid()"
+                    (ngModelChange)="checkAction = true"
+                    style="width: 100%"
+                  />
+                  <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                    checkMachine[col.keyName]
+                  }}</span>
+                </div>
+                <div style="width: 45%;">
+                  <label class="fn-label"
+                    >{{ "Đơn vị tính" | translate }}</label
+                  >
+                  <br />
+                  <nz-select
+                    style="width: 100%"
+                    nzMode="default"
+                    nzPlaceHolder="Chọn"
+                    [(ngModel)]="inforMachine[col.keyName + '_u']"
+                    (nzOpenChange)="handleOpenChangeUnit($event, col)"
+                  >
+                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="!col.hasUnit && col.keyName != 'status'">
+            <ng-container *ngIf="col.dataType == dataType.NUMBER">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <br />
+                <nz-input-number
+                  [nzMin]="0"
+                  [nzStep]="1"
+                  [nzParser]="parser"
+                  [nzFormatter]="formatter"
+                  nz-input
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true"
+                  style="width: 100%"
+                />
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <nz-date-picker
+                  style="width: 100%"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true"
+                ></nz-date-picker>
+                <span
+                  style="color: red"
+                  *ngIf="col.isRequired == true && checkMachine[col.keyName]"
+                  >{{ checkMachine[col.keyName] }}</span
+                >
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.STRING">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <input
+                  type="text"
+                  nz-input
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  placeholder=" {{ 'Nhập' | translate }} {{
+                    col.keyTitle | translate
+                  }} "
+                  (ngModelChange)="checkAction = true"
+                />
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <textarea
+                  nz-input
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  placeholder=" {{ 'Nhập' | translate }} {{
+                    col.keyTitle | translate
+                  }} "
+                  (ngModelChange)="checkAction = true"
+                  rows="1"
+                ></textarea>
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.PARAM">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <nz-select
+                  style="width: 100%"
+                  nzMode="default"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  (nzOpenChange)="handleOpenChangeDataTypeParam($event, col)"
+                  nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                    col.keyTitle | translate
+                  }} ----"
+                  (ngModelChange)="checkAction = true"
+                >
+                  <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                </nz-select>
+                <!-- <ng-template #renderTemplate>
+                  <div class="container">
+                    <input type="text" nz-input #inputElement />
+                    <a class="add-item" (click)="addItem(inputElement)">
+                      <span nz-icon nzType="plus"></span>
+                      {{ "add.btn" | translate }}
+                    </a>
+                    <div
+                      style="color: red"
+                      class="error-message"
+                      *ngIf="showErrorMachineType"
+                    >
+                      Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                    </div>
+                  </div>
+                </ng-template> -->
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.BOOLEAN">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <nz-radio-group
+                  nz-col
+                  nzSpan="24"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  style="margin-top: 6px; display: flex; justify-content: space-between;"
+                >
+                  <label
+                    style="width: 50%; margin: 0;"
+                    nz-radio
+                    [nzValue]="true"
+                    >{{ "Có" | translate }}</label
+                  >
+                  <label
+                    style="width: 45%; margin: 0;"
+                    nz-radio
+                    [nzValue]="false"
+                    >{{ "Không" | translate }}</label
+                  >
+                </nz-radio-group>
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div style="width: 30%;">
+        <ng-container *ngFor="let col of columns">
+          <ng-container *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'">
+            <div style="width: 100%; margin-bottom: 20px;" class="fn-df fn-df-justify-center">
+              <div class="fn-pd-8 fn-df-column">
+                <img class="fn-css-img-form-add" src="./assets/icons/no-image.png" alt="No image">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}</label
+                >
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <app-button
+      (click)="handleCancel()"
+      style="
+        margin-right: 30px;
+        background-color: #e5e5e5;
+        display: inline-block;
+        border-radius: 4px;
+      "
+      [buttonType]="'text'"
+      title="{{ 'Hủy bỏ' | translate }}"
+    ></app-button>
+    <!-- <app-button
+      (click)="submitDemo()"
+      title="{{ 'Thêm mới' | translate }}"
+      class="btn btn-save"
+      #saveBtn
+    ></app-button> -->
+      <button
+        nz-button
+        (click)="submitDemo()"
+        class="fn-bg-default"
+        style="border-radius: 4px;width: 86px; text-align: center;"
+      >
+        <span>{{ 'Cập nhật' | translate }}</span>
+      </button>
+  </ng-template>
+  <app-popup-cancel
+    [(isvisible)]="isvisibleCancel"
+    (cancel)="cancelConfirm($event)"
+  ></app-popup-cancel>
+  <app-add-column
+    *ngIf="isvisibleAddColumn"
+    [entryType]="6"
+    [(isvisible)]="isvisibleAddColumn"
+  ></app-add-column>
+  <app-popup-add
+    [(isvisible)]="isvisiblesubmit"
+    (add)="submit()"
+  ></app-popup-add>
+</nz-modal>

@@ -1,0 +1,528 @@
+<app-breadcrumb nz-row [listBreadCrumb]="breadcrumbs"></app-breadcrumb>
+<nz-card
+  style="height: 100%; border-radius: 4px; padding-top: 10px;"
+  class="color-border"
+>
+  <h2 style="font-weight: 600; margin-bottom: 0;">{{ title | translate }}</h2>
+  <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="space-between" class="mt-12">
+    <div style="padding-left: 14px;padding-bottom: 14px; width: 35%;">
+      <h4>{{ "generalSearch" | translate }}</h4>
+      <nz-input-group [nzPrefix]="searchPrefix" style="height: 40px">
+        <ng-template #searchPrefix
+          ><span
+            nz-icon
+            nzType="search"
+            nzTheme="outline"
+            style="color: #d8c6bf"
+          ></span
+        ></ng-template>
+        <input
+          type="text"
+          [nzAutocomplete]="auto"
+          nz-input
+          [(ngModel)]="common"
+          (input)="autoCompleteCommon($event)"
+          (keyup)="search($event)"
+          placeholder="{{ 'placeHolderSearch' | translate }}"
+        />
+        <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+          <nz-auto-option
+            *ngFor="let option of optionsComplete"
+            [nzValue]="option"
+            >{{ option }}</nz-auto-option
+          >
+        </nz-autocomplete>
+      </nz-input-group>
+    </div>
+    <div style="display: flex;">
+      <div nz-col>
+        <button
+          style="color: #012169"
+          nz-button
+          nzType="text"
+          (click)="preview()"
+          class="mb-24"
+        >
+          <svg
+            style="position: relative; top: 4px"
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+          >
+            <g clip-path="url(#clip0_2098_5997)">
+              <path
+                d="M1.125 3.18146C2.12063 2.76521 3.54825 2.31633 4.9365 2.17683C6.43275 2.02608 7.70175 2.24771 8.4375 3.02283V13.9871C7.38562 13.3908 6.0525 13.3087 4.82288 13.4325C3.49538 13.5675 2.15663 13.9511 1.125 14.3448V3.18146ZM9.5625 3.02283C10.2983 2.24771 11.5673 2.02608 13.0635 2.17683C14.4518 2.31633 15.8794 2.76521 16.875 3.18146V14.3448C15.8422 13.9511 14.5046 13.5663 13.1771 13.4336C11.9464 13.3087 10.6144 13.3897 9.5625 13.9871V3.02283ZM9 2.00583C7.89187 1.05296 6.28538 0.911207 4.82288 1.05746C3.11963 1.22958 1.40062 1.81346 0.329625 2.30058C0.231355 2.34528 0.148022 2.4173 0.0895736 2.50807C0.031125 2.59883 2.98928e-05 2.7045 0 2.81246L0 15.1875C2.60572e-05 15.2816 0.0236668 15.3742 0.0687567 15.4568C0.113847 15.5394 0.178944 15.6094 0.258087 15.6603C0.33723 15.7112 0.427888 15.7415 0.521756 15.7483C0.615625 15.7551 0.709704 15.7383 0.795375 15.6993C1.78763 15.2493 3.38625 14.7082 4.93538 14.5518C6.5205 14.3921 7.84912 14.6497 8.56125 15.5385C8.61396 15.6042 8.68074 15.6572 8.75668 15.6936C8.83262 15.73 8.91577 15.749 9 15.749C9.08423 15.749 9.16738 15.73 9.24332 15.6936C9.31925 15.6572 9.38604 15.6042 9.43875 15.5385C10.1509 14.6497 11.4795 14.3921 13.0635 14.5518C14.6138 14.7082 16.2135 15.2493 17.2046 15.6993C17.2903 15.7383 17.3844 15.7551 17.4782 15.7483C17.5721 15.7415 17.6628 15.7112 17.7419 15.6603C17.8211 15.6094 17.8862 15.5394 17.9312 15.4568C17.9763 15.3742 18 15.2816 18 15.1875V2.81246C18 2.7045 17.9689 2.59883 17.9104 2.50807C17.852 2.4173 17.7686 2.34528 17.6704 2.30058C16.5994 1.81346 14.8804 1.22958 13.1771 1.05746C11.7146 0.910082 10.1081 1.05296 9 2.00583Z"
+                fill="#2A3884"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_2098_5997">
+                <rect width="18" height="18" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          &nbsp; {{ "preview" | translate }}
+        </button>
+      </div>
+      <div nz-col>
+        <button
+          style="color: #012169"
+          nz-button
+          nzType="text"
+          (click)="addColumn()"
+          class="mb-24"
+        >
+          <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+          {{ "add.btn" | translate }}
+        </button>
+      </div>
+      <div nz-col>
+        <button
+          style="color: #012169"
+          nz-button
+          nzType="text"
+          (click)="import()"
+          class="mb-24"
+        >
+          <span nz-icon nzType="upload" nzTheme="outline"></span>
+          {{ "import.btn" | translate }}
+        </button>
+      </div>
+      <div nz-col>
+        <button
+          style="color: #012169"
+          nz-button
+          nzType="text"
+          (click)="export()"
+          class="mb-24"
+        >
+          <span nz-icon nzType="download" nzTheme="outline"></span>
+          {{ "export.btn" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nz-table
+    nzShowPagination="false"
+    [nzData]="columns"
+    nzBordered=""
+    [nzScroll]="{ x: 'auto', y: '400px' }"
+    [nzSize]="'small'"
+  >
+    <thead>
+      <tr>
+        <th
+          nz-resizable
+          nzAlign="center"
+          [nzMinWidth]="60"
+          [nzWidth]="columnWidth[0]"
+          (nzResize)="onResize($event, 0)"
+        >
+          {{ "config.index" | translate }}
+          <nz-resize-handle nzDirection="right">
+            <div class="resize-trigger"></div>
+          </nz-resize-handle>
+        </th>
+        <th
+          nz-resizable
+          nzAlign="center"
+          [nzMinWidth]="60"
+          [nzWidth]="columnWidth[1]"
+          (nzResize)="onResize($event, 1)"
+        >
+          {{ "config.keyTitle" | translate }}
+          <nz-resize-handle nzDirection="right">
+            <div class="resize-trigger"></div>
+          </nz-resize-handle>
+        </th>
+        <th
+          nz-resizable
+          nzAlign="center"
+          [nzMinWidth]="60"
+          [nzWidth]="columnWidth[2]"
+          (nzResize)="onResize($event, 2)"
+        >
+          {{ "config.dataType" | translate }}
+          <nz-resize-handle nzDirection="right">
+            <div class="resize-trigger"></div>
+          </nz-resize-handle>
+        </th>
+        <th
+          nz-resizable
+          nzAlign="center"
+          [nzMinWidth]="60"
+          [nzWidth]="columnWidth[3]"
+          (nzResize)="onResize($event, 3)"
+        >
+          {{ "config.isRequired" | translate }}
+          <nz-resize-handle nzDirection="right">
+            <div class="resize-trigger"></div>
+          </nz-resize-handle>
+        </th>
+        <th
+          nz-resizable
+          nzAlign="center"
+          [nzMinWidth]="60"
+          [nzWidth]="columnWidth[4]"
+          (nzResize)="onResize($event, 4)"
+        >
+          {{ "config.status" | translate }}
+          <nz-resize-handle nzDirection="right">
+            <div class="resize-trigger"></div>
+          </nz-resize-handle>
+        </th>
+        <th nzAlign="center" [nzRight]="true" [nzWidth]="'120px'">
+          {{ "action" | translate }}
+        </th>
+      </tr>
+    </thead>
+    <tbody class="striped-tr" cdkDropList (cdkDropListDropped)="drop($event)">
+      <tr>
+        <td></td>
+        <td>
+          <nz-input-group [nzPrefix]="statusPrefix">
+            <ng-template #statusPrefix
+              ><span
+                nz-icon
+                nzType="search"
+                nzTheme="outline"
+                style="color: #d8c6bf"
+              ></span
+            ></ng-template>
+            <input
+              type="text"
+              [nzAutocomplete]="auto"
+              nz-input
+              [(ngModel)]="keyTitle"
+              (input)="autoComplete($event)"
+              (keyup)="search($event)"
+              nz-popover
+              nzPopoverTrigger="hover"
+              [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+              #popover="nzPopover"
+            />
+            <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+              <nz-auto-option
+                *ngFor="let option of optionsComplete"
+                [nzValue]="option"
+                >{{ option }}</nz-auto-option
+              >
+            </nz-autocomplete>
+          </nz-input-group>
+          <ng-template #contentTemplate>
+            <td nz-row>
+              <button nz-button nzType="link" (click)="addColumn()">
+                + Thêm mới
+              </button>
+            </td>
+          </ng-template>
+        </td>
+        <td>
+          <i
+            style="
+              position: absolute;
+              z-index: 1;
+              top: 17px;
+              left: 20px;
+              color: #d8c6bf;
+            "
+            nz-icon
+            nzType="search"
+            nzTheme="outline"
+          ></i>
+
+          <nz-select
+            class="select-search"
+            style="width: 100%"
+            [nzAllowClear]="true"
+            [(ngModel)]="dataType"
+            (ngModelChange)="searchSelectBox($event)"
+            nz-popover
+            nzPopoverTrigger="hover"
+            [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+            #popover="nzPopover"
+            [nzShowArrow]="false"
+          >
+            <nz-option [nzValue]="3" nzLabel="String"></nz-option>
+            <nz-option [nzValue]="5" nzLabel="Date"></nz-option>
+            <nz-option [nzValue]="1" nzLabel="Integer"></nz-option>
+            <nz-option [nzValue]="2" nzLabel="Float"></nz-option>
+            <nz-option [nzValue]="6" nzLabel="Boolean"></nz-option>
+            <nz-option [nzValue]="4" nzLabel="Json"></nz-option>
+          </nz-select>
+
+          <ng-template #contentTemplate>
+            <td nz-row>
+              <button nz-button nzType="link" (click)="addColumn()">
+                + Thêm mới
+              </button>
+            </td>
+          </ng-template>
+        </td>
+
+        <td>
+          <i
+            style="
+              position: absolute;
+              z-index: 1;
+              top: 17px;
+              left: 20px;
+              color: #d8c6bf;
+            "
+            nz-icon
+            nzType="search"
+            nzTheme="outline"
+          ></i>
+          <nz-select
+            class="select-search"
+            style="width: 100%"
+            [nzAllowClear]="true"
+            [nzShowArrow]="false"
+            [(ngModel)]="isRequired"
+            (ngModelChange)="searchSelectBox($event)"
+            nz-popover
+            nzPopoverTrigger="hover"
+            [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+            #popover="nzPopover"
+          >
+            <nz-option
+              [nzValue]="true"
+              nzLabel="{{ 'required' | translate }}"
+            ></nz-option>
+            <nz-option
+              [nzValue]="false"
+              nzLabel="{{ 'optional' | translate }}"
+            ></nz-option>
+          </nz-select>
+
+          <ng-template #contentTemplate>
+            <td nz-row>
+              <button nz-button nzType="link" (click)="addColumn()">
+                + Thêm mới
+              </button>
+            </td>
+          </ng-template>
+        </td>
+        <td>
+          <i
+            style="
+              position: absolute;
+              z-index: 1;
+              top: 17px;
+              left: 20px;
+              color: #d8c6bf;
+            "
+            nz-icon
+            nzType="search"
+            nzTheme="outline"
+          ></i>
+          <nz-select
+            class="select-search"
+            style="width: 100%"
+            [nzShowArrow]="false"
+            [(ngModel)]="check"
+            [nzAllowClear]="true"
+            (ngModelChange)="searchSelectBox($event)"
+            nz-popover
+            nzPopoverTrigger="hover"
+            [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+            #popover="nzPopover"
+          >
+            <nz-option
+              [nzValue]="true"
+              nzLabel="{{ 'display' | translate }}"
+            ></nz-option>
+            <nz-option
+              [nzValue]="false"
+              nzLabel="{{ 'hidden' | translate }}"
+            ></nz-option>
+          </nz-select>
+          <ng-template #contentTemplate>
+            <td nz-row>
+              <button nz-button nzType="link" (click)="addColumn()">
+                + Thêm mới
+              </button>
+            </td>
+          </ng-template>
+        </td>
+        <td [nzRight]="true"></td>
+      </tr>
+      <ng-container *ngFor="let column of columns">
+        <tr cdkDrag cdkDragLockAxis="y">
+          <td cdkDragHandle [nzAlign]="'center'">
+            {{ column.entryIndex }}
+          </td>
+          <td [nzAlign]="'left'">
+            {{ column.keyTitle | translate }}
+          </td>
+          <td [nzAlign]="'left'">
+            <div [ngSwitch]="column.dataType">
+              <div *ngSwitchCase="1">Integer</div>
+              <div *ngSwitchCase="2">Float</div>
+              <div *ngSwitchCase="3">String</div>
+              <div *ngSwitchCase="4">Json</div>
+              <div *ngSwitchCase="5">Date</div>
+              <div *ngSwitchCase="6">Boolean</div>
+            </div>
+          </td>
+          <td [nzAlign]="'left'">
+            <div
+              [className]="
+                column.isRequired
+                  ? 'border-element bordered-element__status_1'
+                  : 'border-element bordered-element__status_0'
+              "
+            >
+              {{
+                column.isRequired
+                  ? ("required" | translate)
+                  : ("optional" | translate)
+              }}
+            </div>
+          </td>
+          <td [nzAlign]="'left'">
+            <div
+              [className]="
+                column.check
+                  ? 'border-element bordered-element__show_1'
+                  : 'border-element bordered-element__status_0'
+              "
+            >
+              {{
+                column.check ? ("display" | translate) : ("hidden" | translate)
+              }}
+            </div>
+          </td>
+          <td [nzAlign]="'center'" [nzRight]="true">
+            <button
+              style="color: #012169"
+              nz-button
+              nzType="link"
+              (click)="editColumn(column)"
+              nz-tooltip="{{ 'btn.edit' | translate }}"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                style="margin-right: 10px"
+              >
+                <g clip-path="url(#clip0_699_11358)">
+                  <path
+                    d="M7.33301 2.66675H2.66634C2.31272 2.66675 1.97358 2.80722 1.72353 3.05727C1.47348 3.30732 1.33301 3.64646 1.33301 4.00008V13.3334C1.33301 13.687 1.47348 14.0262 1.72353 14.2762C1.97358 14.5263 2.31272 14.6667 2.66634 14.6667H11.9997C12.3533 14.6667 12.6924 14.5263 12.9425 14.2762C13.1925 14.0262 13.333 13.687 13.333 13.3334V8.66675"
+                    stroke="#2A3884"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12.333 1.66665C12.5982 1.40144 12.9579 1.25244 13.333 1.25244C13.7081 1.25244 14.0678 1.40144 14.333 1.66665C14.5982 1.93187 14.7472 2.29158 14.7472 2.66665C14.7472 3.04173 14.5982 3.40144 14.333 3.66665L7.99967 9.99999L5.33301 10.6667L5.99967 7.99999L12.333 1.66665Z"
+                    stroke="#2A3884"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_699_11358">
+                    <rect width="16" height="16" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </button>
+            <button
+              style="color: #012169"
+              nz-button
+              nzType="link"
+              (click)="deleteColumn(column)"
+              nz-tooltip="{{ 'btn.delete' | translate }}"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+              >
+                <path
+                  d="M2.25 4.5H3.75H15.75"
+                  stroke="#2A3884"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M14.25 4.5V15C14.25 15.3978 14.092 15.7794 13.8107 16.0607C13.5294 16.342 13.1478 16.5 12.75 16.5H5.25C4.85218 16.5 4.47064 16.342 4.18934 16.0607C3.90804 15.7794 3.75 15.3978 3.75 15V4.5M6 4.5V3C6 2.60218 6.15804 2.22064 6.43934 1.93934C6.72064 1.65804 7.10218 1.5 7.5 1.5H10.5C10.8978 1.5 11.2794 1.65804 11.5607 1.93934C11.842 2.22064 12 2.60218 12 3V4.5"
+                  stroke="#2A3884"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M7.5 8.25V12.75"
+                  stroke="#2A3884"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M10.5 8.25V12.75"
+                  stroke="#2A3884"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </nz-table>
+
+  <app-pagination
+    *ngIf="total"
+    [currentPage]="pageNumber"
+    [currentSize]="pageSize"
+    [total]="total"
+    (emitPage)="getColumn($event)"
+  >
+  </app-pagination>
+
+  <app-popup-delete
+    *ngIf="isvisibleDelete"
+    (delete)="deleteConfirm()"
+    [title]="'popup.delete.column.title'|translate"
+    [deleteType]="'popup.delete.column.title'|translate"
+    [deleteCode]="''"
+    (isvisibleChange)="getColumn({ page: pageNumber, size: pageSize })"
+    [(isvisible)]="isvisibleDelete"
+  >
+  </app-popup-delete>
+  <app-add-column
+    *ngIf="isvisibleAddColumn"
+    [entryType]="entityType"
+    [(isvisible)]="isvisibleAddColumn"
+    (isvisibleChange)="childOutAdd()"
+  ></app-add-column>
+  <app-infor-column
+    *ngIf="isvisibleEditColumn"
+    [total]="total"
+    [(isvisible)]="isvisibleEditColumn"
+    [column]="currentColumn"
+    (isvisibleChange)="childOut()"
+  ></app-infor-column>
+  <app-popup-import
+    *ngIf="isvisibleImport"
+    [TemplateName]="title + '_Template'"
+    [header]="header"
+    [(isvisible)]="isvisibleImport"
+    (import)="importConfirm($event)"
+    TemplateName="Template_Error"
+  ></app-popup-import>
+</nz-card>

@@ -1,0 +1,12 @@
+.fn-btn-delete {
+  color: #FFFFFF;
+  background-color: #ec0000;
+}
+
+::ng-deep .ant-modal-footer {
+  padding-right: 24px !important;
+}
+
+.fn-footer-center {
+  text-align: center;
+}

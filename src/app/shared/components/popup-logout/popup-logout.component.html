@@ -1,0 +1,40 @@
+<nz-modal
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="600"
+>
+  <ng-template #modalTitle>
+    <h2 style="text-align: center; color: #2c73eb; padding: 12px">
+      Xác nhận đăng xuất
+    </h2>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <p style="text-align: center">
+      Bạn có chắc chắn muốn <span style="font-weight: 800">đăng xuất</span>?
+    </p>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <app-button
+      (click)="handleCancel()"
+      style="
+        margin-right: 30px;
+        background-color: #e5e5e5;
+        display: inline-block;
+        border-radius: 4px;
+      "
+      [buttonType]="'text'"
+      title="{{ 'btn.cancel' | translate }}"
+    ></app-button>
+    <app-button
+      (click)="submit()"
+      title="{{ 'btn.confirm' | translate }}"
+      class="btn btn-save"
+      #saveBtn
+    ></app-button>
+  </ng-template>
+</nz-modal>

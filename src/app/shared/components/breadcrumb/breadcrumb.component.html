@@ -1,0 +1,50 @@
+<div class="breadcrumb-container" *ngIf="lengthListBreadCrumb > 0">
+  <ol class="breadcrumbs">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 28 28"
+      fill="none"
+      routerLink="/home"
+      style="margin-right: 10px; cursor: pointer"
+    >
+      <path
+        d="M3.5 10.4999L14 2.33325L24.5 10.4999V23.3333C24.5 23.9521 24.2542 24.5456 23.8166 24.9832C23.379 25.4208 22.7855 25.6666 22.1667 25.6666H5.83333C5.21449 25.6666 4.621 25.4208 4.18342 24.9832C3.74583 24.5456 3.5 23.9521 3.5 23.3333V10.4999Z"
+        stroke="black"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M10.5 25.6667V14H17.5V25.6667"
+        stroke="black"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <li
+      *ngFor="let item of listBreadCrumb; let i = index"
+      class="breadcrumb-item"
+    >
+      <div
+        class="breadcrumb-item__names"
+        *ngIf="item.name != ''"
+        [routerLink]="item.route"
+        routerLinkActive="router-link-active"
+        class="{{ item.route ? 'breadcrumb-link' : '' }}"
+        [style.color]="i == lengthListBreadCrumb - 1 ? '#2C73EB' : '#000000'"
+      >
+        {{ item.name | translate }}
+      </div>
+      <i
+        *ngIf="i != lengthListBreadCrumb - 1"
+        nz-icon
+        nzType="right"
+        nzTheme="outline"
+        class="breadcrumb-icon"
+      ></i>
+    </li>
+  </ol>
+</div>

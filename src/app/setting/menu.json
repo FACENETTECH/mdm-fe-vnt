@@ -1,0 +1,217 @@
+[
+  {
+    "name": "Dashboard",
+    "url": "",
+    "classIcon": "dashboard",
+    "permission": ["user-business"],
+    "lstChild": null
+  },
+  {
+    "name": "menu.management_machine_line",
+    "url": null,
+    "classIcon": "appstore",
+    "permission": ["user-business"],
+    "lstChild": [
+      {
+        "name": "menu.management_machine",
+        "url": "/manage-machine-line/manage-machine",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      },
+      {
+        "name": "menu.management_line",
+        "url": "/manage-machine-line/manage-line",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      },
+      {
+        "name": "menu.management_stage",
+        "url": "/manage-machine-line/manage-stage",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      }
+    ]
+  },
+  {
+    "name": "menu.management_error",
+    "url": null,
+    "classIcon": "appstore",
+    "permission": ["user-business"],
+    "lstChild": [
+      {
+        "name": "menu.error",
+        "url": "/manage-error/error",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      },
+      {
+        "name": "menu.group_error",
+        "url": "/manage-error/group-error",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      }
+    ]
+  },
+  {
+    "name": "menu.management_vendor",
+    "url": "/manage-vendor/",
+    "classIcon": "appstore",
+    "permission": ["user-business"],
+    "lstChild": null
+  },
+  {
+    "name": "Quản lý thông tin nhân viên",
+    "url": null,
+    "classIcon": "appstore",
+    "permission": ["user-business"],
+    "lstChild": [
+      {
+        "name": "Quản lý nhân viên",
+        "url": "/manage-employee/employee",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      },
+      {
+        "name": "Quản lý nhóm/tổ",
+        "url": "/manage-employee/group",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      }
+    ]
+  },
+  {
+    "name": "Quản lý thông tin danh mục vật tư",
+    "url": null,
+    "classIcon": "appstore",
+    "permission": ["user-business"],
+    "lstChild": [
+      {
+        "name": "Thông tin nguyên vật liệu",
+        "url": "/manage-item/material",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      },
+      {
+        "name": "Thông tin BTP",
+        "url": "/manage-item/semi-product",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      },
+      {
+        "name": "Thông tin thành phẩm",
+        "url": "/manage-item/finished-product",
+        "classIcon": null,
+        "permission": ["user-business"],
+        "lstChild": null
+      }
+    ]
+  },
+  {
+    "name": "Quản lý cấu hình",
+    "url": null,
+    "classIcon": "appstore",
+    "permission": ["admin_business"],
+    "lstChild": [
+      {
+        "name": "Cấu hình máy",
+        "url": "/manage-config/6",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình dây chuyền",
+        "url": "/manage-config/7",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình công đoạn",
+        "url": "/manage-config/1",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình công việc",
+        "url": "/manage-config/3",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình lỗi",
+        "url": "/manage-config/4",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình nhóm lỗi",
+        "url": "/manage-config/5",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình nhà cung cấp",
+        "url": "/manage-config/2",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình nhân viên",
+        "url": "/manage-config/11",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình nhóm tổ",
+        "url": "/manage-config/12",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình nguyên vật liệu",
+        "url": "/manage-config/10",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình bán thành phẩm",
+        "url": "/manage-config/8",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      },
+      {
+        "name": "Cấu hình thành phẩm",
+        "url": "/manage-config/9",
+        "classIcon": null,
+        "permission": ["admin_business"],
+        "lstChild": null
+      }
+    ]
+  },
+  {
+    "name": "Quản lý tài khoản",
+    "url": "/manage-user/",
+    "classIcon": "user",
+    "permission": ["admin_business"],
+    "lstChild": null
+  }
+]

@@ -1,0 +1,65 @@
+<div class="body">
+  <div class="menu">
+    <app-header> </app-header>
+  </div>
+  <div class="body-content">
+    <div [class]="classLayout.sider">
+      <ng-container *ngIf="isSider">
+        <div
+          nz-tooltip
+          nzTooltipTitle="{{ 'btn.close' | translate }}"
+          nzTooltipPlacement="right"
+          (click)="changeSider()"
+          class="close-sider color-border"
+        >
+          <!-- <b class="color-text-sider">Thu gọn</b> -->
+          <span
+            nz-icon
+            nzType="menu-fold"
+            nzTheme="outline"
+            style="font-size: 20px"
+            class="color-text-sider"
+          ></span>
+        </div>
+        <app-sider [sider]="data"></app-sider>
+      </ng-container>
+      <ng-container *ngIf="!isSider">
+        <div
+          nz-tooltip
+          nzTooltipTitle="{{ 'btn.open' | translate }}"
+          nzTooltipPlacement="right"
+          (click)="changeSider()"
+          class="open-sider color-border"
+        >
+          <!-- <b class="color-text-sider">></b> -->
+          <span
+            nz-icon
+            nzType="menu-unfold"
+            nzTheme="outline"
+            style="font-size: 20px"
+            class="color-text-sider"
+          ></span>
+        </div>
+        <app-sider-mini [sider]="data"></app-sider-mini>
+      </ng-container>
+    </div>
+    <div [class]="classLayout.content">
+      <div class="content-top">
+        <!-- Tự thay breadcrumb vào riêng từng component -->
+        <!-- <fn-breadcrumb></fn-breadcrumb> -->
+        <div class="content-item">
+          <ng-content class="ng-content-block"></ng-content>
+          <ngx-ui-loader></ngx-ui-loader>
+        </div>
+      </div>
+      <footer>
+        <p>
+          © Copyright
+          <a target="_blank" href="https://www.facenet.vn/">FaceNet</a> 2023.
+          All Rights Reserved Designed by
+          <a target="_blank" href="https://www.facenet.vn/">FaceNet</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<ul
+  nz-menu
+  style="background-color: #e5e5e5"
+  nzMode="inline"
+  [nzInlineCollapsed]="isCollapsed"
+>
+  <ng-container *ngFor="let menu of lstMenuRes">
+    <li
+      nz-submenu
+      nzOpen
+      nzTitle="{{ menu.name | translate }}"
+      nzIcon="{{ menu.classIcon }}"
+      style="background-color: #e5e5e5"
+      *ngIf="access(menu.permission) && menu.lstChild"
+    >
+      <ul *ngIf="menu.lstChild != null" style="background-color: #e5e5e5">
+        <ng-container *ngFor="let menuChild of menu.lstChild">
+          <li nz-menu-item nzMatchRouter *ngIf="access(menuChild.permission)">
+            <a routerLink="{{ menuChild.url | translate }}">
+              {{ menuChild.name | translate }}
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </li>
+
+    <li
+      nz-menu-item
+      class="li-menu"
+      nzMatchRouter
+      *ngIf="access(menu.permission) && !menu.lstChild"
+    >
+      <a *ngIf="menu.url" routerLink="{{ menu.url | translate }}">
+        <span nz-icon nzType="{{ menu.classIcon }}" nzTheme="outline"></span>
+        {{ !isCollapsed ? (menu.name | translate) : "" }}
+      </a>
+      <a *ngIf="!menu.url">
+        <span nz-icon nzType="{{ menu.classIcon }}" nzTheme="outline"></span>
+        {{ !isCollapsed ? (menu.name | translate) : "" }}
+      </a>
+    </li>
+  </ng-container>
+</ul>

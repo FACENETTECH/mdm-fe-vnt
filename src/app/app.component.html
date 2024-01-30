@@ -1,0 +1,155 @@
+
+<!-- <nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="300px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null" [nzTheme]="'light'">
+    <div class="sidebar-logo" style="background-color: #2a3884">
+      <a href="localhost:4200/" target="_blank">
+        <ng-container *ngIf="logoBusiness; else notLogo">
+          <img *ngIf="!isCollapsed" src="{{ logoBusiness }}" alt="logo" />
+          <img
+            style="width: 32px"
+            *ngIf="isCollapsed"
+            src="{{ logoBusiness }}"
+            alt="logo"
+          />
+        </ng-container>
+        <ng-template #notLogo>
+          <img
+            *ngIf="!isCollapsed"
+            src="./assets/img/logo_FaceNet.png"
+            alt="logo"
+          />
+          <img
+            style="width: 32px"
+            *ngIf="isCollapsed"
+            src="./assets/img/logo_FaceNet.png"
+            alt="logo"
+          />
+        </ng-template>
+        <h1 *ngIf="!isCollapsed" style="color: #ffffff; font-size: 28px">
+          {{ nameBusiness }}
+        </h1>
+      </a>
+    </div>
+    <app-menu [isCollapsed]="isCollapsed"></app-menu>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div
+        class="app-header d-flex j-content-between a-items-center color-header"
+        style="color: #ffffff"
+      >
+        <div class="d-flex j-content-between a-items-center">
+          <span
+            class="header-trigger"
+            (click)="isCollapsed = !isCollapsed"
+            style="display: flex"
+          >
+            <span
+              class="trigger d-flex a-items-center"
+              nz-icon
+              [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></span>
+          </span>
+          <span style="color: #ffffff; font-size: 28px">
+            {{ "Master Data Management " | translate }}
+          </span>
+        </div>
+        <span
+          style="padding: 0 24px 0 0"
+          class="d-flex j-content-between a-items-center"
+        >
+          &nbsp; &nbsp;
+          <span
+            style="font-size: 24px"
+            class="d-flex j-content-between a-items-center"
+          >
+            <nz-avatar nzIcon="user"></nz-avatar>
+            &nbsp;
+
+            <span style="font-size: 16px; position: relative;">
+              
+              <span style="font-size: 15px;position: absolute; top: -10px;">{{"Xin chào" | translate}}<br></span>
+              <span style="position: relative; top: 10px">
+                {{ name }}
+              </span>
+            </span>
+          </span>
+          &nbsp; &nbsp;
+          <span class="d-flex c-pointer" (click)="showOption()">
+            <nz-avatar [nzSrc]="srcImg"></nz-avatar>
+          </span>
+          &nbsp; &nbsp;
+          <ng-container *ngIf="true">
+            <nz-select
+              [(ngModel)]="selectLanguage"
+              (ngModelChange)="changeLanguage($event)"
+              style="width: 120px"
+            >
+              <nz-option
+                *ngFor="let option of options"
+                [nzLabel]="option.label | translate"
+                [nzValue]="option.value"
+              ></nz-option>
+            </nz-select>
+            &nbsp; &nbsp;
+          </ng-container>
+          &nbsp; &nbsp;
+          <span
+            (click)="fullScreen()"
+            nz-icon
+            style="font-size: 24px"
+            [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"
+            nzTheme="outline"
+          ></span>
+          &nbsp; &nbsp; &nbsp; &nbsp;
+
+          <span
+            (click)="notify()"
+            nz-icon
+            style="font-size: 24px"
+            nzType="bell"
+            nzTheme="outline"
+          ></span>
+          &nbsp; &nbsp;
+          <span
+            (click)="logoutConfirm()"
+            nz-icon
+            style="font-size: 24px"
+            nzType="logout"
+            nzTheme="outline"
+          ></span>
+        </span>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+        <ngx-ui-loader></ngx-ui-loader>
+      </div>
+    </nz-content>
+    <footer>
+      <div class="container-footer">
+        <div class="footer-content">
+          <p>
+            &copy; Copyright FaceNet 2023. All rights reserved. Designed by
+            <a
+              style="text-decoration: none; color: gray; font-weight: 600"
+              href="https://facenet.vn/"
+              target="_blank"
+              >FaceNet</a
+            >
+          </p>
+        </div>
+      </div>
+    </footer>
+  </nz-layout>
+</nz-layout>
+
+<app-popup-logout *ngIf="isvisibleLogout"  [(isvisible)]="isvisibleLogout" (logout)="logOut()"  ></app-popup-logout>
+<tour-step-template></tour-step-template> -->
+
+<fn-layout [data]="siderList">
+  <router-outlet></router-outlet>
+</fn-layout>
+

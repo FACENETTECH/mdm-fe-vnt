@@ -1,0 +1,140 @@
+<aside>
+  <div *ngFor="let parent of sider; let i = index" class="list">
+    <ng-container *ngIf="checkPermisson(parent.requiredRoles)">
+      <div
+        *ngIf="parent.children.length === 0 && parent.open === false"
+        class="parent"
+        (click)="clickParent(i, parent.path)"
+      >
+        <div class="parent-content">
+          <div class="content-left">
+            <img width="24px" height="24px" src="{{ parent.icon }}" alt="" />
+            <a>
+              <p style="color: black">
+                {{ parent.label | translate }}
+              </p>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="parent.children.length === 0 && parent.open === true"
+        class="parent"
+      >
+        <div class="parent-content">
+          <div class="content-left">
+            <div class="color-sider-item">
+              <img src="{{ parent.icon }}" alt="" />
+            </div>
+            <a>
+              <p class="color-text-sider">{{ parent.label | translate }}</p>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="parent.children.length !== 0 && parent.open === false"
+        class="parent"
+        (click)="openParent(i)"
+      >
+        <div class="parent-content">
+          <div class="content-left">
+            <img src="{{ parent.icon }}" alt="" />
+            <a>
+              <p style="color: black">
+                {{ parent.label | translate }}
+              </p>
+            </a>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="10"
+            height="6"
+            viewBox="0 0 10 6"
+            fill="none"
+            style="min-width: 10px; min-height: 6px; margin-left: 5px"
+          >
+            <path
+              d="M9.89507 0H8.90821C8.8411 0 8.77794 0.0292969 8.73847 0.0773438L5.00025 4.66641L1.26203 0.0773438C1.22256 0.0292969 1.1594 0 1.09229 0H0.105432C0.0199038 0 -0.030097 0.0867189 0.0199038 0.148828L4.65945 5.84531C4.82788 6.05156 5.17262 6.05156 5.33973 5.84531L9.97928 0.148828C10.0306 0.0867189 9.9806 0 9.89507 0Z"
+              fill="black"
+              fill-opacity="0.5"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        *ngIf="parent.children.length !== 0 && parent.open === true"
+        class="parent-open"
+      >
+        <div class="parent-content-open" (click)="closeParent(i)">
+          <div class="content-left">
+            <div class="color-sider-item">
+              <img src="{{ parent.icon }}" alt="" />
+            </div>
+            <a>
+              <p class="color-text-sider">
+                {{ parent.label | translate }}
+              </p>
+            </a>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="10"
+            height="6"
+            viewBox="0 0 10 6"
+            fill="none"
+            style="min-width: 10px; min-height: 6px; margin-left: 5px"
+          >
+            <path
+              d="M0.104932 6H1.09179C1.1589 6 1.22206 5.9707 1.26153 5.92266L4.99975 1.33359L8.73797 5.92266C8.77744 5.9707 8.8406 6 8.90771 6H9.89457C9.9801 6 10.0301 5.91328 9.9801 5.85117L5.34055 0.154688C5.17212 -0.0515623 4.82738 -0.0515623 4.66027 0.154688L0.0207195 5.85117C-0.0305967 5.91328 0.0194044 6 0.104932 6Z"
+              fill="#2C73EB"
+            />
+          </svg>
+        </div>
+        <div
+          style="
+            width: 100%;
+            padding-left: 24px;
+            padding-right: 16px;
+            padding-bottom: 0px;
+          "
+        >
+          <div class="line color-item-sidebar"></div>
+        </div>
+        <div
+          *ngFor="let children of parent.children; let j = index"
+          class="children"
+          (click)="openChildren(i, j)"
+        >
+          <ng-container *ngIf="checkPermisson(children.requiredRoles)">
+            <div
+              *ngIf="children.open === false"
+              class="children-content"
+              (click)="link(children.path)"
+            >
+              <a>
+                <p style="color: black">
+                  {{ children.label | translate }}
+                </p>
+              </a>
+            </div>
+            <div
+              *ngIf="children.open === true"
+              class="children-content-choose"
+              (click)="link(children.path)"
+            >
+              <div class="children-content-open color-item-sidebar">
+                <a>
+                  <p class="color-text-header">
+                    {{ children.label | translate }}
+                  </p>
+                </a>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="fake-bottom"></div>
+</aside>

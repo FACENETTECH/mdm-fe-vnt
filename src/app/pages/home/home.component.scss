@@ -1,0 +1,235 @@
+section {
+  width: 100%;
+  background-color: rgba(221, 219, 218, 0.5);
+  padding: 20px;
+  border: 1px solid #2c73eb;
+  border-radius: 4px;
+}
+
+.header-title {
+  color: #000;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.line {
+  display: flex;
+  width: 100%;
+  height: auto;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  .line-content {
+    position: relative;
+    display: flex;
+    width: 25%;
+    height: 3px;
+    border-radius: 10px;
+    background-color: #497db2;
+    top: 75px;
+    margin: 0px 50px;
+  }
+}
+
+.content-child {
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  svg {
+    width: 50px;
+    height: 50px;
+  }
+  p {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    margin: 0px;
+  }
+  button {
+    min-width: 110px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid #004c98;
+    color: #004c98;
+    background-color: transparent;
+    padding: 10px 12px;
+    margin-top: 20px;
+    max-height: 40px;
+    p {
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+      font-family: Inter;
+    }
+  }
+  button:active {
+    opacity: 0.8;
+    transform: translateY(2px);
+  }
+}
+
+/* Style FaceNet button */
+.fn-button {
+  min-width: 100px;
+  height: 42px;
+  border: none;
+  padding: 10px 12px;
+  font-size: 18px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.fn-button:active {
+  opacity: 0.8;
+  transform: translateY(2px);
+}
+
+.fn-button-solid {
+  min-width: 100px;
+  height: 42px;
+  border: none;
+  padding: 10px 12px;
+  font-size: 18px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  background-color: #2c73eb;
+  color: white;
+}
+
+.fn-button-solid:active {
+  opacity: 0.8;
+  transform: translateY(2px);
+}
+
+.fn-button-thin {
+  min-width: 100px;
+  height: 42px;
+  border: none;
+  padding: 10px 12px;
+  font-size: 18px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  background-color: transparent;
+  color: #2c73eb;
+}
+
+.fn-button-thin:hover {
+  border: 1px solid #2c73eb;
+}
+
+.fn-button-thin:active {
+  opacity: 0.8;
+  transform: translateY(2px);
+}
+
+/* Style FaceNet input */
+
+.fn-input {
+  display: flex;
+  height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0px 16px;
+  align-items: flex-end;
+  gap: 80px;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.fn-input:focus {
+  /* border-color: #ff7a00 !important; */
+  border: 1px solid #ff7a00 !important;
+}
+
+/* Style FaceNet label */
+
+.fn-label {
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-bottom: 8px;
+}
+
+/* style in project */
+
+.fn-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 30px;
+}
+
+.fn-start {
+  justify-content: start !important;
+}
+
+.fn-center {
+  justify-content: center !important;
+}
+
+.fn-end {
+  justify-content: end !important;
+}
+
+.fn-space-between {
+  justify-content: space-between;
+}
+
+.fn-header-title {
+  color: #000;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 20px;
+}
+
+.fn-status-green {
+  padding: 4px 8px;
+  background-color: #00af12;
+  color: white;
+  border-radius: 4px;
+}
+
+.fn-status-grey {
+  padding: 4px 8px;
+  background-color: #d4d4d4;
+  color: #7e7e7e;
+  border-radius: 4px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: #000000;
+}

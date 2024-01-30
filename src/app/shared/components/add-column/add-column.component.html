@@ -1,0 +1,198 @@
+<nz-modal
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="1000"
+>
+  <ng-template #modalTitle>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        background-color: #ccdbeb;
+        padding: 5px 0px 10px 16px;
+      "
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+      >
+        <g clip-path="url(#clip0_563_6391)">
+          <path
+            d="M21.6 0.5H2.4C1.08 0.5 0 1.58 0 2.9V24.5L4.8 19.7H21.6C22.92 19.7 24 18.62 24 17.3V2.9C24 1.58 22.92 0.5 21.6 0.5ZM12 11.3C11.34 11.3 10.8 10.76 10.8 10.1V5.3C10.8 4.64 11.34 4.1 12 4.1C12.66 4.1 13.2 4.64 13.2 5.3V10.1C13.2 10.76 12.66 11.3 12 11.3ZM13.2 16.1H10.8V13.7H13.2V16.1Z"
+            fill="#004C98"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_563_6391">
+            <rect
+              width="24"
+              height="24"
+              fill="white"
+              transform="translate(0 0.5)"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+      <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+        {{'configPage.addScreen.title'|translate}}
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <!-- <h2>Thêm mới thông tin cột</h2> -->
+    <div nz-row [nzGutter]="[100, 16]">
+      <div nz-col nzSpan="12">
+        <label class="fn-label"
+          >{{'configPage.addScreen.displayName'|translate}}<span style="color: red">*</span></label
+        >
+        <input
+          nz-input
+          [(ngModel)]="keyTitle"
+          (input)="checkValid()"
+          type="text"
+          placeholder="{{'configPage.addScreen.displayNameHolder'|translate}}"
+          (ngModelChange)="checkAction = true"
+        />
+        <span style="color: red" *ngIf="checkKeyTitle">{{
+          checkKeyTitle
+        }}</span>
+      </div>
+      <div nz-col nzSpan="12">
+        <label class="fn-label"
+          >{{'configPage.addScreen.dataType'|translate}}<span style="color: red">*</span></label
+        >
+        <nz-select
+          style="width: 100%"
+          [(ngModel)]="dataType"
+          nzPlaceHolder="----Chọn----"
+        >
+          <nz-option [nzValue]="3" nzLabel="String"></nz-option>
+          <nz-option [nzValue]="5" nzLabel="Date"></nz-option>
+          <nz-option [nzValue]="1" nzLabel="Integer"></nz-option>
+          <nz-option [nzValue]="2" nzLabel="Float"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="[100, 16]">
+      <div nz-col nzSpan="12">
+        <label class="fn-label"
+          >{{'configPage.addScreen.isRequired'|translate}}<span style="color: red">*</span></label
+        >
+        <nz-select
+          style="width: 100%"
+          [(ngModel)]="isRequired"
+          nzPlaceHolder="----Chọn----"
+        >
+          <nz-option [nzValue]="true" nzLabel="{{'configPage.addScreen.required'|translate}}"></nz-option>
+          <nz-option [nzValue]="false" nzLabel="{{'configPage.addScreen.optional'|translate}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="12">
+        <label class="fn-label"
+          >{{'configPage.addScreen.status'|translate}}<span style="color: red">*</span></label
+        >
+        <nz-select
+          style="width: 100%"
+          [(ngModel)]="check"
+          nzPlaceHolder="----Chọn----"
+        >
+          <nz-option [nzValue]="true" nzLabel="{{'configPage.addScreen.visible'|translate}}"></nz-option>
+          <nz-option [nzValue]="false" nzLabel="{{'configPage.addScreen.invisible'|translate}}"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <app-button
+      (click)="handleCancel()"
+      style="
+        margin-right: 30px;
+        background-color: #e5e5e5;
+        display: inline-block;
+        border-radius: 4px;
+      "
+      [buttonType]="'text'"
+      title="Hủy bỏ"
+    ></app-button>
+    <app-button
+      (click)="submitDemo()"
+      title="Thêm mới"
+      class="btn btn-save"
+      #saveBtn
+    ></app-button>
+  </ng-template>
+
+  <app-popup-cancel
+    [(isvisible)]="isvisibleCancel"
+    (cancel)="cancelConfirm()"
+  ></app-popup-cancel>
+  <!-- <app-popup-add [(isvisible)]="isvisibleAdd" (add)="submit()"></app-popup-add> -->
+</nz-modal>
+<nz-modal
+  [(nzVisible)]="isvisibleAdd"
+  [nzTitle]="modalTitle2"
+  [nzContent]="modalContent2"
+  [nzFooter]="modalFooter2"
+  (nzOnCancel)="closeAdd()"
+  [nzWidth]="600"
+>
+  <ng-template #modalTitle2>
+    <h2 style="padding: 12px; text-align: center; color: #2c73eb">
+      {{ "Xác nhận thêm mới cột" | translate }}
+    </h2>
+  </ng-template>
+
+  <ng-template #modalContent2>
+    <p>
+      {{ "Bạn có chắc chắn muốn thêm cột " | translate }}
+      <span style="font-weight: 600">{{ keyTitle }}</span> ?
+    </p>
+    <div
+      style="
+        width: 100%;
+        background-color: #ccdbeb;
+        padding: 12px;
+        border-left: 4px solid #2c73eb;
+        border-radius: 3px;
+      "
+    >
+      <h3 style="color: black">
+        <span nz-icon nzType="warning" nzTheme="outline"></span>
+        {{ "popup.attention" | translate }}
+      </h3>
+      <p>
+        {{ "Nhấn xác nhận để thêm mới cột" | translate }}
+        <span style="font-weight: 600">{{ keyTitle }}</span>
+        {{ "vào bảng cấu hình" | translate }}
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter2>
+    <app-button
+      (click)="closeAdd()"
+      style="
+        margin-right: 30px;
+        background-color: #e5e5e5;
+        display: inline-block;
+        border-radius: 4px;
+      "
+      [buttonType]="'text'"
+      title="{{ 'btn.cancel' | translate }}"
+    ></app-button>
+    <app-button
+      (click)="submit()"
+      title="{{ 'btn.confirm' | translate }}"
+      class="btn btn-save"
+      #saveBtn
+    ></app-button>
+  </ng-template>
+</nz-modal>

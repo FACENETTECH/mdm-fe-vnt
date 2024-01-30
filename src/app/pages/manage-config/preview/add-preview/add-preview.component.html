@@ -1,0 +1,195 @@
+<nz-modal
+  *ngIf="entityType == 6"
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="1000"
+>
+  <ng-template #modalTitle>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        background-color: #ccdbeb;
+        padding: 5px 0px 10px 16px;
+      "
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+      >
+        <g clip-path="url(#clip0_822_19458)">
+          <path
+            d="M21.6 0.5H2.4C1.08 0.5 0 1.58 0 2.9V24.5L4.8 19.7H21.6C22.92 19.7 24 18.62 24 17.3V2.9C24 1.58 22.92 0.5 21.6 0.5ZM12 11.3C11.34 11.3 10.8 10.76 10.8 10.1V5.3C10.8 4.64 11.34 4.1 12 4.1C12.66 4.1 13.2 4.64 13.2 5.3V10.1C13.2 10.76 12.66 11.3 12 11.3ZM13.2 16.1H10.8V13.7H13.2V16.1Z"
+            fill="#2A3884"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_822_19458">
+            <rect
+              width="24"
+              height="24"
+              fill="white"
+              transform="translate(0 0.5)"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+      <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+        Thêm mới thông tin máy
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <div class="form-group">
+      <!-- <h2>Thêm mới thông tin máy</h2> -->
+      <div
+        style="display: flex; flex-wrap: wrap; justify-content: space-between"
+      >
+        <ng-container *ngFor="let col of columns">
+          <div
+            *ngIf="
+              col.dataType != 5 &&
+              col.keyName != 'status' &&
+              col.keyName != 'machineType' &&
+              col.keyName != 'maintenanceTime' &&
+              col.keyName != 'maxWaitingTime'
+            "
+            style="width: 45%; margin-bottom: 20px"
+          >
+            <label class="fn-label"
+              >{{ col.keyTitle }}
+              <span *ngIf="col.isRequired == true" style="color: red">*</span>
+            </label>
+            <input
+              disabled
+              type="text"
+              nz-input
+              [(ngModel)]="inforMachine[col.keyName]"
+              (ngModelChange)="checkValid()"
+              [placeholder]="col.keyTitle"
+            />
+          </div>
+          <div
+            *ngIf="col.keyName == 'machineType'"
+            style="width: 45%; margin-bottom: 20px"
+          >
+            <label class="fn-label"
+              >{{ col.keyTitle }}
+              <span *ngIf="col.isRequired == true" style="color: red">*</span>
+            </label>
+            <nz-select
+              disabled
+              style="width: 100%"
+              nzMode="default"
+              [(ngModel)]="inforMachine['machineType']"
+              (ngModelChange)="checkValid()"
+              nzPlaceHolder="---- Chọn loại máy -----"
+            >
+            </nz-select>
+          </div>
+
+          <div
+            *ngIf="
+              col.keyName == 'maintenanceTime' ||
+              col.keyName == 'maxWaitingTime'
+            "
+            style="width: 45%; margin-bottom: 20px"
+          >
+            <label class="fn-label"
+              >{{ col.keyTitle }}
+              <span *ngIf="col.isRequired == true" style="color: red"
+                >*</span
+              ></label
+            >
+            <div nz-row>
+              <div nz-col nzSpan="11">
+                <input
+                  disabled
+                  nz-input
+                  type="text"
+                  [placeholder]="col.keyTitle"
+                  (ngModelChange)="checkValid()"
+                />
+              </div>
+              <div nz-col nzSpan="11">
+                <nz-select
+                  [nzDisabled]="true"
+                  style="width: 100%; margin-left: 30px"
+                  nzMode="default"
+                  nzPlaceHolder="---- Chọn -----"
+                >
+                </nz-select>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="col.dataType == 5"
+            style="width: 45%; margin-bottom: 20px"
+          >
+            <label class="fn-label"
+              >{{ col.keyTitle }}
+              <span *ngIf="col.isRequired == true" style="color: red">*</span>
+            </label>
+            <nz-date-picker
+              disabled
+              style="width: 100%"
+              [(ngModel)]="inforMachine[col.keyName]"
+              (ngModelChange)="checkValid()"
+            ></nz-date-picker>
+            <span
+              style="color: red"
+              *ngIf="col.isRequired == true && checkMachine[col.keyName]"
+              >{{ checkMachine[col.keyName] }}</span
+            >
+          </div>
+        </ng-container>
+      </div>
+      <div nz-row>
+        <nz-radio-group
+          disabled
+          nz-col
+          nzSpan="12"
+          style="
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+          "
+        >
+          <label nz-radio nzValue="1">Hoạt động</label>
+          <label nz-radio nzValue="0">Ngừng hoạt động</label>
+        </nz-radio-group>
+        <!-- <span class="add-icon" (click)="addColumn()" nz-col nzSpan="12"
+          style="margin-top: 18px;color: #012169; display: flex;justify-content:flex-end;margin-left: auto;" nz-icon
+          nzType="appstore-add" nzTheme="outline"></span> -->
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <app-button
+      (click)="handleCancel()"
+      style="
+        margin-right: 30px;
+        background-color: #e5e5e5;
+        display: inline-block;
+        border-radius: 4px;
+      "
+      [buttonType]="'text'"
+      title="Hủy bỏ"
+    ></app-button>
+    <app-button
+      (click)="submit()"
+      title="Thêm mới"
+      class="btn btn-save"
+      #saveBtn
+    ></app-button>
+  </ng-template>
+</nz-modal>

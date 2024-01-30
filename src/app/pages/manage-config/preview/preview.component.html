@@ -1,0 +1,171 @@
+<app-breadcrumb nz-row [listBreadCrumb]="breadcrumbs"></app-breadcrumb>
+<nz-card
+  class="color-border"
+  style="height: 100%; padding-top: 10px; border-radius: 4px"
+>
+  <h2 style="font-weight: 600; margin-bottom: 0;">{{ title | translate }}</h2>
+  <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="space-between" class="mt-12">
+    <div style="padding-left: 14px;padding-bottom: 14px; width: 35%;">
+      <h4>{{ "generalSearch" | translate }}</h4>
+      <nz-input-group [nzPrefix]="searchPrefix" style="height: 40px">
+        <ng-template #searchPrefix
+          ><span
+            nz-icon
+            nzType="search"
+            nzTheme="outline"
+            style="color: #d8c6bf"
+          ></span
+        ></ng-template>
+        <input
+          type="text"
+          nz-input
+          disabled
+          placeholder="{{ 'placeHolderSearch' | translate }}"
+        />
+      </nz-input-group>
+    </div>
+    <div style="display: flex;">
+      <div nz-col>
+        <button style="color: #012169" nz-button nzType="text" class="mb-24">
+          <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+          {{ "add.btn" | translate }}
+        </button>
+      </div>
+      <div nz-col>
+        <button style="color: #012169" nz-button nzType="text" class="mb-24">
+          <span nz-icon nzType="upload" nzTheme="outline"></span>
+          {{ "import.btn" | translate }}
+        </button>
+      </div>
+      <div nz-col>
+        <button style="color: #012169" nz-button nzType="text" class="mb-24">
+          <span nz-icon nzType="download" nzTheme="outline"></span>
+          {{ "export.btn" | translate }}
+        </button>
+      </div>
+  
+      <div nz-col>
+        <nz-row nzJustify="end">
+          <button
+            class="mb-24"
+            style="color: #012169"
+            nz-button
+            nzType="text"
+            nz-tooltip="{{ 'btn.choose' | translate }}"
+            nz-dropdown
+            nzTrigger="click"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M0 19.2H12V24H24V6.4H18V0H0V19.2ZM15 19.2H21V20.8H15V19.2ZM15 14.4H21V16H15V14.4ZM15 9.6H21V11.2H15V9.6ZM3 3.2H15V6.4H12V16H3V3.2Z"
+                fill="#2A3884"
+              />
+            </svg>
+          </button>
+          <!-- <nz-dropdown-menu #configColumns="nzDropdownMenu">
+            <ul nz-menu>
+              <ng-container *ngFor="let column of columns">
+                <li nz-menu-item>
+                  <label nz-checkbox [(ngModel)]="column.check">{{
+                    column.keyTitle
+                  }}</label>
+                </li>
+              </ng-container>
+            </ul>
+          </nz-dropdown-menu> -->
+        </nz-row>
+      </div>
+    </div>
+  </div>
+
+  <nz-table
+    nzBordered
+    nzShowPagination="false"
+    [nzScroll]="{ x: 'auto', y: '400px' }"
+    [nzData]="listData"
+    #errorTable
+    [nzSize]="'small'"
+  >
+    <thead>
+      <tr>
+        <ng-container *ngFor="let column of columns; let i = index">
+          <ng-container *ngIf="column.check">
+            <th
+              nz-resizable
+              nzBounds="window"
+              nzPreview
+              [nzWidth]="column.width"
+              nzAlign="center"
+              [nzSortFn]="true"
+            >
+              <div class="editable-cell">
+                {{ column.keyTitle }}
+
+                <nz-resize-handle nzDirection="right">
+                  <div class="resize-trigger"></div>
+                </nz-resize-handle>
+              </div>
+            </th>
+          </ng-container>
+        </ng-container>
+        <th nzWidth="160px" nzAlign="center" [nzRight]="true">
+          {{ "action" | translate }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <ng-container *ngFor="let column of columns">
+          <td>
+            <nz-input-group [nzPrefix]="statusPrefix">
+              <ng-template #statusPrefix
+                ><span
+                  nz-icon
+                  nzType="search"
+                  nzTheme="outline"
+                  style="color: #d8c6bf"
+                ></span
+              ></ng-template>
+              <input type="text" nz-input disabled />
+            </nz-input-group>
+          </td>
+        </ng-container>
+        <td [nzRight]="true"></td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <app-pagination
+    *ngIf="total"
+    [currentPage]="pageNumber"
+    [currentSize]="pageSize"
+    [total]="total"
+  >
+  </app-pagination>
+
+  <div nz-row style="margin-top: 50px">
+    <div nz-col [nzSpan]="22"></div>
+    <app-button
+      nz-col
+      [nzSpan]="2"
+      (click)="back()"
+      style="
+        background-color: #e5e5e5;
+        display: inline-block;
+        border-radius: 4px;
+        text-align: center;
+      "
+      [buttonType]="'text'"
+      title="{{'Trở lại'|translate}}"
+    ></app-button>
+  </div>
+
+  <app-add-preview [(isvisible)]="isvisibleAdd" [entityType]="entityType">
+  </app-add-preview>
+</nz-card>

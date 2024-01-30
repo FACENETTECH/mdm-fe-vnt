@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  fcim_cloud_mdm_fe:
+    container_name: fcim-cloud-mdm-fe
+    build:
+      dockerfile: Dockerfile
+    image: fcim-cloud-mdm-fe
+    restart: always
+    ports:
+      - "3096:80"

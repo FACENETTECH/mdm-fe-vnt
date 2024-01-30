@@ -1,0 +1,67 @@
+<nz-modal
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="600"
+>
+  <ng-template #modalTitle>
+    <h2 style="padding: 12px; text-align: center;" class="fn-css-label">
+      {{ "popup.update.title" | translate }}
+    </h2>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <p>
+      {{ "popup.update.ask" | translate }}
+      <span style="font-weight: 600"> {{ tableName }}</span>
+      ?
+    </p>
+    <div
+      style="
+        width: 100%;
+        background-color: rgba(0, 174, 238, 0.10);
+        padding: 12px;
+        border-left: 4px solid #00AEEE;
+        border-radius: 3px;
+      "
+    >
+      <h3 style="color: black">
+        <span nz-icon nzType="warning" nzTheme="outline"></span>
+        {{ "popup.attention" | translate }}
+      </h3>
+      <p>
+        {{ "Thông tin " | translate }}
+        <span style="font-weight: 600">{{
+          tableName
+        }}</span>
+        {{ " thay đổi sẽ được lưu lại" | translate }}
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <div class="fn-footer-center">
+      <app-button
+        (click)="handleCancel()"
+        style="
+          margin-right: 30px;
+          background-color: #e5e5e5;
+          display: inline-block;
+          border-radius: 4px;
+        "
+        [buttonType]="'text'"
+        title="{{ 'btn.cancel' | translate }}"
+      ></app-button>
+      <button
+        nz-button
+        (click)="submit()"
+        class="fn-bg-default"
+        style="border-radius: 4px;width: 86px; text-align: center;"
+      >
+        <span>{{ 'btn.confirm' | translate }}</span>
+      </button>
+    </div>
+  </ng-template>
+</nz-modal>

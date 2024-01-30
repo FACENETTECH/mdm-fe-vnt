@@ -1,0 +1,7 @@
+::ng-deep .ant-modal-footer {
+  padding-right: 24px !important;
+}
+
+.fn-footer-center {
+  text-align: center;
+}

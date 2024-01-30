@@ -1,0 +1,61 @@
+<aside>
+  <div *ngFor="let parent of sider; let i = index" class="list">
+    <ng-container *ngIf="checkPermisson(parent.requiredRoles)">
+      <div
+        *ngIf="parent.children.length !== 0"
+        nz-popover
+        [(nzPopoverVisible)]="parent.open"
+        nzPopoverTrigger="click"
+        [nzPopoverContent]="template"
+        class="parent"
+        (click)="openParent(i)"
+      >
+        <div
+          nz-tooltip
+          nzTooltipTitle="{{ parent.label | translate }}"
+          nzTooltipPlacement="right"
+          class="parent-content"
+        >
+          <img src="{{ parent.icon }}" alt="" />
+        </div>
+        <ng-template #template>
+          <div class="template">
+            <ng-container
+              *ngFor="let children of parent.children; let j = index"
+            >
+              <ng-container *ngIf="checkPermisson(children.requiredRoles)">
+                <p *ngIf="!children.open" (click)="link(children.path, i, j)">
+                  {{ children.label | translate }}
+                </p>
+                <p *ngIf="children.open" class="color-text-sider">
+                  {{ children.label | translate }}
+                </p>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-template>
+      </div>
+
+      <div
+        *ngIf="parent.children.length === 0"
+        class="parent"
+        (click)="clickParent(i, parent.path)"
+      >
+        <div
+          nz-tooltip
+          nzTooltipTitle="{{ parent.label | translate }}"
+          nzTooltipPlacement="right"
+          class="parent-content"
+        >
+          <img src="{{ parent.icon }}" alt="" />
+          <!-- <span>
+            <svg>
+              <use [attr.xlink:href]="parent.icon"></use>
+            </svg>
+          </span> -->
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="fake-bottom"></div>
+</aside>

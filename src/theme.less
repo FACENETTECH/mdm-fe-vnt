@@ -1,0 +1,93 @@
+
+// Custom Theming for NG-ZORRO
+// For more information: https://ng.ant.design/docs/customize-theme/en
+@import "../node_modules/ng-zorro-antd/ng-zorro-antd.less";
+
+// Override less variables to here
+// View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+
+// @primary-color: #1890ff;
+@primary-color: #2C73EB;
+
+.ant-table-thead > tr > th {
+  background-color: #CCDBEB;
+}
+
+.ant-card-body {
+  padding: 0 24px 24px 24px;
+}
+
+.ant-form-item-control-input-content {
+  display: flex;
+  justify-content: right;
+}
+
+.ant-menu-sub.ant-menu-inline{
+  background: #E5E5E5;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+  background-color: #2C73EB;
+  color: white;
+}
+
+.ant-menu-item-selected a, .ant-menu-item-selected a:hover{
+  color: white;
+}
+.ant-pagination-options{
+  float: right;
+}
+
+.ant-upload.ant-upload-drag{
+  padding-bottom: 30px;
+}
+
+.ant-menu-light .ant-menu-item:hover, .ant-menu-light .ant-menu-item-active, .ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open, .ant-menu-light .ant-menu-submenu-active, .ant-menu-light .ant-menu-submenu-title:hover{
+  color: black;
+}
+.ant-menu-submenu-selected .ant-menu-submenu-title{
+  border-bottom:  3px solid #2C73EB;
+  
+}
+
+.li-menu .ant-menu-item .ng-star-inserted .ant-menu-item-selected a{
+  color: #2C73EB;
+}
+
+.select-search  .ant-select-selector{
+  padding-left: 30px !important;
+}
+
+.select-search .ant-picker-input{
+  padding-left: 20px !important;
+}
+.ant-menu-submenu-selected{
+  color: #2C73EB !important;
+}
+
+
+
+.ant-menu-submenu-selected .ant-menu-submenu-arrow{
+  color: #2C73EB !important;
+
+}
+
+.ant-btn{
+  padding: 0;
+}
+
+.ant-modal-content{
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.select-lang > .ant-select-selector { 
+  background-color: transparent !important; 
+  color: white; 
+  border: 0 !important; 
+  font-size: 14px; 
+  font-weight: 600; 
+} 
+.select-lang > .ant-select-arrow { 
+  color: white; 
+}
