@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href=/mdm/",
+    "build": "ng build --base-href=/mdm-v2/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

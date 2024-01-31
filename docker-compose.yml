@@ -7,4 +7,4 @@ services:
     image: fcim-cloud-mdm-fe
     restart: always
     ports:
-      - "3096:80"
+      - "3095:80"

@@ -78,7 +78,7 @@
               "browserTarget": "project-base:build:development"
             }
           },
-          "options": { "port": 4300 },
+          "options": { "port": 3095 },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
