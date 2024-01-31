@@ -3,7 +3,7 @@
   style="height: 100%; border-radius: 4px; padding-top: 10px;"
   class="color-border"
 >
-  <h2 style="font-weight: 600; margin-bottom: 0; text-align: center;">{{ inforTable.displayName | translate }}</h2>
+  <h2 style="font-weight: 600; margin-bottom: 0; text-align: center;">{{ tableName | translate }}</h2>
   <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="space-between" class="mt-12">
     <div style="padding-left: 14px;padding-bottom: 14px; width: 35%;">
       <!-- <h4>{{ "generalSearch" | translate }}</h4> -->
@@ -124,7 +124,7 @@
   <nz-table
     nzBordered
     nzShowPagination="false"
-    [nzScroll]="{ x: 'auto', y: '400px' }"
+    [nzScroll]="{ x: 'auto', y: '600px' }"
     [nzData]="listMachine"
     #MachineTable
     [nzSize]="'small'"
@@ -444,7 +444,7 @@
                 (click)="deleteMachine(infor)"
                 nz-tooltip="{{ 'btn.delete' | translate }}"
               >
-              <img src="./assets/icons/Delete-VNT.svg">
+              <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
               </button>
             </div>
           </td>
@@ -466,8 +466,8 @@
   *ngIf="isvisibleDelete"
   (delete)="deleteConfirm($event)"
   [title]="'Xoá ' + inforTable.label"
-  [deleteType]="'xoá bản ghi này'"
-  [deleteCode]="currentMachine.code"
+  [tableName]="inforTable.label"
+  [code]="currentMachine[columnKey]"
   [(isvisible)]="isvisibleDelete"
 >
 </app-popup-delete>

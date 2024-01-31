@@ -9,6 +9,8 @@ export class PopupDeleteComponent implements OnInit {
 
   constructor() { }
 
+  @Input() code: string = '';
+  @Input() tableName: string = '';
   @Input() isvisible: boolean = false;
   @Input() title: string = "";
   @Input() deleteType: string = "";

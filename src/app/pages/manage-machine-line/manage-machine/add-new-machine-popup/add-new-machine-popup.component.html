@@ -443,6 +443,8 @@
   ></app-add-column>
   <app-popup-add
     [(isvisible)]="isvisiblesubmit"
+    [tableName]="inforTable.label"
+    [code]="inforMachine[columnKey]"
     (add)="submit()"
   ></app-popup-add>
 </nz-modal>

@@ -334,7 +334,8 @@
     "addNew": {
       "confirm": "Confirm New Addition",
       "ask": "Add new data",
-      "then": " then the entered data will be added to the database"
+      "then": " then the entered data will be added to the database",
+      "title": "Add new infor "
     },
     "delete": {
       "confirm": "Confirm Data Deletion",

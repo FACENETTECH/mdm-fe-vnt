@@ -49,6 +49,7 @@ export class AddNewMachinePopupComponent {
   inforMachine: Record<string, any> = {};
   valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
   valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
+  columnKey: string = '';
 
   onSubmit(): void {}
 
@@ -340,6 +341,12 @@ export class AddNewMachinePopupComponent {
     this.manageService.getColummnByTableName(this.inforTable.name).subscribe({
       next: (res) => {
         this.columns = res.data;
+        for(let i = 0; i < this.columns.length; i++) {
+          if(this.columns[i].isCode) {
+            this.columnKey = this.columns[i].keyName;
+            break;
+          }
+        }
         console.log(this.columns);
       }
     })

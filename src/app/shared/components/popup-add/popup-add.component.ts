@@ -9,6 +9,8 @@ export class PopupAddComponent implements OnInit {
 
   constructor() { }
 
+  @Input() code: string = '';
+  @Input() tableName: string = '';
   @Input() isvisible: boolean = false;
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() add: EventEmitter<boolean> = new EventEmitter()

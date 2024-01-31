@@ -14,8 +14,8 @@
 
   <ng-template #modalContent>
     <p>
-      {{ "popup.cancel.ask" | translate }}
-      <span style="font-weight: 600">{{ "popup.addNew.ask" | translate }}</span
+      {{ "popup.addNew.title" | translate }}{{ tableName }} 
+      <span style="font-weight: 600">{{ code }}</span
       >?
     </p>
     <div
@@ -32,11 +32,13 @@
         {{ "popup.attention" | translate }}
       </h3>
       <p>
-        {{ "popup.ifYou" | translate }}
-        <span style="font-weight: 600">{{
+        {{ "popup.addNew.firstContent" | translate }}
+        {{ tableName }}
+        {{ "popup.addNew.lastContent" | translate }}
+        <!-- <span style="font-weight: 600">{{
           "popup.addNew.ask" | translate
         }}</span
-        >{{ "popup.addNew.then" | translate }}
+        >{{ "popup.addNew.then" | translate }} -->
       </p>
     </div>
   </ng-template>

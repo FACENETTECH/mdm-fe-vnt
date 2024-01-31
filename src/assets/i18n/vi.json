@@ -296,12 +296,18 @@
     "addNew": {
       "confirm": "Xác nhận thêm mới",
       "ask": "Thêm mới dữ liệu này",
-      "then": " thì dữ liệu đã nhập nhập sẽ được thêm mới vào cơ sở dữ liệu"
+      "then": "Thông tin nguyên công sẽ được thêm vào danh sách.",
+      "title": "Thêm mới thông tin ",
+      "firstContent": "Thông tin ",
+      "lastContent": " sẽ được thêm vào danh sách."
     },
     "delete": {
+      "title": "Xác nhận xoá ",
       "confirm": "Xác nhận Xóa dữ liệu",
       "ask": "Xóa dữ liệu này",
       "then": "thì các thông tin liên quan đều sẽ bị xóa",
+      "firstContent": "Thông tin ",
+      "lastContent": " sẽ bị xoá khỏi hệ thống.",
       "stage": {
         "title": "Xóa công đoạn"
       },

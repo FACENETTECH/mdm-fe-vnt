@@ -6,9 +6,9 @@ import { ToastrService } from 'ngx-toastr';
   template: `
     <div nz-row style="margin-top: 30px;">
     <nz-select [(ngModel)]="currentSize" style="width: 100%" nz-col [nzSpan]="3" (ngModelChange)="changeSize()">
-      <nz-option [nzValue]="10" nzLabel="10/{{'page' | translate}}" ></nz-option>
-      <nz-option [nzValue]="20"  nzLabel="20/{{'page' | translate}}"></nz-option>
-      <nz-option [nzValue]="40" nzLabel="40/{{'page' | translate}}"></nz-option>
+      <nz-option [nzValue]="20" nzLabel="20/{{'page' | translate}}" ></nz-option>
+      <nz-option [nzValue]="40"  nzLabel="40/{{'page' | translate}}"></nz-option>
+      <nz-option [nzValue]="80" nzLabel="80/{{'page' | translate}}"></nz-option>
     </nz-select>
     <div nz-col [nzSpan]="6"></div>
       <nz-pagination
@@ -44,7 +44,7 @@ export class PaginationComponent {
   @Output() emitPage: EventEmitter<any> = new EventEmitter();
   @Input() currentPage = 1;
 
-  @Input() currentSize = 10;
+  @Input() currentSize = 20;
 
   pageSize: any;
   totalPage: number = 0;

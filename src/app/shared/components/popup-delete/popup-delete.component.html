@@ -14,8 +14,8 @@
 
   <ng-template #modalContent>
     <p>
-      {{ "popup.cancel.ask" | translate }}
-      <span style="font-weight: 600">{{deleteType}} {{deleteCode}}</span>
+      {{ "popup.delete.title" | translate }}{{tableName}}
+      <span style="font-weight: 600"> {{code}}</span>
       ?
     </p>
     <div
@@ -32,11 +32,11 @@
         {{ "popup.attention" | translate }}
       </h3>
       <p>
-        {{ "popup.ifYou" | translate }}
+        {{ tableName }}
         <span style="font-weight: 600">{{
-          deleteType
+          code
         }}</span>
-        {{ "popup.delete.then" | translate }}
+        {{ "popup.delete.lastContent" | translate }}
       </p>
     </div>
   </ng-template>

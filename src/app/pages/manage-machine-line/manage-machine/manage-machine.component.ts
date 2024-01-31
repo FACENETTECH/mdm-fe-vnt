@@ -37,7 +37,7 @@ export class ManageMachineComponent implements OnInit {
     private manageComponentService: ManageComponentService
   ) {}
   pageNumber: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 20;
   total: number = 0;
   common: string = '';
 
@@ -75,6 +75,8 @@ export class ManageMachineComponent implements OnInit {
   count = 0;
   inforMachine: Record<string, any> = {};
   valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
+  tableName: string = '';
+  columnKey: string = '';
 
   breadcrumbs = [
     {
@@ -100,6 +102,7 @@ export class ManageMachineComponent implements OnInit {
   ngOnInit() {
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
     this.breadcrumbs[0].name = this.inforTable.displayName;
+    this.tableName = this.inforTable.displayName.toUpperCase();
     this.getHeaders();
   }
 
@@ -370,6 +373,7 @@ export class ManageMachineComponent implements OnInit {
       }
     })
   }
+  
 
   configColumn() {}
   getColumnNames(): string[] {
@@ -385,6 +389,12 @@ export class ManageMachineComponent implements OnInit {
         this.columns = res.data;
         for(let i = 0; i < this.columns.length; i++) {
           this.columns[i].localCheck = true;
+        }
+        for(let i = 0; i < this.columns.length; i++) {
+          if(this.columns[i].isCode) {
+            this.columnKey = this.columns[i].keyName;
+            break;
+          }
         }
         this.getData({ page: this.pageNumber, size: this.pageSize });
       }, error: (err) => {
