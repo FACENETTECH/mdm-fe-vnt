@@ -353,6 +353,24 @@ export class ManageMachineComponent implements OnInit {
       }
     })
   }
+
+  deleteListConfirm(event: any) {
+    let request: any = [];
+    this.setOfCheckedId.forEach((item) => {
+      request.push(item);
+    })
+    this.manageComponentService.deleteListRecordByListId(this.inforTable.name, request).subscribe({
+      next: (res) => {
+        this.toast.success(res.result.message);
+        this.setOfCheckedId = new Set<number>();
+        this.refreshCheckedStatus();
+        this.getData({ page: this.pageNumber, size: this.pageSize });
+      }, error: (err) => {
+        this.toast.error(err.result.message);
+      }
+    })
+  }
+
   configColumn() {}
   getColumnNames(): string[] {
     return this.columns.map((column: any) => column.header);
