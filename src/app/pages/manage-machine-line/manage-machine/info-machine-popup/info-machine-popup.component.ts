@@ -1,17 +1,17 @@
-import { KeyedWrite } from '@angular/compiler';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import jspdf from 'jspdf';
-import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
+  FormBuilder,
+  UntypedFormBuilder,
+  Validators,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
+import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
 import { ToastrService } from 'ngx-toastr';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
+import { DATA_TYPE } from 'src/app/utils/constrant';
 @Component({
   selector: 'app-info-machine-popup',
   templateUrl: './info-machine-popup.component.html',
@@ -20,18 +20,19 @@ import { InfoMachineService } from 'src/app/services/manage-machine-line/info-ma
 export class InfoMachinePopupComponent {
   constructor(
     private toast: ToastrService,
-    private machineService: InfoMachineService,
-    private i18m: NzI18nService
+    private machine: InfoMachineService,
+    private fb: UntypedFormBuilder,
+    private i18n: NzI18nService,
+    private manageService: ManageComponentService,
+    private loader: NgxUiLoaderService
   ) {}
   @Input() isvisible: boolean = true;
-  @Input() machine: any = '';
-  // @Input()row :  any;
-
+  @Input() inforComponent: any = '';
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
-  machintTypeSelect!: any;
+
   machineCode: string = '';
   machineName: string = '';
-  status: string = '0';
+  status: string = '1';
   machineType: string = '';
   productivity: string = '';
   description: string = '';
@@ -42,17 +43,46 @@ export class InfoMachinePopupComponent {
   purchaseDate: string = '';
   maxWaitingTime: string = '';
   cycleTime: string = '';
-  test: number = 1;
-  pageNumber: number = 1;
-  pageSize: number = 10;
-  total: number = 0;
-  columns: any[] = [];
   lineTypeList: any = [];
-  // machineTypeList : any = [];
   productionLineTypeList: any = [];
-
+  form!: UntypedFormGroup;
+  inforTable: any;
   inforMachine: Record<string, any> = {};
+  valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
+  valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
 
+  onSubmit(): void {}
+
+  ngOnInit() {
+    this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+    this.getColumn();
+    console.log(this.inforComponent);
+  }
+
+  parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
+  formatter = (value: any): string => {
+    let result = `${value}`.replace(',', '');
+    result = `${result}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return result;
+  };
+
+  confirmationValidator = (
+    control: UntypedFormControl
+  ): {
+    [s: string]: boolean;
+  } => {
+    if (!control.value) {
+      return { required: true };
+    } else if (
+      Date.parse(control.value) <
+      Date.parse(this.form.controls['orderedTime'].value)
+    ) {
+      return { confirm: true, error: true };
+    }
+    return {};
+  };
+
+  index = 0;
   ismachineTypeValid(input: string): boolean {
     const isEmpty = input === '';
     const containsSpecialCharacter =
@@ -60,36 +90,16 @@ export class InfoMachinePopupComponent {
     return !isEmpty && !containsSpecialCharacter;
   }
   addItem(inputElement: HTMLInputElement): void {
-    const newItem = inputElement.value.trim();
-    if (!this.ismachineTypeValid(newItem)) {
-      this.showErrorMachineType = true;
-      return;
-    }
-    this.showErrorMachineType = false;
-
-    if (
-      this.machineTypeList.findIndex(
-        (item) => item.machineTypeName === newItem
-      ) === -1
-    ) {
-      const requestData = {
-        machineTypeName: newItem,
-      };
-      this.machineService
-        .addTypeList(requestData)
-        .then((response: any) => {
-          this.getParam();
-        })
-        .catch((error: any) => {
-          console.error(error);
-        });
-    }
+    
   }
+
+  machineTypeList: any[] = [];
+  id: string = '';
+  machineTypeName: string = '';
 
   checkMachine: Record<string, any> = {};
 
   checkValid() {
-    console.log(this.inforMachine['machineType']);
     let charSpecial = /[&@₫()?!/"#%^*+=\|~<>$¥€?!']/;
 
     this.columns.map((x: any) => {
@@ -106,45 +116,12 @@ export class InfoMachinePopupComponent {
         this.checkMachine[
           x.keyName
         ] = `Trường ${x.keyTitle} chứa ký tự đặc biệt`;
+      } else {
+        this.checkMachine[x.keyName] = '';
       }
     });
+    console.log(this.checkMachine);
   }
-
-  ngOnInit() {
-    this.inforMachine['machineType'] = {};
-    this.machineCode = this.machine.machineCode;
-    this.machineName = this.machine.machineName;
-    this.status = this.machine.status;
-    // this.machineType = this.machine.machineType;
-    this.productivity = this.machine.productivity;
-    this.supplier = this.machine.supplier;
-    this.maintenanceTime = this.machine.maintenanceTime;
-    this.minProductionQuantity = this.machine.minProductionQuantity;
-    this.maxProductionQuantity = this.machine.maxProductionQuantity;
-    this.purchaseDate = this.machine.purchaseDate;
-    this.maxWaitingTime = this.machine.maxWaitingTime;
-    this.cycleTime = this.machine.cycleTime;
-    this.description = this.machine.description;
-
-    // this.getData({page: this.pageNumber, size: this.pageSize});
-    // this.getParam();
-    this.initializeData();
-    this.getRowDataAsString(this.machine);
-  }
-  async initializeData() {
-    // this.getData({page: this.pageNumber, size: this.pageSize});
-    this.getColumn();
-    this.getParam();
-  }
-  parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
-  formatter = (value: any): string => {
-    let result = `${value}`.replace(',', '');
-    result = `${result}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return result;
-  };
-  machineTypeList: any[] = [];
-  id: string = '';
-  machineTypeName: string = '';
   async getParam() {
     const request = {
       params: {
@@ -152,41 +129,12 @@ export class InfoMachinePopupComponent {
         machineTypeName: this.machineTypeName,
       },
     };
-    let res = await this.machineService.getMachineTypeList(request);
+    let res = await this.machine.getMachineTypeList(request);
+    console.log(res);
     this.machineTypeList = res.data;
 
     return this.machineTypeList;
   }
-
-  async getData(page: { page: number; size: number }) {
-    let request = {
-      pageNumber: page.page - 1,
-      pageSize: page.size,
-      filter: {
-        machineCode: this.machineCode,
-        description: this.description,
-        status: '',
-        cycleTime: this.cycleTime,
-        maxWaitingTime: this.maxWaitingTime,
-        purchaseDate: this.purchaseDate,
-        maxProductionQuantity: this.maxProductionQuantity,
-        minProductionQuantity: this.minProductionQuantity,
-        maintenanceTime: this.maintenanceTime,
-        supplier: this.supplier,
-        productivity: this.productivity,
-        machineType: {},
-        machineName: this.machineName,
-      },
-    };
-
-    let res = await this.machineService.getMachine(request);
-    this.columns = res.columns;
-    this.total = res.dataCount;
-  }
-  @Input() machinee: any = '';
-
-  machineColumn: Record<string, any> = {};
-
   isvisibleCancel: boolean = false;
 
   checkAction: boolean = false;
@@ -204,7 +152,6 @@ export class InfoMachinePopupComponent {
   listOfValue1: any[] = [];
 
   listOfValue: any[] = [];
-
   listOfOption: any[] = [
     {
       value: 0,
@@ -276,16 +223,7 @@ export class InfoMachinePopupComponent {
     const max = parseInt(this.maxProductionQuantity, 10);
     return min < max;
   }
-  showErrorMachineType: boolean = false;
-  showErrorMachineCode: boolean = false;
-  showErrorMachineName: boolean = false;
-  showErrorminProductionQuantity: boolean = false;
-  showErrormaxProductionQuantity: boolean = false;
-  showErrormaxWaitingTime: boolean = false;
-  showErrormaintenanceTime: boolean = false;
-  showErrorproductivity: boolean = false;
-
-  selectedUnit: string = 'Giấy';
+  selectedUnit: string = 'Giây';
   selectedUnited: string = 'Giây';
   prevSelectedUnited: string | null = null;
 
@@ -319,9 +257,12 @@ export class InfoMachinePopupComponent {
     }
   }
   convertToSeconds(value: number, unit: string): number {
+    console.log(value);
+
+    if (isNaN(value)) {
+      return 0;
+    }
     switch (unit) {
-      case 'Giây':
-        return value * 1;
       case 'Phút':
         return value * 60;
       case 'Giờ':
@@ -335,241 +276,133 @@ export class InfoMachinePopupComponent {
     }
   }
   convertedMaxWaitingTime: string | null = null;
+  showErrorMachineType: boolean = false;
+  showErrorMachineCode: boolean = false;
+  showErrorMachineName: boolean = false;
+  showErrorminProductionQuantity: boolean = false;
+  showErrormaxProductionQuantity: boolean = false;
+  showErrormaxWaitingTime: boolean = false;
+  showErrormaintenanceTime: boolean = false;
+  showErrorproductivity: boolean = false;
+
   isvisiblesubmit: boolean = false;
 
   submitDemo() {
     this.isvisiblesubmit = true;
   }
+
   async submit() {
-    // const maxWaitingTimeNumber = parseFloat(this.maxWaitingTime);
-    // if (!isNaN(maxWaitingTimeNumber)) {
-    //     const maxWaitingTimeInSecond = this.convertToSeconds(maxWaitingTimeNumber, this.selectedUnit);
-    //     this.maxWaitingTime = maxWaitingTimeInSecond.toString();
-    // } else {
-    //     this.maxWaitingTime = '';
-    // }
-    // const maintenanceTimeNumber = parseFloat(this.maintenanceTime);
-    // if (!isNaN(maxWaitingTimeNumber)) {
-    //     const maintenanceTimeInSecond = this.convertToSeconds(maintenanceTimeNumber, this.selectedUnited);
-    //     this.maintenanceTime = maintenanceTimeInSecond.toString();
-    // } else {
-    //     this.maintenanceTime = '';
-    // }
-    this.showErrorMachineCode = !this.ismachineCodeValid();
-    this.showErrorMachineName = !this.ismachineNameValid();
-    this.showErrorminProductionQuantity = !this.isPositiveIntegerMinValid(
-      this.minProductionQuantity
-    );
-    this.showErrormaxProductionQuantity = !this.isPositiveIntegerValid(
-      this.maxProductionQuantity
-    );
-    this.showErrormaxWaitingTime = !this.isPositiveIntegerValid(
-      this.maxWaitingTime
-    );
-    this.showErrormaintenanceTime = !this.isPositiveIntegerValid(
-      this.maintenanceTime
-    );
-    this.showErrorproductivity = !this.isPositiveIntegerValid(
-      this.productivity
-    );
-
+    this.loader.start();
+    console.log(this.inforMachine)
+    this.checkValid();
     let check = true;
-
     this.columns.map((x: any) => {
-      if (!this.inforMachine[x.keyName] && x.isRequired == true) {
-        this.toast.warning(`Không được bỏ trống ${x.keyTitle}`);
+      if (this.checkMachine[x.keyName]) {
+        this.toast.warning(this.checkMachine[x.keyName]);
         check = false;
         return;
       }
     });
-
-    if (check) {
-      const maxWaitingTimeNumber = parseFloat(
-        this.inforMachine['maxWaitingTime']
-      );
-      if (!isNaN(maxWaitingTimeNumber)) {
-        const maxWaitingTimeInSecond = this.convertToSeconds(
-          maxWaitingTimeNumber,
-          this.selectedUnit
-        );
-        this.inforMachine['maxWaitingTime'] = maxWaitingTimeInSecond.toString();
-      } else {
-        this.inforMachine['maxWaitingTime'] = '';
-      }
-      const maintenanceTimeNumber = parseFloat(
-        this.inforMachine['maintenanceTime']
-      );
-      if (!isNaN(maintenanceTimeNumber)) {
-        const maintenanceTimeInSecond = this.convertToSeconds(
-          maintenanceTimeNumber,
-          this.selectedUnited
-        );
-        this.inforMachine['maintenanceTime'] =
-          maintenanceTimeInSecond.toString();
-      } else {
-        this.inforMachine['maintenanceTime'] = '';
-      }
-
-      let request: any = this.inforMachine;
-
-      Object.keys(request).forEach((key) => {
-        if (request[key] === '') {
-          request[key] = null;
+    if(check) {
+      this.manageService.updateInforRecordById(this.inforTable.name, this.inforMachine['id'], this.inforMachine).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.toast.success(res.result.message);
+          this.isvisible = false;
+          this.isvisibleChange.emit(false);
+          this.loader.stop();
+        }, error: (err) => {
+          this.toast.error(err.result.message);
+          this.loader.stop();
         }
-      });
-      this.columns.map((x: any) => {
-        if (this.machineColumn[x.keyName]) {
-          if (x.keyName != 'status') {
-            request[x.keyName] = this.machineColumn[x.keyName]
-              ? this.machineColumn[x.keyName]
-              : '';
-          }
-        }
-      });
-
-      let res = await this.machineService.updateMachine(
-        request,
-        this.machineCode
-      );
-      if (res.result.ok) {
-        this.toast.success('Cập nhật máy thành công', 'Thành công');
-        this.isvisibleChange.emit(false);
-      } else {
-        this.toast.error(res.result.message, 'Cập nhật máy thất bại');
-      }
-    }
-  }
-  async getColumn() {
-    let col = localStorage.getItem('machine');
-    this.columns = JSON.parse(col ? col : '');
-    this.columns = this.columns.filter((x: any) => {
-      return x.check;
-    });
-
-    this.columns.map((x: any) => {
-      this.inforMachine[x.keyName] = this.machine[x.keyName];
-    });
-    this.inforMachine['maintenanceTimeUnit'] =
-      this.machine['maintenanceTimeUnit'];
-    this.inforMachine['maxWaitingTimeUnit'] =
-      this.machine['maxWaitingTimeUnit'];
-    console.log(
-      this.inforMachine['maintenanceTime'],
-      this.inforMachine['maxWaitingTime']
-    );
-
-    if (!this.inforMachine['machineType']) {
-      this.inforMachine['machineType'] = { id: '', machineTypeName: '' };
-    }
-
-    // this.columns.map((x : any) => {
-    //     if (x.keyName != 'machineType') {
-    //         this.machineColumn[x.keyName] = this.machine[x.keyName] ? this.machine[x.keyName] : '';
-
-    //     }
-
-    // })
-    // this.columns.map((x : any) => {
-    //     if (x.keyName == 'machineCode' || x.keyName == 'machineName' || x.keyName == 'status' || x.keyName == 'productivity' || x.keyName == 'machineType' || x.keyName == 'description' || x.keyName == 'supplier' || x.keyName == 'minProductionQuantity' || x.keyName == 'maxProductionQuantity' || x.keyName == 'maintenanceTime' || x.keyName == 'purchaseDate' || x.keyName == 'maxWaitingTime' || x.keyName == 'cycleTime')
-    //       {  this.machineColumn[x.keyName] = this.machinee[x.keyName];
-    //       }else {
-    //         this.machineColumn[x.keyName] = this.machinee[x.keyName];
-    //       }
-
-    // })
-    // this.columns.forEach((x : any) => {
-    //     if (this.machineColumn[x.keyName]) {
-    //         this.machineColumn[x.keyName] = this.machinee[x.keyName];
-    //     }
-    // });
-  }
-  showQrCode() {}
-  public title = 'qr';
-  public qrInfo = '';
-  public width = 200;
-
-  strQr: string = '';
-  getRowDataAsString(machine: any): string {
-    let key = Object.keys(machine);
-    let col = localStorage.getItem('machine');
-    let columns = JSON.parse(col ? col : '');
-    console.log(columns);
-    this.strQr = machine.machineCode + '|MACHINE';
-    console.log('QR', this.strQr);
-
-    // columns.map((c : any) => {
-    //     console.log(c);
-
-    //     this.strQr += c.keyTitle + ': ' + machine[c.keyName] + ' - ';
-
-    // })
-    // let str = "";
-
-    // this.strQr += "Machine Code: " + machine.machineCode + " - Machine Name: " + machine.machineName + " - Machine Type: " + machine.machineType + " - Status: " + this.getStatusText(machine.status) + " - Description: " + machine.description + " - Productivity: " + machine.productivity + " - Supplier: " + machine.supplier + " - Max: " + machine.maxProductionQuantity + " - Min: " + machine.minProductionQuantity + " - Purchase Date: " + machine.purchaseDate + " - Max Waiting Time: " + machine.maxWaitingTime + " - Cycle Time: " + machine.cycleTime;
-    return '';
-  }
-  getStatusText(status: number): string {
-    return status === 1 ? 'Hoạt động' : 'Ngừng hoạt động';
-  }
-  showOptions: boolean = false;
-
-  addNewOption(): void {
-    this.isPopoverVisible = false;
-  }
-  isPopoverVisible: boolean = false;
-
-  handleVisibleChange(visible: boolean): void {
-    this.isPopoverVisible = visible;
-  }
-
-  convertSecondsToDuration(seconds: number, name: string) {
-    const month = 2592000;
-    const days = 86400;
-    const hours = 3600;
-    const minutes = 60;
-
-    if (seconds == 0) {
-      return;
-    } else if (seconds % month === 0) {
-      this.inforMachine[name] = seconds / month;
-      if (name == 'maintenanceTime') this.selectedUnited = 'Tháng';
-      else this.selectedUnit = 'Tháng';
-    } else if (seconds % days === 0) {
-      this.inforMachine[name] = seconds / days;
-      if (name == 'maintenanceTime') this.selectedUnited = 'Ngày';
-      else this.selectedUnit = 'Ngày';
-    } else if (seconds % hours === 0) {
-      this.inforMachine[name] = seconds / hours;
-      if (name == 'maintenanceTime') this.selectedUnited = 'Giờ';
-      else this.selectedUnit = 'Giờ';
-    } else if (seconds % minutes === 0) {
-      this.inforMachine[name] = seconds / minutes;
-      if (name == 'maintenanceTime') this.selectedUnited = 'Phút';
-      else this.selectedUnit = 'Phút';
+      })
     } else {
-      this.inforMachine[name] = seconds;
-      if (name == 'maintenanceTime') this.selectedUnited = 'Giây';
-      else this.selectedUnit = 'Giây';
+      this.toast.warning("Vui lòng nhập đầy đủ thông tin yêu cầu bắt buộc!");
+      this.loader.stop();
     }
   }
 
-  @ViewChild('download', { static: false }) download!: ElementRef;
-  printQR() {
-    const canvas = document
-      .getElementById('QR')
-      ?.querySelector<HTMLCanvasElement>('canvas');
-    if (canvas) {
-      // this.download.nativeElement.href = canvas.toDataURL('image/png');
-      // this.download.nativeElement.download = this.inforMaterial['productCode'];
-      // const event = new MouseEvent('click');
-      // this.download.nativeElement.dispatchEvent(event);
-      let pdf = new jspdf(); // A4 size page of PDF
-      var position = 50;
-      let imgWidth = 100;
-      let imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const contentDataURL = canvas.toDataURL('image/png');
-      pdf.addImage(contentDataURL, 'PNG', 50, position, imgWidth, imgHeight);
-      pdf.save(`${this.inforMachine['machineCode']}.pdf`); // Generated PDF
+  isvisibleAddColumn: boolean = false;
+  addColumn() {
+    this.isvisibleAddColumn = true;
+  }
+  pageNumber: number = 1;
+  pageSize: number = 10;
+  async getData(page: { page: number; size: number }) {
+    let request = {
+      pageNumber: page.page - 1,
+      pageSize: page.size,
+      filter: {},
+    };
+
+    console.log(this.columns);
+  }
+
+  async getColumn() {
+    this.manageService.getColummnByTableName(this.inforTable.name).subscribe({
+      next: (res) => {
+        this.columns = res.data;
+        console.log(this.columns);
+        this.inforMachine = this.inforComponent;
+        this.getParamsOnInit();
+      }
+    })
+  }
+
+  /**
+   * Hàm gọi API và xử lý dữ liệu option cho select box
+   */
+  async handleOpenChangeDataTypeParam(data: any, column: any) {
+    console.log("Select: ", column);
+    if(data) {
+      this.manageService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
+        next: (res) => {
+          console.log("Select data: ", res);
+          this.valueSelectBox = res.data;
+        }, error: (err) => {
+          this.toast.error(err.result.message);
+        }
+      })
     }
   }
+
+  /**
+   * Hàm gọi API và xử lý dữ liệu option cho select box với trường có đơn vị tính
+   */
+  async handleOpenChangeUnit(data: any, column: any) {
+    console.log("Unit: ", column);
+    if(data) {
+      if(column.note != '' && column.note != null) {
+        this.manageService.getParamsByCode(column.note).subscribe({
+          next: (res) => {
+            console.log("Unit data: ", res);
+            this.valueTypeParam = res.data;
+          }, error: (err) => {
+            this.toast.error(err.result.message);
+          }
+        });
+      } else {
+        this.toast.warning("Không tìm thấy tên cột!");
+      }
+    }
+  }
+
+  /**
+   * Hàm lấy danh sách param phụ thuộc theo cột hoặc theo trường hasUnit
+   */
+  async getParamsOnInit() {
+    for(let i = 0; i < this.columns.length; i++) {
+      if(this.columns[i].dataType == 9) {
+        await this.handleOpenChangeDataTypeParam(true, this.columns[i]);
+      } else if(this.columns[i].hasUnit) {
+        await this.handleOpenChangeUnit(true, this.columns[i]);
+      }
+    }
+  }
+
+  machineColumn: Record<string, any> = {};
+  columns: any[] = [];
+  total: number = 0;
+  @Input() machinee: any = '';
+  protected readonly dataType = DATA_TYPE;
 }

@@ -500,7 +500,7 @@
 <app-info-machine-popup
   *ngIf="ivisibleInfor"
   (isvisibleChange)="addColumnConfirm()"
-  [machine]="currentMachine"
+  [inforComponent]="currentMachine"
   [(isvisible)]="ivisibleInfor"
 ></app-info-machine-popup>
 <app-add-column
