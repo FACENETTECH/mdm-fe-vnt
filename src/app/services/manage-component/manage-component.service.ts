@@ -97,4 +97,14 @@ export class ManageComponentService {
   deleteRecordById(tableName: string, id: any): Observable<any> {
     return this.httpClient.delete(`${this.url}/api/dynamic-tables/${tableName}/${id}`);
   }
+
+  /**
+   * Xoá thông tin các bản ghi trong table bằng id
+   * @param tableName Tên bảng cần xoá bản ghi
+   * @param listId Danh sách id bản ghi cần xoá
+   * @returns 
+   */
+  deleteListRecordByListId(tableName: string, listId: any): Observable<any> {
+    return this.httpClient.put(`${this.url}/api/dynamic-tables/${tableName}/delete-batch`, listId);
+  }
 }

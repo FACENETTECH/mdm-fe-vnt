@@ -471,6 +471,17 @@
   [(isvisible)]="isvisibleDelete"
 >
 </app-popup-delete>
+
+<app-popup-delete-list-recodrd
+  *ngIf="isvisibleDeleteList"
+  (delete)="deleteListConfirm($event)"
+  [title]="'Xoá ' + inforTable.label"
+  [deleteType]="'xoá các bản ghi này'"
+  [deleteCode]="currentMachine.code"
+  [(isvisible)]="isvisibleDeleteList"
+>
+</app-popup-delete-list-recodrd>
+
 <app-add-new-machine-popup
   *ngIf="isvisibleAdd"
   (isvisibleChange)="addColumnConfirm()"

@@ -88,6 +88,7 @@ import {AddNewMachinePopupComponent} from './manage-machine/add-new-machine-popu
 import {InfoMachinePopupComponent} from './manage-machine/info-machine-popup/info-machine-popup.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { UpdateInforComponentComponent } from './manage-machine/update-infor-component/update-infor-component.component';
+import { PopupDeleteListRecodrdComponent } from './manage-machine/popup-delete-list-recodrd/popup-delete-list-recodrd.component';
 
 
 @NgModule({
@@ -95,7 +96,8 @@ import { UpdateInforComponentComponent } from './manage-machine/update-infor-com
         ManageMachineComponent,
         AddNewMachinePopupComponent,
         InfoMachinePopupComponent,
-        UpdateInforComponentComponent
+        UpdateInforComponentComponent,
+        PopupDeleteListRecodrdComponent
     ],
     imports: [
         CommonModule,
