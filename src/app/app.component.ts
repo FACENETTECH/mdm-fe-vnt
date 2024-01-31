@@ -273,7 +273,7 @@ export class AppComponent {
    */
   getListFunctionByName(data: any) {
     let sider: any;
-    this.manageComponentService.getInforTables(data.name).subscribe({
+    this.manageComponentService.getInforTables(data).subscribe({
       next: (res) => {
         console.log(res);
         sider = res.data;
@@ -308,19 +308,29 @@ export class AppComponent {
   }
 
   getNameByCookie() { 
-    const cookies = document.cookie.split(';');
-    let data;
-    for (const cookie of cookies) {
-      const [name, value] = cookie.split('=');
-      if (name.trim() === 'data') {
-        data = JSON.parse(decodeURIComponent(value));
-        break;
-      }
+    if(localStorage.getItem("tableNameMDM") != null && localStorage.getItem("tableNameMDM") != '') {
+      this.getListFunctionByName(localStorage.getItem("tableNameMDM"));
+    } else {
+      console.log(window.location.href);
+      let arr = window.location.href.split('/');
+      console.log(arr[arr.length - 1]);
+      localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
+      this.getListFunctionByName(arr[arr.length - 1]);
     }
-    console.log(data);
-    if(data != undefined && data != null && data != '') {
-      this.getListFunctionByName(data);
-    }
+
+    // const cookies = document.cookie.split(';');
+    // let data;
+    // for (const cookie of cookies) {
+    //   const [name, value] = cookie.split('=');
+    //   if (name.trim() === 'data') {
+    //     data = JSON.parse(decodeURIComponent(value));
+    //     break;
+    //   }
+    // }
+    // console.log(data);
+    // if(data != undefined && data != null && data != '') {
+    //   this.getListFunctionByName(data);
+    // }
   }
 }
 
