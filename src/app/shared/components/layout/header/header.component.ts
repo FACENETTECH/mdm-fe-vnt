@@ -134,12 +134,12 @@ export class HeaderComponent {
       this.i18n.setLocale(vi_VN);
       registerLocaleData(vi);
       this.title.setTitle('Master data management');
-      this.srcImg = '/assets/icons/flag_vi.svg';
+      this.srcImg = './assets/icons/flag_vi.svg';
     } else {
       this.i18n.setLocale(en_US);
       registerLocaleData(en);
       this.title.setTitle('Master data management');
-      this.srcImg = '/assets/icons/flag_en.svg';
+      this.srcImg = './assets/icons/flag_en.svg';
     }
     this.appI18nService.setLanguage(language);
   }
