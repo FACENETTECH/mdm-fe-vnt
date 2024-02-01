@@ -10,12 +10,12 @@ import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
 })
 export class SiderComponent {
   @Input() sider: {
-    label: string;
+    displayName: string;
     open: boolean;
     path: string | null;
     icon: string;
     children: {
-      label: string;
+      displayName: string;
       open: boolean;
       path: string;
       requiredRoles: string[];

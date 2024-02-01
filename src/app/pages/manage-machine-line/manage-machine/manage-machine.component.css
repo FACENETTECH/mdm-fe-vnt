@@ -20,3 +20,13 @@ td:not(.numeric-value) {
   display: flex;
   justify-content: space-around;
 }
+
+.ant-table-tbody > tr > td {
+  height: 20px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.ant-table-tbody > tr:nth-child(2) > td {
+  padding: 6px 8px;
+}

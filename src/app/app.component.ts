@@ -334,49 +334,6 @@ export class AppComponent {
   }
 }
 
-const dummyFunctions = [
-  {
-    index: 2,
-    name: "supplier",
-    displayName: "vật tư",
-    label: "Quản lý vật tư",
-    parent: null,
-    isEntity: true,
-    note: "sth",
-    icon: './assets/icons/Appstore.svg',
-    color: '#9747FF',
-    link: `http://dev.fcim.facenet.vn/mdm`,
-    children: [
-      {
-        index: 2,
-        name: "supplier_type",
-        displayName: "vật tư",
-        label: "Nhóm vật tư",
-        parent: "supplier",
-        isEntity: true,
-        note: "sth",
-        icon: './assets/icons/Appstore.svg',
-        color: '#9747FF',
-        link: `http://dev.fcim.facenet.vn/mdm`,
-        children: null
-      },
-        {
-        index: 2,
-        name: "supplier_group",
-        displayName: "vật tư",
-        label: "Chủng loại vật tư",
-        parent: "supplier",
-        isEntity: true,
-        note: "sth",
-        icon: './assets/icons/Appstore.svg',
-        color: '#9747FF',
-        link: `http://dev.fcim.facenet.vn/mdm`,
-        children: null
-      },
-    ]
-  }
-]
-
 // const dummySider = [
 //   {
 //     label: 'sider.configurationManagement',

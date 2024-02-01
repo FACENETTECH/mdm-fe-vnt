@@ -11,7 +11,7 @@
             <img width="24px" height="24px" src="{{ parent.icon }}" alt="" />
             <a>
               <p style="color: black">
-                {{ parent.label | translate }}
+                {{ parent.displayName | translate }}
               </p>
             </a>
           </div>
@@ -27,7 +27,7 @@
               <img src="{{ parent.icon }}" alt="" />
             </div>
             <a>
-              <p class="color-text-sider">{{ parent.label | translate }}</p>
+              <p class="color-text-sider">{{ parent.displayName | translate }}</p>
             </a>
           </div>
         </div>
@@ -42,7 +42,7 @@
             <img src="{{ parent.icon }}" alt="" />
             <a>
               <p style="color: black">
-                {{ parent.label | translate }}
+                {{ parent.displayName | translate }}
               </p>
             </a>
           </div>
@@ -73,7 +73,7 @@
             </div>
             <a>
               <p class="color-text-sider">
-                {{ parent.label | translate }}
+                {{ parent.displayName | translate }}
               </p>
             </a>
           </div>
@@ -114,7 +114,7 @@
             >
               <a>
                 <p style="color: black">
-                  {{ children.label | translate }}
+                  {{ children.displayName | translate }}
                 </p>
               </a>
             </div>
@@ -126,7 +126,7 @@
               <div class="children-content-open color-item-sidebar">
                 <a>
                   <p class="color-text-header">
-                    {{ children.label | translate }}
+                    {{ children.displayName | translate }}
                   </p>
                 </a>
               </div>
