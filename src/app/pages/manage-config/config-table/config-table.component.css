@@ -1,0 +1,23 @@
+td.numeric-value {
+    text-align: right;
+  }
+  
+  /* Align text values to the left */
+  td:not(.numeric-value) {
+    text-align: left;
+  }
+  
+  /* Các css dành riêng cho Facenet */
+  .fn-text-al-right {
+    text-align: right !important;
+  }
+  
+  .fn-text-al-center {
+    text-align: center !important;
+  }
+  
+  .fn-css-action-grid {
+    display: flex;
+    justify-content: space-around;
+  }
+  

@@ -37,6 +37,8 @@
           placeholder="{{ 'placeHolderSearch' | translate }}"
           [(ngModel)]="common"
           (keyup)="search($event)"
+          (focus)="onInputFocus()"
+          (blur)="onInputBlur()"
         />
 
         <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">

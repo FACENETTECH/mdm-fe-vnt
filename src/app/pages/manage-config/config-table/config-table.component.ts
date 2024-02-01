@@ -15,12 +15,13 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DATA_TYPE } from 'src/app/utils/constrant';
 import { InforColumnComponent } from 'src/app/shared/components/infor-column/infor-column.component';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
+
 @Component({
-  selector: 'app-manage-machine',
-  templateUrl: './manage-machine.component.html',
-  styleUrls: ['./manage-machine.component.css'],
+  selector: 'app-config-table',
+  templateUrl: './config-table.component.html',
+  styleUrls: ['./config-table.component.css']
 })
-export class ManageMachineComponent implements OnInit {
+export class ConfigTableComponent {
   // New variables for dynamic form
   checked = false;
   indeterminate = false;
@@ -58,7 +59,7 @@ export class ManageMachineComponent implements OnInit {
   isvisibleImport: boolean = false;
   isvisibleAddColumn: boolean = false;
 
-  listMachine: any[] = [];
+  listFunction: any[] = [];
   columns: any[] = [];
   columnNames: string[] = [];
   expandSet = new Set<number>();
@@ -102,17 +103,11 @@ export class ManageMachineComponent implements OnInit {
   }
   ngOnInit() {
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
-    this.breadcrumbs[0].name = this.inforTable.displayName;
-    this.tableName = this.inforTable.displayName.toUpperCase();
     this.getHeaders();
   }
 
   clearInput(keyName: string) {
-    if (keyName == 'machinetype') {
-      this.inforMachine[keyName]['machineTypeName'] = '';
-    } else {
-      this.inforMachine[keyName] = '';
-    }
+    this.inforMachine[keyName] = '';
   }
 
   async addColumnConfirm() {
@@ -246,8 +241,9 @@ export class ManageMachineComponent implements OnInit {
     this.manageComponentService.getDataDynamicTable(this.inforTable.name, request).subscribe({
       next: (res) => {
         console.log(res);
-        this.listMachine = res.data;
-        this.total = res.dataCount;
+        // this.listFunction = res.data;
+        this.listFunction = dummyData;
+        this.total = this.listFunction.length;
         for (let j = 0; j < this.columns.length; j++) {
           let compare: Record<string, any> = {};
           compare[this.columns[j].keyName] = this.columns[j].keyName;
@@ -260,22 +256,15 @@ export class ManageMachineComponent implements OnInit {
         this.columns.map((x: any) => {
           this.stageTemplate[x.keyTitle] = '';
         });
-        // this.columns.map((x: any) => {
-        //   if (x.keyName != 'status') {
-        //     x.width = '300px';
-        //   } else {
-        //     x.width = '150px';
-        //   }
-        // });
         this.listMachineToExport = [];
         this.listMachineTemplate.push(this.stageTemplate);
-        if (this.listMachine.length == 0) {
+        if (this.listFunction.length == 0) {
           this.noDataFound = true;
         } else {
           this.noDataFound = false;
         }
         this.loader.stop();
-        console.log('List Manchine: ', this.listMachine);
+        console.log('List Manchine: ', this.listFunction);
       }
     })
   }
@@ -386,116 +375,23 @@ export class ManageMachineComponent implements OnInit {
   getHeaders() {
     this.manageComponentService.getColummnByTableName(this.inforTable.name).subscribe({
       next: (res) => {
-        console.log(res);
-        this.columns = res.data;
-        for(let i = 0; i < this.columns.length; i++) {
-          this.columns[i].localCheck = true;
-        }
-        for(let i = 0; i < this.columns.length; i++) {
-          if(this.columns[i].isCode) {
-            this.columnKey = this.columns[i].keyName;
-            break;
-          }
-        }
+        // console.log(res);
+        // this.columns = res.data;
+        // for(let i = 0; i < this.columns.length; i++) {
+        //   this.columns[i].localCheck = true;
+        // }
+        // for(let i = 0; i < this.columns.length; i++) {
+        //   if(this.columns[i].isCode) {
+        //     this.columnKey = this.columns[i].keyName;
+        //     break;
+        //   }
+        // }
+        this.columns = dummyColumn;
         this.getData({ page: this.pageNumber, size: this.pageSize });
       }, error: (err) => {
         console.log(err);
       }
     })
-  }
-
-  async export() {
-    let request = {
-      pageNumber: 0,
-      pageSize: 0,
-      common: '',
-      filter: {
-        machineCode: '',
-        machineName: '',
-        status: '',
-        machineType: {},
-        productivity: '',
-        description: '',
-        supplier: '',
-        maintenanceTime: '',
-        minProductionQuantity: '',
-        maxProductionQuantity: '',
-        purchaseDate: '',
-        maxWaitingTime: '',
-        cycleTime: '',
-      },
-    };
-
-    let res = await this.machineService.getMachine(request);
-    let listMachine = res.data;
-    let header: any[] = [];
-    for (let i = 0; i < listMachine.length; i++) {
-      let stageTemplate1: Record<string, any> = {};
-      for (let j = 0; j < this.columns.length; j++) {
-        if (i == 0) {
-          if (
-            this.columns[j].keyName == 'maintenanceTime' ||
-            this.columns[j].keyName == 'maxWaitingTime'
-          ) {
-            header.push(this.columns[j].keyTitle);
-            header.push(`Đơn vị ${this.columns[j].keyTitle}`);
-          } else {
-            header.push(this.columns[j].keyTitle);
-          }
-        }
-        if (this.columns[j].keyName === 'status') {
-          const statusValue =
-            listMachine[i][this.columns[j].keyName] === 1
-              ? 'Hoạt động'
-              : 'Ngừng hoạt động';
-          stageTemplate1[this.columns[j].keyName] = statusValue;
-        } else if (
-          this.columns[j].keyName == 'maintenanceTime' ||
-          this.columns[j].keyName == 'maxWaitingTime'
-        ) {
-          stageTemplate1[this.columns[j].keyName] =
-            listMachine[i][this.columns[j].keyName];
-          stageTemplate1[`Đơn vị ${this.columns[j].keyTitle}`];
-        } else if (this.columns[j].keyName == 'machineType') {
-          stageTemplate1[this.columns[j].keyName] =
-            listMachine[i]['machineType']['machineTypeName'];
-        } else {
-          stageTemplate1[this.columns[j].keyName] =
-            listMachine[i][this.columns[j].keyName];
-        }
-      }
-
-      this.listMachineToExport[i] = stageTemplate1;
-
-      let temp = {
-        ...stageTemplate1,
-      };
-      this.listMachineToExport.push(temp);
-    }
-    this.exportService.exportExcel(
-      this.listMachineToExport,
-      'MachineData',
-      header
-    );
-  }
-
-  async importConfirm($event: any) {
-    let res = this.http
-      .post(`${environment.api_end_point}/api/machines/import-excel`, $event)
-      .subscribe({
-        next: (res: any) => {
-          this.toast.success('Import file thành công');
-          this.getData({ page: this.pageNumber, size: this.pageSize });
-        },
-        error: (err: any) => {
-          this.toast.error(err.error.result.message);
-
-          this.getData({ page: this.pageNumber, size: this.pageSize });
-        },
-      });
-  }
-  import() {
-    this.isvisibleImport = true;
   }
 
   onClickIcon(element: any) {
@@ -564,7 +460,7 @@ export class ManageMachineComponent implements OnInit {
    * @param value : đây là thông tin từng bản ghi
    */
   onAllChecked(value: boolean): void {
-    this.listMachine.forEach(item => this.updateCheckedSet(item.id, value));
+    this.listFunction.forEach(item => this.updateCheckedSet(item.id, value));
     this.refreshCheckedStatus();
   }
 
@@ -595,8 +491,8 @@ export class ManageMachineComponent implements OnInit {
    * Đây là hoàn bỏ check tất cả các bạn ghi hiện tại được chọn
    */
   refreshCheckedStatus(): void {
-    this.checked = this.listMachine.every(item => this.setOfCheckedId.has(item.id));
-    this.indeterminate = this.listMachine.some(item => this.setOfCheckedId.has(item.id)) && !this.checked;
+    this.checked = this.listFunction.every(item => this.setOfCheckedId.has(item.id));
+    this.indeterminate = this.listFunction.some(item => this.setOfCheckedId.has(item.id)) && !this.checked;
   }
 
   /**
@@ -604,22 +500,10 @@ export class ManageMachineComponent implements OnInit {
    * @param event : là thông tin về hàng được thay đổi vị trí
    */
   async drop(event: CdkDragDrop<string[], string, any>) {
-    moveItemInArray(this.listMachine, event.previousIndex, event.currentIndex);
-    console.log("record: ", this.listMachine)
+    moveItemInArray(this.listFunction, event.previousIndex, event.currentIndex);
+    console.log("record: ", this.listFunction)
     console.log("previousIndex: ", event.previousIndex);
-    console.log("currentIndex: ", this.listMachine[event.currentIndex]);
-    this.listMachine[event.currentIndex].index = this.listMachine[event.currentIndex - 1].index;
-    this.manageComponentService.updateInforRecordById(
-      this.inforTable.name, 
-      this.listMachine[event.currentIndex].id, 
-      this.listMachine[event.currentIndex]
-    ).subscribe({
-      next: (res) => {
-        console.log(res);
-      }, error: (err) => {
-        console.log(err);
-      }
-    })
+    console.log("currentIndex: ", event.currentIndex);
   }
 
   /**
@@ -637,9 +521,9 @@ export class ManageMachineComponent implements OnInit {
     }
     if(code !== '') {
       this.setOfCheckedId.forEach((item) => {
-        for(let i = 0; i < this.listMachine.length; i++) {
-          if(item == this.listMachine[i].id) {
-            request.push(this.listMachine[i]);
+        for(let i = 0; i < this.listFunction.length; i++) {
+          if(item == this.listFunction[i].id) {
+            request.push(this.listFunction[i]);
             break;
           }
         }
@@ -774,3 +658,108 @@ export class ManageMachineComponent implements OnInit {
 
   protected readonly dataType = DATA_TYPE;
 }
+
+const dummyColumn = [
+  {
+    id: 1,
+    index: 1,
+    tableName: "config_table",
+    keyName: "configCode",
+    keyTitle: "Mã nhóm chức năng",
+    isRequired: true,
+    dataType: 2,
+    hasUnit: false,
+    relateTable: null,
+    relateColumn: null,
+    note: null,
+    addition: null,
+    width: "200px",
+    isCode: true,
+    localCheck: true
+  },
+  {
+    id: 2,
+    index: 1,
+    tableName: "config_table",
+    keyName: "configName",
+    keyTitle: "Tên nhóm chức năng",
+    isRequired: true,
+    dataType: 2,
+    hasUnit: false,
+    relateTable: null,
+    relateColumn: null,
+    note: null,
+    addition: null,
+    width: "200px",
+    isCode: true,
+    localCheck: true
+  },
+  {
+    id: 3,
+    index: 1,
+    tableName: "config_table",
+    keyName: "status",
+    keyTitle: "Trạng thái",
+    isRequired: true,
+    dataType: 2,
+    hasUnit: false,
+    relateTable: null,
+    relateColumn: null,
+    note: null,
+    addition: null,
+    width: "200px",
+    isCode: true,
+    localCheck: true
+  },
+  {
+    id: 4,
+    index: 1,
+    tableName: "config_table",
+    keyName: "configDesc",
+    keyTitle: "Mô tả",
+    isRequired: true,
+    dataType: 2,
+    hasUnit: false,
+    relateTable: null,
+    relateColumn: null,
+    note: null,
+    addition: null,
+    width: "300px",
+    isCode: true,
+    localCheck: true
+  }
+]
+
+
+const dummyData = [
+  {
+    configCode: "F01",
+    configName: "Quản lý nguyên công",
+    status: 1,
+    configDesc: "Note"
+  },
+  {
+    configCode: "F02",
+    configName: "Quản lý vật tư",
+    status: 1,
+    configDesc: "Note"
+  },
+  {
+    configCode: "F03",
+    configName: "Quản lý nhà cung cấp",
+    status: 0,
+    configDesc: "Note"
+  },
+  {
+    configCode: "F04",
+    configName: "Quản lý nhân viên",
+    status: 0,
+    configDesc: "Note"
+  },
+  {
+    configCode: "F05",
+    configName: "Quản lý công đoạn",
+    status: 0,
+    configDesc: "Note"
+  }
+]

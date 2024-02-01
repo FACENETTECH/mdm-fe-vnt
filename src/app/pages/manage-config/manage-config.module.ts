@@ -86,6 +86,7 @@ import { PreviewComponent } from './preview/preview.component';
 import { AddPreviewComponent } from './preview/add-preview/add-preview.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ConfigTableComponent } from './config-table/config-table.component';
 
 
 @NgModule({
@@ -93,6 +94,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ConfigComponent,
     PreviewComponent,
     AddPreviewComponent,
+    ConfigTableComponent,
   ],
   imports: [
     CommonModule,
