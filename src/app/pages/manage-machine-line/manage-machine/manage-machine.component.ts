@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { NzResizeEvent } from 'ng-zorro-antd/resizable';
 import { ToastrService } from 'ngx-toastr';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
@@ -182,7 +182,7 @@ export class ManageMachineComponent implements OnInit {
     return this.isNumeric(value) || this.isDate(value);
   }
 
-  propertySort: string | null = 'created_at';
+  propertySort: string | null = 'index';
   orderSort: string = 'DESC';
   sortColumn: string = '';
   customSortFunction(event: any, sortColumn: string) {
@@ -604,6 +604,9 @@ export class ManageMachineComponent implements OnInit {
    */
   async drop(event: CdkDragDrop<string[], string, any>) {
     moveItemInArray(this.listMachine, event.previousIndex, event.currentIndex);
+    console.log("record: ", this.listMachine)
+    console.log("previousIndex: ", event.previousIndex);
+    console.log("currentIndex: ", event.currentIndex);
   }
 
   /**
@@ -686,6 +689,37 @@ export class ManageMachineComponent implements OnInit {
         }
       })
     }
+  }
+
+  @HostListener('document:keydown.control.n', ['$event'])
+  handleAddNew(event: any) {
+    console.log(event);
+  }
+
+  @HostListener('document:keydown.delete', ['$event'])
+  handleDelete(event: any) {
+    console.log(event);
+    if(this.setOfCheckedId.size > 0) {
+      this.openPopupDeleteList();
+    } else {
+      this.toast.warning("Vui lòng chọn bản ghi để sử dụng chức năng này!");
+    }
+  }
+
+  @HostListener('document:keydown.F2', ['$event'])
+  handleUpdate(event: any) {
+    console.log(event);
+  }
+
+  @HostListener('document:keydown.control.d', ['$event'])
+  handleCopy(event: any) {
+    console.log(event);
+  }
+
+  @HostListener('document:keydown.F5', ['$event'])
+  handleF5(event: any) {
+    event.defaultPrevented = true;
+    console.log("Hoang");
   }
 
   protected readonly dataType = DATA_TYPE;
