@@ -12,12 +12,13 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
 import { DATA_TYPE } from 'src/app/utils/constrant';
+
 @Component({
-  selector: 'app-info-machine-popup',
-  templateUrl: './info-machine-popup.component.html',
-  styleUrls: ['./info-machine-popup.component.css'],
+  selector: 'app-popup-add-config-table',
+  templateUrl: './popup-add-config-table.component.html',
+  styleUrls: ['./popup-add-config-table.component.css']
 })
-export class InfoMachinePopupComponent {
+export class PopupAddConfigTableComponent {
   constructor(
     private toast: ToastrService,
     private machine: InfoMachineService,
@@ -27,7 +28,6 @@ export class InfoMachinePopupComponent {
     private loader: NgxUiLoaderService
   ) {}
   @Input() isvisible: boolean = true;
-  @Input() inforComponent: any = '';
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
 
   machineCode: string = '';
@@ -50,13 +50,16 @@ export class InfoMachinePopupComponent {
   inforMachine: Record<string, any> = {};
   valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
   valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
+  columnKey: string = '';
+  listColumnInFunction: any = [];
+  columnsFunction: any = [];
 
   onSubmit(): void {}
 
   ngOnInit() {
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
     this.getColumn();
-    console.log(this.inforComponent);
+    this.inforMachine['status'] = 1;
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -304,7 +307,7 @@ export class InfoMachinePopupComponent {
       }
     });
     if(check) {
-      this.manageService.updateInforRecordById(this.inforTable.name, this.inforMachine['id'], this.inforMachine).subscribe({
+      this.manageService.addNewRecord(this.inforTable.name, this.inforMachine).subscribe({
         next: (res) => {
           console.log(res);
           this.toast.success(res.result.message);
@@ -321,7 +324,6 @@ export class InfoMachinePopupComponent {
       this.loader.stop();
     }
   }
-
   isvisibleAddColumn: boolean = false;
   addColumn() {
     this.isvisibleAddColumn = true;
@@ -339,20 +341,14 @@ export class InfoMachinePopupComponent {
   }
 
   async getColumn() {
-    this.manageService.getColummnByTableName(this.inforTable.name).subscribe({
-      next: (res) => {
-        this.columns = res.data;
-        console.log(this.columns);
-        this.inforMachine = this.inforComponent;
-        this.getParamsOnInit();
-      }
-    })
+    this.columns = dummyColumns;
+    this.columnsFunction = columnsTable;
   }
 
   /**
    * Hàm gọi API và xử lý dữ liệu option cho select box
    */
-  async handleOpenChangeDataTypeParam(data: any, column: any) {
+  handleOpenChangeDataTypeParam(data: any, column: any) {
     console.log("Select: ", column);
     if(data) {
       this.manageService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
@@ -369,7 +365,7 @@ export class InfoMachinePopupComponent {
   /**
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có đơn vị tính
    */
-  async handleOpenChangeUnit(data: any, column: any) {
+  handleOpenChangeUnit(data: any, column: any) {
     console.log("Unit: ", column);
     if(data) {
       if(column.note != '' && column.note != null) {
@@ -388,16 +384,28 @@ export class InfoMachinePopupComponent {
   }
 
   /**
-   * Hàm lấy danh sách param phụ thuộc theo cột hoặc theo trường hasUnit
+   * Thêm 1 dòng vào trong bảng thêm mới column
    */
-  async getParamsOnInit() {
-    for(let i = 0; i < this.columns.length; i++) {
-      if(this.columns[i].dataType == 9) {
-        await this.handleOpenChangeDataTypeParam(true, this.columns[i]);
-      } else if(this.columns[i].hasUnit) {
-        await this.handleOpenChangeUnit(true, this.columns[i]);
+  addRowTable() {
+    this.listColumnInFunction.push(
+      {
+        keyName: null,
+        keyTitle: null,
+        dataType: 0,
+        isCode: false,
+        hasUnit: false,
+        note: null,
+        isRequired: false,
+        width: null
       }
-    }
+    )
+  }
+
+  /**
+   * Xóa 1 dòng vào trong bảng thêm mới column
+   */
+  deleteRowTable(item: any, index: any) {
+    this.listColumnInFunction.splice(index, 1);
   }
 
   /**
@@ -405,7 +413,7 @@ export class InfoMachinePopupComponent {
    * @param event 
    */
    @HostListener('document:keydown.Escape', ['$event'])
-   handleEscape(event: any) {
+   handleUpdate(event: any) {
      console.log(event);
      this.handleCancel();
    }
@@ -416,3 +424,233 @@ export class InfoMachinePopupComponent {
   @Input() machinee: any = '';
   protected readonly dataType = DATA_TYPE;
 }
+
+const dummyColumns = [
+  {
+    "id": 1,
+    "index": 1,
+    "tableName": "config",
+    "keyName": "displayName",
+    "keyTitle": "Tên hiển thị",
+    "isRequired": true,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  },
+  {
+    "id": 2,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "label",
+    "keyTitle": "Tên chức năng",
+    "isRequired": true,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  },
+  {
+    "id": 3,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "name",
+    "keyTitle": "Mã chức năng",
+    "isRequired": true,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  },
+  {
+    "id": 4,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "isEntity",
+    "keyTitle": "Loại chức năng",
+    "isRequired": true,
+    "dataType": 9,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  },
+  {
+    "id": 5,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "link",
+    "keyTitle": "Url",
+    "isRequired": true,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  },
+  {
+    "id": 6,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "color",
+    "keyTitle": "Màu",
+    "isRequired": false,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  }
+]
+
+const columnsTable = [
+  {
+    "id": 1,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "keyName",
+    "keyTitle": "Mã cột",
+    "isRequired": true,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "110px",
+    "isCode": false
+  },
+  {
+    "id": 2,
+    "index": 2,
+    "tableName": "operation",
+    "keyName": "keyTitle",
+    "keyTitle": "Tên cột",
+    "isRequired": true,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "110px",
+    "isCode": false
+  },
+  {
+    "id": 3,
+    "index": 3,
+    "tableName": "operation",
+    "keyName": "dataType",
+    "keyTitle": "Kiểu dữ liệu",
+    "isRequired": false,
+    "dataType": 9,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "110px",
+    "isCode": false
+  },
+  {
+    "id": 4,
+    "index": 4,
+    "tableName": "operation",
+    "keyName": "isCode",
+    "keyTitle": "Mã định danh",
+    "isRequired": false,
+    "dataType": 5,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "110px",
+    "isCode": false
+  },
+  {
+    "id": 5,
+    "index": 5,
+    "tableName": "operation",
+    "keyName": "hasUnit",
+    "keyTitle": "Có đơn vị",
+    "isRequired": false,
+    "dataType": 5,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "110px",
+    "isCode": false
+  },
+  {
+    "id": 6,
+    "index": 6,
+    "tableName": "operation",
+    "keyName": "note",
+    "keyTitle": "Ghi chú",
+    "isRequired": false,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "110px",
+    "isCode": false
+  },
+  {
+    "id": 7,
+    "index": 7,
+    "tableName": "operation",
+    "keyName": "isRequired",
+    "keyTitle": "Bắt buộc",
+    "isRequired": false,
+    "dataType": 5,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "110px",
+    "isCode": false
+  },
+  {
+    "id": 8,
+    "index": 8,
+    "tableName": "operation",
+    "keyName": "width",
+    "keyTitle": "Độ rộng",
+    "isRequired": false,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "110px",
+    "isCode": false
+  }
+]

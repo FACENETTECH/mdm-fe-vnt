@@ -56,7 +56,7 @@
           style="color: #01aba8"
           nz-button
           nzType="text"
-          (click)="addMachine()"
+          (click)="addConfigTable()"
           class="mb-24"
         >
           <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
@@ -122,6 +122,7 @@
     <thead class="color-header-row">
       <tr>
         <th></th>
+        <th></th>
         <ng-container *ngFor="let column of columns; let i = index">
           <ng-container *ngIf="column.localCheck">
             <th
@@ -152,6 +153,7 @@
           <td cdkDragHandle>
             <img src="./assets/icons/changePositionRow.svg">
           </td>
+          <td [nzExpand]="expandSet.has(infor.id)" (nzExpandChange)="onExpandChange(infor.id, $event)"></td>
           <ng-container *ngFor="let column of columns">
             <ng-container *ngIf="column.localCheck">
               <ng-container [ngSwitch]="column.keyName">
@@ -219,6 +221,43 @@
             </div>
           </td>
         </tr>
+        <tr [nzExpand]="expandSet.has(infor.id)">
+            <nz-table #nzTable [nzData]="listFunction" nzTableLayout="fixed" nzShowPagination="false">
+                <thead>
+                  <tr>
+                    <th>Mã chức năng</th>
+                    <th>Tên chức năng</th>
+                    <th>Mô tả</th>
+                    <th nzWidth="86px">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ABC</td>
+                        <td>ABC</td>
+                        <td>ABC</td>
+                        <td nzAlign="center" [nzRight]="true">
+                            <div class="fn-css-action-grid">
+                              <button
+                                nz-button
+                                nzType="link"
+                                nz-tooltip="{{ 'btn.edit' | translate }}"
+                              >
+                                <img src="./assets/icons/Edit-VNT.svg">
+                              </button>
+                              <button
+                                nz-button
+                                nzType="link"
+                                nz-tooltip="{{ 'btn.delete' | translate }}"
+                              >
+                              <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
+                              </button>
+                            </div>
+                          </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </tr>
       </ng-container>
     </tbody>
   </nz-table>
@@ -232,6 +271,14 @@
   >
   </app-pagination>
 </nz-card>
+
+<app-popup-add-config-table
+  *ngIf="isvisibleAdd"
+  (isvisibleChange)="addColumnConfirm()"
+  [(isvisible)]="isvisibleAdd"
+>
+</app-popup-add-config-table>
+
 <app-popup-delete
   *ngIf="isvisibleDelete"
   (delete)="deleteConfirm($event)"

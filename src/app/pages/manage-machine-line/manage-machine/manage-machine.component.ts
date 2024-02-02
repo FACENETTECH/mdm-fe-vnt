@@ -718,6 +718,14 @@ export class ManageMachineComponent implements OnInit {
     this.isInputFocused = false;
   }
 
+  /**
+   * Xử lý sự kiện double click trên dòng trong table
+   */
+  onDblClickOnRowTable(infor: any) {
+    console.log("test");
+    this.inforComponent(infor);
+  }
+
 
   /**
    * Xử lý sự kiện nhấn phím tắt Shift + N để thêm mới bản ghi
@@ -757,7 +765,7 @@ export class ManageMachineComponent implements OnInit {
    * Xử lý sự kiện nhấn phím tắt Control + D để sao chép nhiều bản ghi
    * @param event 
    */
-  @HostListener('document:keydown.control.d', ['$event'])
+  @HostListener('document:keydown.shift.c', ['$event'])
   handleCopy(event: any) {
     if(this.setOfCheckedId.size > 0) {
       this.openPopupCopy();

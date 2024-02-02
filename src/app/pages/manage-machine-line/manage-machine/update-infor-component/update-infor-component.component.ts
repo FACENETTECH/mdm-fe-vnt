@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
 import {
   FormBuilder,
   UntypedFormBuilder,
@@ -400,6 +400,16 @@ export class UpdateInforComponentComponent {
       }
     }
   }
+
+  /**
+   * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
+   * @param event 
+   */
+   @HostListener('document:keydown.Escape', ['$event'])
+   handleEscape(event: any) {
+     console.log(event);
+     this.handleCancel();
+   }
 
   machineColumn: Record<string, any> = {};
   columns: any[] = [];

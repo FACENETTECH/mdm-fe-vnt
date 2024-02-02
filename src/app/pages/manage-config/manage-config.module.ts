@@ -87,6 +87,8 @@ import { AddPreviewComponent } from './preview/add-preview/add-preview.component
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ConfigTableComponent } from './config-table/config-table.component';
+import { PopupAddConfigTableComponent } from './config-table/popup-add-config-table/popup-add-config-table.component';
+import { PopupUpdateConfigTableComponent } from './config-table/popup-update-config-table/popup-update-config-table.component';
 
 
 @NgModule({
@@ -95,6 +97,8 @@ import { ConfigTableComponent } from './config-table/config-table.component';
     PreviewComponent,
     AddPreviewComponent,
     ConfigTableComponent,
+    PopupAddConfigTableComponent,
+    PopupUpdateConfigTableComponent,
   ],
   imports: [
     CommonModule,

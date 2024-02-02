@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
 import {
   FormBuilder,
   UntypedFormBuilder,
@@ -389,6 +389,16 @@ export class AddNewMachinePopupComponent {
       }
     }
   }
+
+  /**
+   * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
+   * @param event 
+   */
+   @HostListener('document:keydown.Escape', ['$event'])
+   handleUpdate(event: any) {
+     console.log(event);
+     this.handleCancel();
+   }
 
   machineColumn: Record<string, any> = {};
   columns: any[] = [];

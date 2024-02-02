@@ -380,7 +380,7 @@
             <ng-container *ngIf="column.localCheck">
               <ng-container [ngSwitch]="column.keyName">
                 <ng-container *ngSwitchCase="'status'">
-                  <td>
+                  <td (dblclick)="onDblClickOnRowTable(infor)">
                     <div [ngSwitch]="infor[column.keyName]" nzAlign="center">
                       <div
                         class="border-element bordered-element__status_1"
@@ -399,22 +399,22 @@
                 </ng-container>
                 <ng-container *ngSwitchDefault>
                   <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
-                    <td>
+                    <td (dblclick)="onDblClickOnRowTable(infor)">
                       {{ infor[column.keyName] }}
                     </td>
                   </ng-container>
                   <ng-container *ngIf="column.dataType == dataType.NUMBER">
-                    <td class="fn-text-al-right">
+                    <td class="fn-text-al-right" (dblclick)="onDblClickOnRowTable(infor)">
                         {{ infor[column.keyName] | number : "1.0-0" }}
                     </td>
                   </ng-container>
                   <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
-                    <td class="fn-text-al-right">
+                    <td class="fn-text-al-right" (dblclick)="onDblClickOnRowTable(infor)">
                       {{ infor[column.keyName] | date: 'dd-MM-yyyy' }}
                     </td>
                   </ng-container>
                   <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
-                    <td class="fn-text-al-center">
+                    <td class="fn-text-al-center" (dblclick)="onDblClickOnRowTable(infor)">
                       <label nz-checkbox [(ngModel)]="infor[column.keyName]"></label>
                     </td>
                   </ng-container>

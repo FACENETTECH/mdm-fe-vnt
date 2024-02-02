@@ -294,7 +294,7 @@ export class ConfigTableComponent {
   stageTemplate: Record<string, any> = {};
   listMachineTemplate: any[] = [];
   listMachineToExport: any[] = [];
-  addMachine() {
+  addConfigTable() {
     this.isvisibleAdd = true;
     console.log("record choose: ", this.setOfCheckedId);
   }
@@ -610,7 +610,7 @@ export class ConfigTableComponent {
   @HostListener('document:keydown.shift.n', ['$event'])
   handleAddNew(event: any) {
     if(!this.isInputFocused) {
-      this.addMachine();
+      this.addConfigTable();
     }
   }
 
@@ -655,6 +655,19 @@ export class ConfigTableComponent {
   //   // event.defaultPrevented = true;
   //   console.log("Hoang: ", event);
   // }
+
+  /**
+   * 
+   * @param id 
+   * @param checked 
+   */
+  onExpandChange(id: number, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
+    } else {
+      this.expandSet.delete(id);
+    }
+  }
 
   protected readonly dataType = DATA_TYPE;
 }
@@ -733,30 +746,35 @@ const dummyColumn = [
 
 const dummyData = [
   {
+    id: 1,
     configCode: "F01",
     configName: "Quản lý nguyên công",
     status: 1,
     configDesc: "Note"
   },
   {
+    id: 2,
     configCode: "F02",
     configName: "Quản lý vật tư",
     status: 1,
     configDesc: "Note"
   },
   {
+    id: 3,
     configCode: "F03",
     configName: "Quản lý nhà cung cấp",
     status: 0,
     configDesc: "Note"
   },
   {
+    id: 4,
     configCode: "F04",
     configName: "Quản lý nhân viên",
     status: 0,
     configDesc: "Note"
   },
   {
+    id: 5,
     configCode: "F05",
     configName: "Quản lý công đoạn",
     status: 0,

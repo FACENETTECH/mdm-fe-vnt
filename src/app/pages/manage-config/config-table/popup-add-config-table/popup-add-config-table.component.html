@@ -4,7 +4,7 @@
   [nzContent]="modalContent"
   [nzFooter]="modalFooter"
   (nzOnCancel)="handleCancel()"
-  [nzWidth]="1360"
+  [nzWidth]="1160"
 >
   <ng-template #modalTitle>
     <div
@@ -40,7 +40,7 @@
         </defs>
       </svg>
       <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Thêm mới thông tin ' + inforTable.label | translate }}
+        {{ 'Thêm mới thông tin chức năng' | translate }}
       </p>
     </div>
   </ng-template>
@@ -48,7 +48,7 @@
   <ng-template #modalContent>
     <div class="form-group">
       <div
-        style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 70%;"
+        style="display: flex; flex-wrap: wrap; justify-content: space-between;"
       >
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.hasUnit && col.keyName != 'status'">
@@ -387,21 +387,96 @@
           </ng-container>
         </ng-container>
       </div>
-      <div style="width: 30%;">
-        <ng-container *ngFor="let col of columns">
-          <ng-container *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'">
-            <div style="width: 100%; margin-bottom: 20px;" class="fn-df fn-df-justify-center">
-              <div class="fn-pd-8 fn-df-column">
-                <img class="fn-css-img-form-add" src="./assets/icons/no-image.png" alt="No image">
-                <label class="fn-label"
-                  >{{ col.keyTitle | translate
-                  }}</label
-                >
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-      </div>
+    </div>
+    <div>
+        <nz-table 
+            #nzTable 
+            [nzData]="listColumnInFunction" 
+            nzTableLayout="fixed" 
+            nzShowPagination="false"
+        >
+            <thead>
+              <tr>
+                <ng-container *ngFor="let column of columnsFunction">
+                    <th [nzWidth]="column.width">{{ column.keyTitle }}</th>
+                </ng-container>
+                <th nzWidth="86px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let item of listColumnInFunction; let i = index">
+                    <tr>
+                        <ng-container *ngFor="let column of columnsFunction">
+                            <ng-container *ngIf="column.dataType == dataType.STRING">
+                                <td>
+                                    <input type="text" nz-input
+                                    [(ngModel)]="item[column.keyName]"
+                                    (ngModelChange)="checkValid()" style="width: 100%;"
+                                    />
+                                </td>
+                            </ng-container>
+                            <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
+                                <td>
+                                    <nz-select
+                                        style="width: 100%"
+                                        nzMode="default"
+                                        [(ngModel)]="item[column.keyName]"
+                                        (ngModelChange)="checkValid()"
+                                        >
+                                        <nz-option [nzValue]="true" [nzLabel]="'Có'"></nz-option>
+                                        <nz-option [nzValue]="false" [nzLabel]="'Không'"></nz-option>
+                                    </nz-select>
+                                </td>
+                            </ng-container>
+                            <ng-container *ngIf="column.dataType == dataType.PARAM">
+                                <td>
+                                    <nz-select
+                                        style="width: 100%"
+                                        nzMode="default"
+                                        [(ngModel)]="item[column.keyName]"
+                                        (ngModelChange)="checkValid()"
+                                        >
+                                        <nz-option [nzValue]="1" [nzLabel]="'Number'"></nz-option>
+                                        <nz-option [nzValue]="2" [nzLabel]="'String'"></nz-option>
+                                        <nz-option [nzValue]="3" [nzLabel]="'Long String'"></nz-option>
+                                        <nz-option [nzValue]="4" [nzLabel]="'Date Time'"></nz-option>
+                                        <nz-option [nzValue]="5" [nzLabel]="'Boolean'"></nz-option>
+                                        <nz-option [nzValue]="6" [nzLabel]="'Image'"></nz-option>
+                                        <nz-option [nzValue]="7" [nzLabel]="'Relation'"></nz-option>
+                                        <nz-option [nzValue]="8" [nzLabel]="'Table'"></nz-option>
+                                        <nz-option [nzValue]="9" [nzLabel]="'Param'"></nz-option>
+                                    </nz-select>
+                                </td>
+                            </ng-container>
+                        </ng-container>
+                        <td nzAlign="center">
+                            <div class="fn-css-action-grid">
+                              <button
+                                nz-button
+                                nzType="link"
+                                (click)="deleteRowTable(item, i)"
+                                nz-tooltip="{{ 'btn.delete' | translate }}"
+                              >
+                              <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
+                              </button>
+                            </div>
+                          </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+    </div>
+    <div>
+        <button
+          style="color: #01aba8"
+          nz-button
+          nzType="text"
+          (click)="addRowTable()"
+          class="mb-24"
+        >
+          <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+          {{ "add.btn" | translate }}
+        </button>
     </div>
   </ng-template>
 
