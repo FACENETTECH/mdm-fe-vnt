@@ -154,6 +154,7 @@ export class HeaderComponent {
   }
 
   backToHomePage() {
+    localStorage.setItem('beforeBaseUrl', '');
     window.location.href = environment.url_home_page;
   }
 

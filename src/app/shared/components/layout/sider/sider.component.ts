@@ -66,7 +66,8 @@ export class SiderComponent {
   openParent(i: number) {
     this.sider[i].open = true;
   }
-  clickParent(i: number, link: any) {
+  clickParent(i: number, link: any, parent: any) {
+    localStorage.setItem('currentSider', parent.name);
     this.router.navigateByUrl(link);
     this.closeAllParentReal();
     this.closeAllChildren();

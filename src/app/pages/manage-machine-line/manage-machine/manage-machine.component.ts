@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { NzResizeEvent } from 'ng-zorro-antd/resizable';
 import { ToastrService } from 'ngx-toastr';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
@@ -8,7 +8,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
 import { ExportService } from 'src/app/services/export.service';
 import { count } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd, Event } from '@angular/router';
 import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -34,8 +34,15 @@ export class ManageMachineComponent implements OnInit {
     private actRoute: ActivatedRoute,
     private loader: NgxUiLoaderService,
     private i18n: NzI18nService,
-    private manageComponentService: ManageComponentService
-  ) {}
+    private manageComponentService: ManageComponentService,
+    private router: Router,
+  ) {
+    this.router.events.subscribe((e: Event) => {
+      if (e instanceof NavigationEnd) {
+        this.ngOnInit();
+      }
+    });
+  }
   pageNumber: number = 1;
   pageSize: number = 20;
   total: number = 0;
@@ -76,6 +83,7 @@ export class ManageMachineComponent implements OnInit {
   inforMachine: Record<string, any> = {};
   valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
   tableName: string = ''; // Lưu trữ giá trị tên bảng viết hoa
+  tableCode: string = '';
   columnKey: string = ''; // Lưu trữ column được coi là khoá của bảng
   isInputFocused: boolean = false; // Lưu trữ giá trị khi focus hoặc blur ra khỏi ô input
 
@@ -101,7 +109,13 @@ export class ManageMachineComponent implements OnInit {
     return `${day}-${month}-${year}`;
   }
   ngOnInit() {
+    console.log()
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+    if(this.inforTable.children.length > 0) {
+      this.tableCode = localStorage.getItem('currentSider')!;
+    } else {
+      this.tableCode = this.inforTable.name
+    }
     this.breadcrumbs[0].name = this.inforTable.displayName;
     this.tableName = this.inforTable.displayName.toUpperCase();
     this.getHeaders();
@@ -116,7 +130,7 @@ export class ManageMachineComponent implements OnInit {
   }
 
   async addColumnConfirm() {
-    // this.getData({ page: this.pageNumber, size: this.pageSize });
+    this.getData({ page: this.pageNumber, size: this.pageSize });
   }
 
   noDataFound: boolean = false;
@@ -243,7 +257,7 @@ export class ManageMachineComponent implements OnInit {
     };
 
     this.loader.start();
-    this.manageComponentService.getDataDynamicTable(this.inforTable.name, request).subscribe({
+    this.manageComponentService.getDataDynamicTable(this.tableCode, request).subscribe({
       next: (res) => {
         console.log(res);
         this.listMachine = res.data;
@@ -348,7 +362,7 @@ export class ManageMachineComponent implements OnInit {
   }
 
   deleteConfirm(event: any) {
-    this.manageComponentService.deleteRecordById(this.inforTable.name, this.currentMachine.id).subscribe({
+    this.manageComponentService.deleteRecordById(this.tableCode, this.currentMachine.id).subscribe({
       next: (res) => {
         this.toast.success(res.result.message);
         this.getData({ page: this.pageNumber, size: this.pageSize });
@@ -363,7 +377,7 @@ export class ManageMachineComponent implements OnInit {
     this.setOfCheckedId.forEach((item) => {
       request.push(item);
     })
-    this.manageComponentService.deleteListRecordByListId(this.inforTable.name, request).subscribe({
+    this.manageComponentService.deleteListRecordByListId(this.tableCode, request).subscribe({
       next: (res) => {
         this.toast.success(res.result.message);
         this.setOfCheckedId = new Set<number>();
@@ -384,7 +398,7 @@ export class ManageMachineComponent implements OnInit {
   headers: any[] = [];
 
   getHeaders() {
-    this.manageComponentService.getColummnByTableName(this.inforTable.name).subscribe({
+    this.manageComponentService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
         console.log(res);
         this.columns = res.data;
@@ -608,7 +622,7 @@ export class ManageMachineComponent implements OnInit {
     if(event.previousIndex < event.currentIndex) {
       this.listMachine[event.currentIndex].index = this.listMachine[event.currentIndex - 1].index;
       this.manageComponentService.updateInforRecordById(
-        this.inforTable.name, 
+        this.tableCode, 
         this.listMachine[event.currentIndex].id, 
         this.listMachine[event.currentIndex]
       ).subscribe({
@@ -620,7 +634,7 @@ export class ManageMachineComponent implements OnInit {
     } else {
       this.listMachine[event.currentIndex].index = this.listMachine[event.currentIndex + 1].index;
       this.manageComponentService.updateInforRecordById(
-        this.inforTable.name, 
+        this.tableCode, 
         this.listMachine[event.currentIndex].id, 
         this.listMachine[event.currentIndex]
       ).subscribe({
@@ -658,7 +672,7 @@ export class ManageMachineComponent implements OnInit {
         for(let i = 0; i < request.length; i++) {
           request[i][code] = request[i][code] + "-" + this.makeid(4);
         }
-        this.manageComponentService.addListRecord(this.inforTable.name, request).subscribe({
+        this.manageComponentService.addListRecord(this.tableCode, request).subscribe({
           next: (res) => {
             this.toast.success(res.result.message);
             this.setOfCheckedId = new Set<number>();
@@ -733,6 +747,11 @@ export class ManageMachineComponent implements OnInit {
     console.log("test");
     this.inforComponent(infor);
   }
+
+  // ngOnDestroy(): void {
+  //   console.log("ngOnDestroy");
+  //   localStorage.setItem('beforeBaseUrl', '');
+  // }
 
 
   /**

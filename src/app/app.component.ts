@@ -309,21 +309,28 @@ export class AppComponent {
 
   getNameByCookie() { 
     console.log(window.location.href);
-    let arr = window.location.href.split('/');
-    console.log(arr[arr.length - 1]);
-    if(arr[arr.length - 1] == '') {
-      if(localStorage.getItem("tableNameMDM") != null && localStorage.getItem("tableNameMDM") != '') {
-        this.getListFunctionByName(localStorage.getItem("tableNameMDM"));
+    console.log(localStorage.getItem('beforeBaseUrl'));
+    if(localStorage.getItem('beforeBaseUrl') == null || localStorage.getItem('beforeBaseUrl') == '') {
+      let arr = window.location.href.split('/');
+      console.log(arr);
+      console.log(arr[arr.length - 1]);
+      if(arr[arr.length - 1] == '') {
+        if(localStorage.getItem("tableNameMDM") != null && localStorage.getItem("tableNameMDM") != '') {
+          this.getListFunctionByName(localStorage.getItem("tableNameMDM"));
+        } else {
+          console.log(window.location.href);
+          let arr = window.location.href.split('/');
+          console.log(arr[arr.length - 1]);
+          localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
+          this.getListFunctionByName(arr[arr.length - 1]);
+        }
       } else {
-        console.log(window.location.href);
-        let arr = window.location.href.split('/');
-        console.log(arr[arr.length - 1]);
         localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
         this.getListFunctionByName(arr[arr.length - 1]);
       }
+      localStorage.setItem('beforeBaseUrl', arr[arr.length - 1])
     } else {
-      localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
-      this.getListFunctionByName(arr[arr.length - 1]);
+      this.getListFunctionByName(localStorage.getItem('beforeBaseUrl'));
     }
     // if(localStorage.getItem("tableNameMDM") != null && localStorage.getItem("tableNameMDM") != '') {
     //   this.getListFunctionByName(localStorage.getItem("tableNameMDM"));
