@@ -309,7 +309,7 @@ export class PopupUpdateConfigTableComponent {
         ...this.inforMachine,
         columns: this.listColumnInFunction
       }
-      this.configService.addNewCategory(request).subscribe({
+      this.configService.updateInforTable(this.tableName, request).subscribe({
         next: (res: any) => {
           console.log(res);
           this.toast.success(res.result.message);
@@ -330,6 +330,18 @@ export class PopupUpdateConfigTableComponent {
   addColumn() {
     this.isvisibleAddColumn = true;
   }
+
+  getColumnByTableName() {
+    this.manageService.getColummnByTableName(this.tableName).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.listColumnInFunction = res.data;
+      }, error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
   pageNumber: number = 1;
   pageSize: number = 10;
   async getData() {
@@ -337,6 +349,8 @@ export class PopupUpdateConfigTableComponent {
     this.configService.getCategoryByName(this.tableName).subscribe({
       next: (res) => {
         console.log(res);
+        this.inforMachine = res.data;
+        this.getColumnByTableName();
         this.loader.stop();
       }, error: (err) => {
         this.toast.error(err.result.message);

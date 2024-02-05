@@ -391,6 +391,15 @@ export class AddNewMachinePopupComponent {
   }
 
   /**
+   * Hàm xử lý import file với những trường là ảnh
+   */
+  formUpload= new FormData();
+  handleChange(item: any) {
+    console.log(item.target.files['0']);
+    this.formUpload.append('file', item.target.files['0']);
+  };
+
+  /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
    * @param event 
    */

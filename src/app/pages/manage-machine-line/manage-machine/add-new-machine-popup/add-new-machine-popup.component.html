@@ -397,6 +397,12 @@
                   >{{ col.keyTitle | translate
                   }}</label
                 >
+                <input 
+                  (change)="checkAction = true"
+                  type="file" 
+                  (change)="handleChange($event)" 
+                  style="content: 'Chọn file';"
+                  accept=".xlsx,.xls"/>
               </div>
             </div>
           </ng-container>

@@ -74,4 +74,14 @@ export class ConfigService {
   deleteCategory(tableName: any): Observable<any> {
     return this.httpClient.delete(`${this.url}/api/categories/${tableName}`);
   }
+
+  /**
+   * API cập nhật thông tin bảng
+   * @param tableName Tên bảng cần xoá
+   * @param request Các thông tin cần cập nhật
+   * @returns 
+   */
+  updateInforTable(tableName: any, request: any): Observable<any> {
+    return this.httpClient.put(`${this.url}/api/categories/${tableName}`, request);
+  }
 }
