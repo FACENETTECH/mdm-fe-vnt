@@ -131,4 +131,13 @@ export class ManageComponentService {
   getImageInComponents(tableName: any, id: any): Observable<any> {
     return this.httpClient.get(`${this.url}/api/system-storage/${tableName}/${id}`);
   }
+
+  /**
+   * API thêm mới giá trị trong bảng param
+   * @param request 
+   * @returns 
+   */
+  addValuesParam(request: any): Observable<any> {
+    return this.httpClient.post(`${this.url}/api/params`, request);
+  }
 }

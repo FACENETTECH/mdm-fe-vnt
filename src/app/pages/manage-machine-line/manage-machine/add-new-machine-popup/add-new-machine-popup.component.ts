@@ -90,7 +90,7 @@ export class AddNewMachinePopupComponent {
     return !isEmpty && !containsSpecialCharacter;
   }
   addItem(inputElement: HTMLInputElement): void {
-    
+
   }
 
   machineTypeList: any[] = [];

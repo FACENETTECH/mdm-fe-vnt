@@ -317,6 +317,7 @@
                 <nz-select
                   style="width: 100%"
                   nzMode="default"
+                  [nzDropdownRender]="renderTemplate"
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
                   (nzOpenChange)="handleOpenChangeDataTypeParam($event, col)"
