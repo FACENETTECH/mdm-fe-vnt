@@ -307,10 +307,18 @@ export class AddNewMachinePopupComponent {
       this.manageService.addNewRecord(this.inforTable.name, this.inforMachine).subscribe({
         next: (res) => {
           console.log(res);
-          this.toast.success(res.result.message);
-          this.isvisible = false;
-          this.isvisibleChange.emit(false);
-          this.loader.stop();
+          this.manageService.uploadImageInComponents(this.inforTable.name, Number(res.data), this.formUpload).subscribe({
+            next: (data) => {
+              console.log(data);
+              this.toast.success(res.result.message);
+              this.isvisible = false;
+              this.isvisibleChange.emit(false);
+              this.loader.stop();
+            }, error: (err) => {
+              console.log(err);
+              this.loader.stop();
+            }
+          })
         }, error: (err) => {
           this.toast.error(err.result.message);
           this.loader.stop();
@@ -394,10 +402,21 @@ export class AddNewMachinePopupComponent {
    * Hàm xử lý import file với những trường là ảnh
    */
   formUpload= new FormData();
-  handleChange(item: any) {
+  handleChange(item: any, column: any) {
     console.log(item.target.files['0']);
-    this.formUpload.append('file', item.target.files['0']);
+    this.formUpload.append(column.keyName, item.target.files['0']);
+    this.inforMachine[column.keyName] = item.target.files['0'].name;
+    console.log(column);
+    console.log(this.inforMachine)
+    console.log(this.formUpload)
   };
+
+  /**
+   * Hàm xử lý click vào form upload file
+   */
+  handleImageClick() {
+    // document.getElementById('fileInput')?.click();
+  }
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup

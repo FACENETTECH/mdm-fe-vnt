@@ -154,10 +154,7 @@ export class HeaderComponent {
   }
 
   backToHomePage() {
-    // this.router.navigateByUrl('/auth/business-acc-setting/home-page');
     window.location.href = environment.url_home_page;
-      // 'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page';
-    // 'http://localhost:4200/#/auth/business-acc-setting/home-page';
   }
 
   openFullscreen() {

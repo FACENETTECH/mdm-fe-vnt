@@ -116,8 +116,8 @@ export class ManageComponentService {
    * @param request File ảnh cần lưu
    * @returns 
    */
-  uploadImageInComponents(tableName: any, columnName: any, id: any ,request: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/api/system-storage/${tableName}/${columnName}/${id}`, request);
+  uploadImageInComponents(tableName: any, id: any ,request: any): Observable<any> {
+    return this.httpClient.post(`${this.url}/api/system-storage/${tableName}/${id}`, request);
   }
 
   /**
@@ -128,7 +128,7 @@ export class ManageComponentService {
    * @param fileName Tên file ảnh cần lấy ra
    * @returns 
    */
-  getImageInComponents(tableName: any, columnName: any, id: any, fileName: any): Observable<any> {
-    return this.httpClient.get(`${this.url}/api/system-storage/${tableName}/${columnName}/${id}/${fileName}`);
+  getImageInComponents(tableName: any, id: any): Observable<any> {
+    return this.httpClient.get(`${this.url}/api/system-storage/${tableName}/${id}`);
   }
 }

@@ -51,6 +51,7 @@ export class UpdateInforComponentComponent {
   inforMachine: Record<string, any> = {};
   valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
   valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
+  inforImage: Record<string, any> = {};
 
   onSubmit(): void {}
 
@@ -308,10 +309,18 @@ export class UpdateInforComponentComponent {
       this.manageService.updateInforRecordById(this.inforTable.name, this.inforMachine['id'], this.inforMachine).subscribe({
         next: (res) => {
           console.log(res);
-          this.toast.success(res.result.message);
-          this.isvisible = false;
-          this.isvisibleChange.emit(false);
-          this.loader.stop();
+          this.manageService.uploadImageInComponents(this.inforTable.name, this.inforMachine['id'], this.formUpload).subscribe({
+            next: (data) => {
+              console.log(data);
+              this.toast.success(res.result.message);
+              this.isvisible = false;
+              this.isvisibleChange.emit(false);
+              this.loader.stop();
+            }, error: (err) => {
+              console.log(err);
+              this.loader.stop();
+            }
+          })
         }, error: (err) => {
           this.toast.error(err.result.message);
           this.loader.stop();
@@ -346,6 +355,21 @@ export class UpdateInforComponentComponent {
         console.log(this.columns);
         this.inforMachine = this.inforComponent;
         this.getParamsOnInit();
+        this.getImageByName();
+      }
+    })
+  }
+
+  /**
+   * Hàm lấy ra danh sách ảnh theo column
+   */
+  getImageByName() {
+    this.manageService.getImageInComponents(this.inforTable.name, this.inforMachine['id']).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.inforImage = res.data;
+      }, error: (err) => {
+        console.log(err);
       }
     })
   }
@@ -400,6 +424,26 @@ export class UpdateInforComponentComponent {
       }
     }
   }
+
+  /**
+   * Hàm xử lý import file với những trường là ảnh
+   */
+   formUpload= new FormData();
+   handleChange(item: any, column: any) {
+     console.log(item.target.files['0']);
+     this.formUpload.append(column.keyName, item.target.files['0']);
+     this.inforMachine[column.keyName] = item.target.files['0'].name;
+     console.log(column);
+     console.log(this.inforMachine)
+     console.log(this.formUpload)
+   };
+ 
+   /**
+    * Hàm xử lý click vào form upload file
+    */
+   handleImageClick() {
+     // document.getElementById('fileInput')?.click();
+   }
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup

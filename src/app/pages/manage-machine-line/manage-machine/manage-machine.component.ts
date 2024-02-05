@@ -116,7 +116,7 @@ export class ManageMachineComponent implements OnInit {
   }
 
   async addColumnConfirm() {
-    this.getData({ page: this.pageNumber, size: this.pageSize });
+    // this.getData({ page: this.pageNumber, size: this.pageSize });
   }
 
   noDataFound: boolean = false;
@@ -605,21 +605,31 @@ export class ManageMachineComponent implements OnInit {
    */
   async drop(event: CdkDragDrop<string[], string, any>) {
     moveItemInArray(this.listMachine, event.previousIndex, event.currentIndex);
-    console.log("record: ", this.listMachine)
-    console.log("previousIndex: ", event.previousIndex);
-    console.log("currentIndex: ", this.listMachine[event.currentIndex]);
-    this.listMachine[event.currentIndex].index = this.listMachine[event.currentIndex - 1].index;
-    this.manageComponentService.updateInforRecordById(
-      this.inforTable.name, 
-      this.listMachine[event.currentIndex].id, 
-      this.listMachine[event.currentIndex]
-    ).subscribe({
-      next: (res) => {
-        console.log(res);
-      }, error: (err) => {
-        console.log(err);
-      }
-    })
+    if(event.previousIndex < event.currentIndex) {
+      this.listMachine[event.currentIndex].index = this.listMachine[event.currentIndex - 1].index;
+      this.manageComponentService.updateInforRecordById(
+        this.inforTable.name, 
+        this.listMachine[event.currentIndex].id, 
+        this.listMachine[event.currentIndex]
+      ).subscribe({
+        next: (res) => {
+        }, error: (err) => {
+          console.log(err);
+        }
+      })
+    } else {
+      this.listMachine[event.currentIndex].index = this.listMachine[event.currentIndex + 1].index;
+      this.manageComponentService.updateInforRecordById(
+        this.inforTable.name, 
+        this.listMachine[event.currentIndex].id, 
+        this.listMachine[event.currentIndex]
+      ).subscribe({
+        next: (res) => {
+        }, error: (err) => {
+          console.log(err);
+        }
+      })
+    }
   }
 
   /**
@@ -644,12 +654,10 @@ export class ManageMachineComponent implements OnInit {
           }
         }
       })
-      console.log(request)
       if(request.length > 0) {
         for(let i = 0; i < request.length; i++) {
           request[i][code] = request[i][code] + "-" + this.makeid(4);
         }
-        console.log(request);
         this.manageComponentService.addListRecord(this.inforTable.name, request).subscribe({
           next: (res) => {
             this.toast.success(res.result.message);
