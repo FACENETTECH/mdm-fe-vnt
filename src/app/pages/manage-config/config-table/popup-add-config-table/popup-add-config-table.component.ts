@@ -533,7 +533,7 @@ const dummyColumns = [
     "tableName": "operation",
     "keyName": "parent",
     "keyTitle": "Cha của nó",
-    "isRequired": true,
+    "isRequired": false,
     "dataType": 2,
     "hasUnit": false,
     "relateTable": null,
