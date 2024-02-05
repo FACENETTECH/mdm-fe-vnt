@@ -4,8 +4,11 @@
 
 export const environment = {
   production: false,
-  url_home_page: 'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
-  api_end_point: 'http://dev.apifcim.facenet.vn/mdm-v2',
+  url_home_page:
+    'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
+  // api_end_point: 'http://dev.apifcim.facenet.vn/mdm-v2',
+  api_end_point: 'http://222.252.25.37:10319',
+
   // api_end_point: 'http://localhost:10320',
   auth_api: '/api/auth/',
   keycloak: {
@@ -19,7 +22,8 @@ export const environment = {
     BASE_SERVICE_API: 'http://localhost:8088/',
     CLIENT_ADDRESS: 'http://localhost:8082',
   },
-  API_URL: 'http://dev.apifcim.facenet.vn/all',
+  // API_URL: 'http://dev.apifcim.facenet.vn/all',
+  API_URL: 'http://222.252.25.37:10302',
 };
 
 // export const environment = {
