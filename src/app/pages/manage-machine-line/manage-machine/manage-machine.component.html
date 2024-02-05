@@ -3,14 +3,14 @@
   style="height: 100%; border-radius: 4px; padding-top: 10px;"
   class="color-border"
 >
-  <h2 style="font-weight: 600; margin-bottom: 0; text-align: center;">{{ tableName | translate }}</h2>
-  <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="space-between" class="mt-12">
-    <div style="padding-left: 14px;padding-bottom: 14px; width: 35%;">
+  <h3 style="font-weight: 500; margin-bottom: 0; text-align: center;">{{ tableName | translate }}</h3>
+  <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="space-between" class="mt-6">
+    <div style="padding-left: 14px;padding-bottom: 6px; width: 35%;">
       <!-- <h4>{{ "generalSearch" | translate }}</h4> -->
       <nz-input-group
         [nzPrefix]="searchPrefix"
         [nzSuffix]="searchSuffix"
-        style="height: 40px"
+        style="height: 32px"
       >
         <ng-template #searchPrefix
           ><span
@@ -51,15 +51,15 @@
       </nz-input-group>
     </div>
     <div style="display: flex;">
-      <div nz-col>
+      <div nz-col style="display: flex; align-items: center">
         <button
           style="color: #01aba8"
           nz-button
           nzType="text"
           (click)="addMachine()"
-          class="mb-24"
+          class="mb-6"
         >
-          <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+          <span nz-icon nzType="plus-circle" nzTheme="outline" class="fn-icon-style"></span>
           {{ "add.btn" | translate }}
         </button>
       </div>
@@ -69,9 +69,9 @@
           nz-button
           nzType="text"
           (click)="openPopupCopy()"
-          class="mb-24"
+          class="mb-6"
         >
-          <span nz-icon nzType="copy" nzTheme="outline"></span>
+          <span nz-icon nzType="copy" nzTheme="outline" class="fn-icon-style"></span>
           {{ "btn.copy" | translate }}
         </button>
       </div>
@@ -81,9 +81,9 @@
           nz-button
           nzType="text"
           (click)="openPopupDeleteList()"
-          class="mb-24"
+          class="mb-6"
         >
-          <span nz-icon nzType="delete" nzTheme="outline"></span>
+          <span nz-icon nzType="delete" nzTheme="outline" class="fn-icon-style"></span>
           {{ "btn.delete" | translate }}
         </button>
       </div>
@@ -91,7 +91,7 @@
       <div nz-col>
         <nz-row nzJustify="end">
           <button
-            class="mb-24"
+            class="mb-6"
             style="color: #01aba8"
             nz-button
             (click)="configColumn()"

@@ -36,3 +36,8 @@ td:not(.numeric-value) {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+.fn-icon-style {
+  font-size: 16px;
+}

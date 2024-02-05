@@ -84,9 +84,26 @@
                     nzPlaceHolder="Chọn"
                     [(ngModel)]="inforMachine[col.keyName + '_u']"
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
+                    [nzDropdownRender]="renderTemplate"
                   >
                     <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                   </nz-select>
+                  <ng-template #renderTemplate>
+                    <div class="container">
+                      <input type="text" nz-input #inputElement />
+                      <a class="add-item" (click)="addItem(inputElement, false, col)">
+                        <span nz-icon nzType="plus"></span>
+                        {{ "add.btn" | translate }}
+                      </a>
+                      <div
+                        style="color: red"
+                        class="error-message"
+                        *ngIf="showErrorMachineType"
+                      >
+                        Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
             </ng-container>
@@ -126,9 +143,26 @@
                     nzPlaceHolder="Chọn"
                     [(ngModel)]="inforMachine[col.keyName + '_u']"
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
+                    [nzDropdownRender]="renderTemplate"
                   >
                     <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                   </nz-select>
+                  <ng-template #renderTemplate>
+                    <div class="container">
+                      <input type="text" nz-input #inputElement />
+                      <a class="add-item" (click)="addItem(inputElement, false, col)">
+                        <span nz-icon nzType="plus"></span>
+                        {{ "add.btn" | translate }}
+                      </a>
+                      <div
+                        style="color: red"
+                        class="error-message"
+                        *ngIf="showErrorMachineType"
+                      >
+                        Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
             </ng-container>
@@ -168,9 +202,26 @@
                     nzPlaceHolder="Chọn"
                     [(ngModel)]="inforMachine[col.keyName + '_u']"
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
+                    [nzDropdownRender]="renderTemplate"
                   >
                     <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                   </nz-select>
+                  <ng-template #renderTemplate>
+                    <div class="container">
+                      <input type="text" nz-input #inputElement />
+                      <a class="add-item" (click)="addItem(inputElement, false, col)">
+                        <span nz-icon nzType="plus"></span>
+                        {{ "add.btn" | translate }}
+                      </a>
+                      <div
+                        style="color: red"
+                        class="error-message"
+                        *ngIf="showErrorMachineType"
+                      >
+                        Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
             </ng-container>
@@ -210,9 +261,26 @@
                     nzPlaceHolder="Chọn"
                     [(ngModel)]="inforMachine[col.keyName + '_u']"
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
+                    [nzDropdownRender]="renderTemplate"
                   >
                     <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                   </nz-select>
+                  <ng-template #renderTemplate>
+                    <div class="container">
+                      <input type="text" nz-input #inputElement />
+                      <a class="add-item" (click)="addItem(inputElement, false, col)">
+                        <span nz-icon nzType="plus"></span>
+                        {{ "add.btn" | translate }}
+                      </a>
+                      <div
+                        style="color: red"
+                        class="error-message"
+                        *ngIf="showErrorMachineType"
+                      >
+                        Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
             </ng-container>
@@ -331,7 +399,7 @@
                 <ng-template #renderTemplate>
                   <div class="container">
                     <input type="text" nz-input #inputElement />
-                    <a class="add-item" (click)="addItem(inputElement)">
+                    <a class="add-item" (click)="addItem(inputElement, true, col)">
                       <span nz-icon nzType="plus"></span>
                       {{ "add.btn" | translate }}
                     </a>

@@ -89,8 +89,36 @@ export class AddNewMachinePopupComponent {
       /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(input);
     return !isEmpty && !containsSpecialCharacter;
   }
-  addItem(inputElement: HTMLInputElement): void {
-
+  addItem(inputElement: HTMLInputElement, isParam: any, column: any): void {
+    console.log(column)
+    const newItem = inputElement.value.trim();
+    console.log(newItem)
+    if(isParam) {
+      let request = {
+        value: newItem,
+        tableName: this.inforTable.name,
+        columnName: column.keyName
+      }
+      this.manageService.addValuesParam(request).subscribe({
+        next: (res) => {
+          console.log(res);
+        }, error: (err) => {
+          console.log(err);
+        }
+      })
+    } else {
+      let request = {
+        value: newItem,
+        paramCode: column.note
+      }
+      this.manageService.addValuesParam(request).subscribe({
+        next: (res) => {
+          console.log(res);
+        }, error: (err) => {
+          console.log(err);
+        }
+      })
+    }
   }
 
   machineTypeList: any[] = [];
