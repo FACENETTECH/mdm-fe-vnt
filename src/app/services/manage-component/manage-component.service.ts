@@ -107,4 +107,28 @@ export class ManageComponentService {
   deleteListRecordByListId(tableName: string, listId: any): Observable<any> {
     return this.httpClient.put(`${this.url}/api/dynamic-tables/${tableName}/delete-batch`, listId);
   }
+
+  /**
+   * API thêm mới ảnh trong chức năng có column dataType là image
+   * @param tableName Tên bảng cần lưu ảnh
+   * @param columnName Tên cột cần lưu ảnh
+   * @param id id của bản ghi cần lưu ảnh
+   * @param request File ảnh cần lưu
+   * @returns 
+   */
+  uploadImageInComponents(tableName: any, columnName: any, id: any ,request: any): Observable<any> {
+    return this.httpClient.post(`${this.url}/api/system-storage/${tableName}/${columnName}/${id}`, request);
+  }
+
+  /**
+   * API lấy ra ảnh trong chức năng có column dataType là image
+   * @param tableName Tên bảng cần cần lấy ảnh ra
+   * @param columnName Tên cột cần lấy ảnh ra
+   * @param id id của bản ghi cần lấy ảnh ra
+   * @param fileName Tên file ảnh cần lấy ra
+   * @returns 
+   */
+  getImageInComponents(tableName: any, columnName: any, id: any, fileName: any): Observable<any> {
+    return this.httpClient.get(`${this.url}/api/system-storage/${tableName}/${columnName}/${id}/${fileName}`);
+  }
 }

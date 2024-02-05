@@ -122,7 +122,6 @@
     <thead class="color-header-row">
       <tr>
         <th></th>
-        <th></th>
         <ng-container *ngFor="let column of columns; let i = index">
           <ng-container *ngIf="column.localCheck">
             <th
@@ -153,7 +152,6 @@
           <td cdkDragHandle>
             <img src="./assets/icons/changePositionRow.svg">
           </td>
-          <td [nzExpand]="expandSet.has(infor.id)" (nzExpandChange)="onExpandChange(infor.id, $event)"></td>
           <ng-container *ngFor="let column of columns">
             <ng-container *ngIf="column.localCheck">
               <ng-container [ngSwitch]="column.keyName">
@@ -221,7 +219,7 @@
             </div>
           </td>
         </tr>
-        <tr [nzExpand]="expandSet.has(infor.id)">
+        <!-- <tr [nzExpand]="expandSet.has(infor.id)">
             <nz-table #nzTable [nzData]="listFunction" nzTableLayout="fixed" nzShowPagination="false">
                 <thead>
                   <tr>
@@ -257,19 +255,19 @@
                     </tr>
                 </tbody>
             </nz-table>
-        </tr>
+        </tr> -->
       </ng-container>
     </tbody>
   </nz-table>
 
-  <app-pagination
+  <!-- <app-pagination
     *ngIf="total"
     [currentPage]="pageNumber"
     [currentSize]="pageSize"
     [total]="total"
     (emitPage)="getData($event)"
   >
-  </app-pagination>
+  </app-pagination> -->
 </nz-card>
 
 <app-popup-add-config-table
@@ -279,15 +277,23 @@
 >
 </app-popup-add-config-table>
 
-<app-popup-delete
+<app-popup-update-config-table
+  *ngIf="isvisibleUpdate"
+  [tableName]="currentMachine.name"
+  (isvisibleChange)="addColumnConfirm()"
+  [(isvisible)]="isvisibleUpdate"
+>
+</app-popup-update-config-table>
+
+<app-popup-delete-config-table
   *ngIf="isvisibleDelete"
   (delete)="deleteConfirm($event)"
-  [title]="'Xoá ' + inforTable.label"
-  [tableName]="inforTable.label"
-  [code]="currentMachine[columnKey]"
+  [title]="'Xoá bảng ' + currentMachine.displayName"
+  [tableName]="currentMachine.displayName"
+  [code]="''"
   [(isvisible)]="isvisibleDelete"
 >
-</app-popup-delete>
+</app-popup-delete-config-table>
 
 <app-add-column
   *ngIf="isvisibleAddColumn"

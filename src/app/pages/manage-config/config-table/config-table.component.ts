@@ -15,6 +15,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DATA_TYPE } from 'src/app/utils/constrant';
 import { InforColumnComponent } from 'src/app/shared/components/infor-column/infor-column.component';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
+import { ConfigService } from 'src/app/services/manage-config/config.service';
 
 @Component({
   selector: 'app-config-table',
@@ -28,14 +29,11 @@ export class ConfigTableComponent {
   setOfCheckedId = new Set<number>();
 
   constructor(
-    private exportService: ExportService,
-    private http: HttpClient,
     private machineService: InfoMachineService,
     private toast: ToastrService,
-    private actRoute: ActivatedRoute,
     private loader: NgxUiLoaderService,
-    private i18n: NzI18nService,
-    private manageComponentService: ManageComponentService
+    private manageComponentService: ManageComponentService,
+    private configService: ConfigService
   ) {}
   pageNumber: number = 1;
   pageSize: number = 20;
@@ -226,47 +224,55 @@ export class ConfigTableComponent {
     return null;
   }
   async getData(page: { page: number; size: number }) {
-    this.pageNumber = page.page;
-    this.pageSize = page.size;
-    let request = {
-      pageNumber: page.page - 1,
-      pageSize: page.size,
-      common: this.common.trim(),
-      filter: this.inforMachine,
-      sortOrder: this.orderSort,
-      sortProperty: this.propertySort,
-    };
-
-    this.loader.start();
-    this.manageComponentService.getDataDynamicTable(this.inforTable.name, request).subscribe({
+    this.configService.getAllCategory().subscribe({
       next: (res) => {
         console.log(res);
-        // this.listFunction = res.data;
-        this.listFunction = dummyData;
-        this.total = this.listFunction.length;
-        for (let j = 0; j < this.columns.length; j++) {
-          let compare: Record<string, any> = {};
-          compare[this.columns[j].keyName] = this.columns[j].keyName;
-          compare['compare'] = (a: any, b: any) =>
-            a[this.columns[j].keyName].localeCompare(b[this.columns[j].keyName]);
-          this.columnSort.push(compare);
-        }
-    
-        this.total = res.dataCount;
-        this.columns.map((x: any) => {
-          this.stageTemplate[x.keyTitle] = '';
-        });
-        this.listMachineToExport = [];
-        this.listMachineTemplate.push(this.stageTemplate);
-        if (this.listFunction.length == 0) {
-          this.noDataFound = true;
-        } else {
-          this.noDataFound = false;
-        }
-        this.loader.stop();
-        console.log('List Manchine: ', this.listFunction);
+        this.listFunction = res.data
+      }, error: (err) => {
+        this.toast.error(err.result.message);
       }
     })
+    // this.pageNumber = page.page;
+    // this.pageSize = page.size;
+    // let request = {
+    //   pageNumber: page.page - 1,
+    //   pageSize: page.size,
+    //   common: this.common.trim(),
+    //   filter: this.inforMachine,
+    //   sortOrder: this.orderSort,
+    //   sortProperty: this.propertySort,
+    // };
+
+    // this.loader.start();
+    // this.manageComponentService.getDataDynamicTable(this.inforTable.name, request).subscribe({
+    //   next: (res) => {
+    //     console.log(res);
+    //     // this.listFunction = res.data;
+    //     this.listFunction = dummyData;
+    //     this.total = this.listFunction.length;
+    //     for (let j = 0; j < this.columns.length; j++) {
+    //       let compare: Record<string, any> = {};
+    //       compare[this.columns[j].keyName] = this.columns[j].keyName;
+    //       compare['compare'] = (a: any, b: any) =>
+    //         a[this.columns[j].keyName].localeCompare(b[this.columns[j].keyName]);
+    //       this.columnSort.push(compare);
+    //     }
+    
+    //     this.total = res.dataCount;
+    //     this.columns.map((x: any) => {
+    //       this.stageTemplate[x.keyTitle] = '';
+    //     });
+    //     this.listMachineToExport = [];
+    //     this.listMachineTemplate.push(this.stageTemplate);
+    //     if (this.listFunction.length == 0) {
+    //       this.noDataFound = true;
+    //     } else {
+    //       this.noDataFound = false;
+    //     }
+    //     this.loader.stop();
+    //     console.log('List Manchine: ', this.listFunction);
+    //   }
+    // })
   }
   changeColumn() {
     localStorage.setItem('machine', JSON.stringify(this.columns));
@@ -314,6 +320,7 @@ export class ConfigTableComponent {
   }
 
   deleteMachine(machine: any) {
+    console.log(machine);
     this.currentMachine = machine;
     this.isvisibleDelete = true;
   }
@@ -337,12 +344,15 @@ export class ConfigTableComponent {
   }
 
   deleteConfirm(event: any) {
-    this.manageComponentService.deleteRecordById(this.inforTable.name, this.currentMachine.id).subscribe({
+    this.loader.start();
+    this.configService.deleteCategory(this.currentMachine.name).subscribe({
       next: (res) => {
         this.toast.success(res.result.message);
         this.getData({ page: this.pageNumber, size: this.pageSize });
+        this.loader.stop();
       }, error: (err) => {
         this.toast.error(err.result.message);
+        this.loader.stop();
       }
     })
   }
@@ -677,7 +687,7 @@ const dummyColumn = [
     id: 1,
     index: 1,
     tableName: "config_table",
-    keyName: "configCode",
+    keyName: "name",
     keyTitle: "Mã nhóm chức năng",
     isRequired: true,
     dataType: 2,
@@ -694,7 +704,7 @@ const dummyColumn = [
     id: 2,
     index: 1,
     tableName: "config_table",
-    keyName: "configName",
+    keyName: "displayName",
     keyTitle: "Tên nhóm chức năng",
     isRequired: true,
     dataType: 2,
@@ -711,8 +721,8 @@ const dummyColumn = [
     id: 3,
     index: 1,
     tableName: "config_table",
-    keyName: "status",
-    keyTitle: "Trạng thái",
+    keyName: "link",
+    keyTitle: "Url",
     isRequired: true,
     dataType: 2,
     hasUnit: false,
@@ -728,7 +738,7 @@ const dummyColumn = [
     id: 4,
     index: 1,
     tableName: "config_table",
-    keyName: "configDesc",
+    keyName: "note",
     keyTitle: "Mô tả",
     isRequired: true,
     dataType: 2,

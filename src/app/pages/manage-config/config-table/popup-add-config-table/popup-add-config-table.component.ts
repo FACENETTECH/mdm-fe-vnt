@@ -10,6 +10,7 @@ import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
+import { ConfigService } from 'src/app/services/manage-config/config.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
 import { DATA_TYPE } from 'src/app/utils/constrant';
 
@@ -22,10 +23,9 @@ export class PopupAddConfigTableComponent {
   constructor(
     private toast: ToastrService,
     private machine: InfoMachineService,
-    private fb: UntypedFormBuilder,
-    private i18n: NzI18nService,
     private manageService: ManageComponentService,
-    private loader: NgxUiLoaderService
+    private loader: NgxUiLoaderService,
+    private configService: ConfigService
   ) {}
   @Input() isvisible: boolean = true;
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
@@ -59,7 +59,6 @@ export class PopupAddConfigTableComponent {
   ngOnInit() {
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
     this.getColumn();
-    this.inforMachine['status'] = 1;
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -295,6 +294,8 @@ export class PopupAddConfigTableComponent {
   }
 
   async submit() {
+    console.log("Infor table: ", this.inforMachine);
+    console.log("Infor column: ", this.listColumnInFunction);
     this.loader.start();
     console.log(this.inforMachine)
     this.checkValid();
@@ -307,8 +308,12 @@ export class PopupAddConfigTableComponent {
       }
     });
     if(check) {
-      this.manageService.addNewRecord(this.inforTable.name, this.inforMachine).subscribe({
-        next: (res) => {
+      let request = {
+        ...this.inforMachine,
+        columns: this.listColumnInFunction
+      }
+      this.configService.addNewCategory(request).subscribe({
+        next: (res: any) => {
           console.log(res);
           this.toast.success(res.result.message);
           this.isvisible = false;
@@ -479,7 +484,7 @@ const dummyColumns = [
     "index": 1,
     "tableName": "operation",
     "keyName": "isEntity",
-    "keyTitle": "Loại chức năng",
+    "keyTitle": "Là chức năng con",
     "isRequired": true,
     "dataType": 9,
     "hasUnit": false,

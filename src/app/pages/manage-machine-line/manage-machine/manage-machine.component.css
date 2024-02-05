@@ -30,3 +30,9 @@ td:not(.numeric-value) {
 .ant-table-tbody > tr:nth-child(2) > td {
   padding: 6px 8px;
 }
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
