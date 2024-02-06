@@ -62,7 +62,6 @@ export class AddNewMachinePopupComponent {
       this.tableCode = this.inforTable.name;
     }
     this.getColumn();
-    this.inforMachine['status'] = 1;
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -96,9 +95,7 @@ export class AddNewMachinePopupComponent {
     return !isEmpty && !containsSpecialCharacter;
   }
   addItem(inputElement: HTMLInputElement, isParam: any, column: any): void {
-    console.log(column)
     const newItem = inputElement.value.trim();
-    console.log(newItem)
     if(isParam) {
       let request = {
         value: newItem,
@@ -107,7 +104,8 @@ export class AddNewMachinePopupComponent {
       }
       this.manageService.addValuesParam(request).subscribe({
         next: (res) => {
-          console.log(res);
+          inputElement.value = '';
+          this.handleOpenChangeDataTypeParam(true, column);
         }, error: (err) => {
           console.log(err);
         }
@@ -119,7 +117,8 @@ export class AddNewMachinePopupComponent {
       }
       this.manageService.addValuesParam(request).subscribe({
         next: (res) => {
-          console.log(res);
+          inputElement.value = '';
+          this.handleOpenChangeUnit(true, column);
         }, error: (err) => {
           console.log(err);
         }

@@ -320,6 +320,7 @@ export class PopupAddConfigTableComponent {
           this.isvisibleChange.emit(false);
           this.loader.stop();
         }, error: (err) => {
+          console.log(err);
           this.toast.error(err.result.message);
           this.loader.stop();
         }
