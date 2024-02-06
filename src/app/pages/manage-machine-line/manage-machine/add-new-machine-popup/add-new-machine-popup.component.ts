@@ -51,6 +51,7 @@ export class AddNewMachinePopupComponent {
   valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
   columnKey: string = '';
   tableCode: string = '';
+  checkActionImage: boolean = false;
 
   onSubmit(): void {}
 
@@ -62,7 +63,6 @@ export class AddNewMachinePopupComponent {
       this.tableCode = this.inforTable.name;
     }
     this.getColumn();
-    this.inforMachine['status'] = 1;
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -96,9 +96,7 @@ export class AddNewMachinePopupComponent {
     return !isEmpty && !containsSpecialCharacter;
   }
   addItem(inputElement: HTMLInputElement, isParam: any, column: any): void {
-    console.log(column)
     const newItem = inputElement.value.trim();
-    console.log(newItem)
     if(isParam) {
       let request = {
         value: newItem,
@@ -107,7 +105,8 @@ export class AddNewMachinePopupComponent {
       }
       this.manageService.addValuesParam(request).subscribe({
         next: (res) => {
-          console.log(res);
+          inputElement.value = '';
+          this.handleOpenChangeDataTypeParam(true, column);
         }, error: (err) => {
           console.log(err);
         }
@@ -119,7 +118,8 @@ export class AddNewMachinePopupComponent {
       }
       this.manageService.addValuesParam(request).subscribe({
         next: (res) => {
-          console.log(res);
+          inputElement.value = '';
+          this.handleOpenChangeUnit(true, column);
         }, error: (err) => {
           console.log(err);
         }
@@ -348,13 +348,13 @@ export class AddNewMachinePopupComponent {
               break;
             }
           }
-          if(isImage) {
+          if(isImage && this.checkActionImage) {
             this.manageService.uploadImageInComponents(this.tableCode, Number(res.data), this.formUpload).subscribe({
               next: (data) => {
                 console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
-                this.isvisibleChange.emit(false);
+                this.isvisibleChange.emit(true);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -364,7 +364,7 @@ export class AddNewMachinePopupComponent {
           } else {
             this.toast.success(res.result.message);
             this.isvisible = false;
-            this.isvisibleChange.emit(false);
+            this.isvisibleChange.emit(true);
             this.loader.stop();
           }
         }, error: (err) => {

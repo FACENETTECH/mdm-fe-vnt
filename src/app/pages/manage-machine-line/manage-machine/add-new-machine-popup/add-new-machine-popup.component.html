@@ -320,6 +320,7 @@
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
+                  [nzFormat]="'yyyy-MM-dd HH:mm:ss'"
                 ></nz-date-picker>
                 <span
                   style="color: red"
@@ -466,7 +467,7 @@
                 >
                 <input 
                   [id]="'fileInput' + col.keyName"
-                  (change)="checkAction = true"
+                  (change)="checkActionImage = true"
                   type="file" 
                   (change)="handleChange($event, col)"
                   style="display: none"
