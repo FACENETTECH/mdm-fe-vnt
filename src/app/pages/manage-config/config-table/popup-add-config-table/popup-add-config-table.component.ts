@@ -526,6 +526,22 @@ const dummyColumns = [
     "addition": null,
     "width": "200px",
     "isCode": false
+  },
+  {
+    "id": 7,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "parent",
+    "keyTitle": "Cha của nó",
+    "isRequired": false,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
   }
 ]
 

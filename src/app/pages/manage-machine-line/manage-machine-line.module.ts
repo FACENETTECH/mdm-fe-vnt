@@ -79,6 +79,7 @@ import {NzResizableModule} from 'ng-zorro-antd/resizable';
 import {NzPipesModule} from 'ng-zorro-antd/pipes';
 import {NzQRCodeModule} from 'ng-zorro-antd/qr-code';
 import {NzWaterMarkModule} from 'ng-zorro-antd/water-mark';
+// import { NgxNumberFormatModule } from 'ngx-number-format';
 //
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
@@ -181,7 +182,7 @@ import { PopupDeleteListRecodrdComponent } from './manage-machine/popup-delete-l
         NzWaterMarkModule,
         TranslateModule.forChild(),
         TourMatMenuModule,
-        DragDropModule,
+        DragDropModule
     ]
 })
 export class ManageMachineLineModule {}

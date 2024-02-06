@@ -307,7 +307,6 @@
                   ></label
                 >
                 <textarea
-                  disabled
                   nz-input
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
@@ -316,6 +315,7 @@
                   }} "
                   (ngModelChange)="checkAction = true"
                   rows="1"
+                  disabled
                 ></textarea>
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
@@ -331,7 +331,6 @@
                   ></label
                 >
                 <nz-select
-                  disabled
                   style="width: 100%"
                   nzMode="default"
                   [(ngModel)]="inforMachine[col.keyName]"
@@ -341,6 +340,7 @@
                     col.keyTitle | translate
                   }} ----"
                   (ngModelChange)="checkAction = true"
+                  disabled
                 >
                   <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                 </nz-select>
@@ -406,11 +406,21 @@
           <ng-container *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'">
             <div style="width: 100%; margin-bottom: 20px;" class="fn-df fn-df-justify-center">
               <div class="fn-pd-8 fn-df-column">
-                <img class="fn-css-img-form-add" src="./assets/icons/no-image.png" alt="No image">
-                <label class="fn-label"
-                  >{{ col.keyTitle | translate
-                  }}</label
-                >
+                <label [for]="'fileInput' + col.keyName" class="fn-text-align-center">
+                    <img class="fn-css-img-form-add" [src]="'data:image/png;base64, ' + inforImage[col.keyName]" alt="No image" (click)="handleImageClick()"><br>
+                    <span style="color: #01aba8">{{ inforMachine[col.keyName] }}</span>
+                  </label>
+                  <label class="fn-label"
+                    >{{ col.keyTitle | translate }}</label
+                  >
+                  <input 
+                    disabled
+                    [id]="'fileInput' + col.keyName"
+                    (change)="checkAction = true"
+                    type="file" 
+                    (change)="handleChange($event, col)"
+                    style="display: none"
+                    accept=".png,.jpg,.jpeg"/>
               </div>
             </div>
           </ng-container>
@@ -430,14 +440,6 @@
       [buttonType]="'text'"
       title="{{ 'Hủy bỏ' | translate }}"
     ></app-button>
-      <!-- <button
-        nz-button
-        (click)="submitDemo()"
-        class="fn-bg-default"
-        style="border-radius: 4px;width: 86px; text-align: center;"
-      >
-        <span>{{ 'Cập nhật' | translate }}</span>
-      </button> -->
   </ng-template>
   <app-popup-cancel
     [(isvisible)]="isvisibleCancel"

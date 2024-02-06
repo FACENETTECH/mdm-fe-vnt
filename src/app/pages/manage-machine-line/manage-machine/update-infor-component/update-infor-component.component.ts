@@ -51,11 +51,18 @@ export class UpdateInforComponentComponent {
   inforMachine: Record<string, any> = {};
   valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
   valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
+  inforImage: Record<string, any> = {};
+  tableCode: string = '';
 
   onSubmit(): void {}
 
   ngOnInit() {
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+    if(this.inforTable.children.length > 0) {
+      this.tableCode = localStorage.getItem('currentSider')!;
+    } else {
+      this.tableCode = this.inforTable.name;
+    }
     this.getColumn();
     console.log(this.inforComponent);
   }
@@ -305,13 +312,35 @@ export class UpdateInforComponentComponent {
       }
     });
     if(check) {
-      this.manageService.updateInforRecordById(this.inforTable.name, this.inforMachine['id'], this.inforMachine).subscribe({
+      this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
         next: (res) => {
           console.log(res);
-          this.toast.success(res.result.message);
-          this.isvisible = false;
-          this.isvisibleChange.emit(false);
-          this.loader.stop();
+          let isImage = false;
+          for(let i = 0; i < this.columns.length; i++) {
+            if(this.columns[i].dataType == this.dataType.IMAGE) {
+              isImage = true;
+              break;
+            }
+          }
+          if(isImage) {
+            this.manageService.uploadImageInComponents(this.tableCode, this.inforMachine['id'], this.formUpload).subscribe({
+              next: (data) => {
+                console.log(data);
+                this.toast.success(res.result.message);
+                this.isvisible = false;
+                this.isvisibleChange.emit(false);
+                this.loader.stop();
+              }, error: (err) => {
+                console.log(err);
+                this.loader.stop();
+              }
+            })
+          } else {
+            this.toast.success(res.result.message);
+            this.isvisible = false;
+            this.isvisibleChange.emit(false);
+            this.loader.stop();
+          }
         }, error: (err) => {
           this.toast.error(err.result.message);
           this.loader.stop();
@@ -340,12 +369,27 @@ export class UpdateInforComponentComponent {
   }
 
   async getColumn() {
-    this.manageService.getColummnByTableName(this.inforTable.name).subscribe({
+    this.manageService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
         this.columns = res.data;
         console.log(this.columns);
         this.inforMachine = this.inforComponent;
         this.getParamsOnInit();
+        this.getImageByName();
+      }
+    })
+  }
+
+  /**
+   * Hàm lấy ra danh sách ảnh theo column
+   */
+  getImageByName() {
+    this.manageService.getImageInComponents(this.tableCode, this.inforMachine['id']).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.inforImage = res.data;
+      }, error: (err) => {
+        console.log(err);
       }
     })
   }
@@ -400,6 +444,26 @@ export class UpdateInforComponentComponent {
       }
     }
   }
+
+  /**
+   * Hàm xử lý import file với những trường là ảnh
+   */
+   formUpload= new FormData();
+   handleChange(item: any, column: any) {
+     console.log(item.target.files['0']);
+     this.formUpload.append(column.keyName, item.target.files['0']);
+     this.inforMachine[column.keyName] = item.target.files['0'].name;
+     console.log(column);
+     console.log(this.inforMachine)
+     console.log(this.formUpload)
+   };
+ 
+   /**
+    * Hàm xử lý click vào form upload file
+    */
+   handleImageClick() {
+     // document.getElementById('fileInput')?.click();
+   }
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup

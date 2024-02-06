@@ -50,11 +50,17 @@ export class AddNewMachinePopupComponent {
   valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
   valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
   columnKey: string = '';
+  tableCode: string = '';
 
   onSubmit(): void {}
 
   ngOnInit() {
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+    if(this.inforTable.children.length > 0) {
+      this.tableCode = localStorage.getItem('currentSider')!;
+    } else {
+      this.tableCode = this.inforTable.name;
+    }
     this.getColumn();
     this.inforMachine['status'] = 1;
   }
@@ -89,8 +95,36 @@ export class AddNewMachinePopupComponent {
       /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(input);
     return !isEmpty && !containsSpecialCharacter;
   }
-  addItem(inputElement: HTMLInputElement): void {
-    
+  addItem(inputElement: HTMLInputElement, isParam: any, column: any): void {
+    console.log(column)
+    const newItem = inputElement.value.trim();
+    console.log(newItem)
+    if(isParam) {
+      let request = {
+        value: newItem,
+        tableName: this.tableCode,
+        columnName: column.keyName
+      }
+      this.manageService.addValuesParam(request).subscribe({
+        next: (res) => {
+          console.log(res);
+        }, error: (err) => {
+          console.log(err);
+        }
+      })
+    } else {
+      let request = {
+        value: newItem,
+        paramCode: column.note
+      }
+      this.manageService.addValuesParam(request).subscribe({
+        next: (res) => {
+          console.log(res);
+        }, error: (err) => {
+          console.log(err);
+        }
+      })
+    }
   }
 
   machineTypeList: any[] = [];
@@ -304,13 +338,35 @@ export class AddNewMachinePopupComponent {
       }
     });
     if(check) {
-      this.manageService.addNewRecord(this.inforTable.name, this.inforMachine).subscribe({
+      this.manageService.addNewRecord(this.tableCode, this.inforMachine).subscribe({
         next: (res) => {
           console.log(res);
-          this.toast.success(res.result.message);
-          this.isvisible = false;
-          this.isvisibleChange.emit(false);
-          this.loader.stop();
+          let isImage = false;
+          for(let i = 0; i < this.columns.length; i++) {
+            if(this.columns[i].dataType == this.dataType.IMAGE) {
+              isImage = true;
+              break;
+            }
+          }
+          if(isImage) {
+            this.manageService.uploadImageInComponents(this.tableCode, Number(res.data), this.formUpload).subscribe({
+              next: (data) => {
+                console.log(data);
+                this.toast.success(res.result.message);
+                this.isvisible = false;
+                this.isvisibleChange.emit(false);
+                this.loader.stop();
+              }, error: (err) => {
+                console.log(err);
+                this.loader.stop();
+              }
+            })
+          } else {
+            this.toast.success(res.result.message);
+            this.isvisible = false;
+            this.isvisibleChange.emit(false);
+            this.loader.stop();
+          }
         }, error: (err) => {
           this.toast.error(err.result.message);
           this.loader.stop();
@@ -338,7 +394,7 @@ export class AddNewMachinePopupComponent {
   }
 
   async getColumn() {
-    this.manageService.getColummnByTableName(this.inforTable.name).subscribe({
+    this.manageService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
         this.columns = res.data;
         for(let i = 0; i < this.columns.length; i++) {
@@ -394,10 +450,21 @@ export class AddNewMachinePopupComponent {
    * Hàm xử lý import file với những trường là ảnh
    */
   formUpload= new FormData();
-  handleChange(item: any) {
+  handleChange(item: any, column: any) {
     console.log(item.target.files['0']);
-    this.formUpload.append('file', item.target.files['0']);
+    this.formUpload.append(column.keyName, item.target.files['0']);
+    this.inforMachine[column.keyName] = item.target.files['0'].name;
+    console.log(column);
+    console.log(this.inforMachine)
+    console.log(this.formUpload)
   };
+
+  /**
+   * Hàm xử lý click vào form upload file
+   */
+  handleImageClick() {
+    // document.getElementById('fileInput')?.click();
+  }
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup

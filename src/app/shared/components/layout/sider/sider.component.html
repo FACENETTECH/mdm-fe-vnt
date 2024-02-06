@@ -4,7 +4,7 @@
       <div
         *ngIf="parent.children.length === 0 && parent.open === false"
         class="parent"
-        (click)="clickParent(i, parent.path)"
+        (click)="clickParent(i, parent.path, parent)"
       >
         <div class="parent-content">
           <div class="content-left">
