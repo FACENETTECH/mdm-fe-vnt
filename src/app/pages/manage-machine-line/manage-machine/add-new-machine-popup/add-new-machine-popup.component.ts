@@ -51,6 +51,7 @@ export class AddNewMachinePopupComponent {
   valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
   columnKey: string = '';
   tableCode: string = '';
+  checkActionImage: boolean = false;
 
   onSubmit(): void {}
 
@@ -347,13 +348,13 @@ export class AddNewMachinePopupComponent {
               break;
             }
           }
-          if(isImage) {
+          if(isImage && this.checkActionImage) {
             this.manageService.uploadImageInComponents(this.tableCode, Number(res.data), this.formUpload).subscribe({
               next: (data) => {
                 console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
-                this.isvisibleChange.emit(false);
+                this.isvisibleChange.emit(true);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -363,7 +364,7 @@ export class AddNewMachinePopupComponent {
           } else {
             this.toast.success(res.result.message);
             this.isvisible = false;
-            this.isvisibleChange.emit(false);
+            this.isvisibleChange.emit(true);
             this.loader.stop();
           }
         }, error: (err) => {

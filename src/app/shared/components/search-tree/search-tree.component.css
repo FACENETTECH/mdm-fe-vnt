@@ -1,0 +1,14 @@
+.checkbox-search-tree {
+    border-bottom: 1px solid rgb(233, 233, 233);
+    width: 100%;
+}
+
+.checkbox-parent-container {
+    width: 90%;
+}
+
+.search-tree-name {
+    border-bottom: 2px solid rgb(233, 233, 233);
+    width: 100%;
+    font-weight: 500;
+}
