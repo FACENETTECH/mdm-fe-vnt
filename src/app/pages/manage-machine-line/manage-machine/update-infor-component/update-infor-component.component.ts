@@ -53,6 +53,7 @@ export class UpdateInforComponentComponent {
   valueTypeParam: any = []; // Lưu trữ các giá trị của những trường có type là param
   inforImage: Record<string, any> = {};
   tableCode: string = '';
+  checkActionImage: boolean = false;
 
   onSubmit(): void {}
 
@@ -322,13 +323,13 @@ export class UpdateInforComponentComponent {
               break;
             }
           }
-          if(isImage) {
+          if(isImage && this.checkActionImage) {
             this.manageService.uploadImageInComponents(this.tableCode, this.inforMachine['id'], this.formUpload).subscribe({
               next: (data) => {
                 console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
-                this.isvisibleChange.emit(false);
+                this.isvisibleChange.emit(true);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -338,7 +339,7 @@ export class UpdateInforComponentComponent {
           } else {
             this.toast.success(res.result.message);
             this.isvisible = false;
-            this.isvisibleChange.emit(false);
+            this.isvisibleChange.emit(true);
             this.loader.stop();
           }
         }, error: (err) => {

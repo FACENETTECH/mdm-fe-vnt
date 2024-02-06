@@ -486,14 +486,14 @@
 
 <app-add-new-machine-popup
   *ngIf="isvisibleAdd"
-  (isvisibleChange)="addColumnConfirm()"
+  (isvisibleChange)="addColumnConfirm($event)"
   [(isvisible)]="isvisibleAdd"
 >
 </app-add-new-machine-popup>
 
 <app-update-infor-component
   *ngIf="isvisibleUpdate"
-  (isvisibleChange)="addColumnConfirm()"
+  (isvisibleChange)="addColumnConfirm($event)"
   [inforComponent]="currentMachine"
   [(isvisible)]="isvisibleUpdate"
 >
@@ -501,27 +501,10 @@
 
 <app-info-machine-popup
   *ngIf="ivisibleInfor"
-  (isvisibleChange)="addColumnConfirm()"
+  (isvisibleChange)="addColumnConfirm($event)"
   [inforComponent]="currentMachine"
   [(isvisible)]="ivisibleInfor"
 ></app-info-machine-popup>
-<app-add-column
-  *ngIf="isvisibleAddColumn"
-  [entryType]="6"
-  [(isvisible)]="isvisibleAddColumn"
-  (isvisibleChange)="addColumnConfirm()"
-></app-add-column>
-<!-- <app-popup-import *ngIf="isvisibleImport" [entityType]="6" [formData]="listMachineTemplate"
-  [(isvisible)]="isvisibleImport" (import)="importConfirm($event)"></app-popup-import> -->
-<app-popup-import
-  *ngIf="isvisibleImport"
-  [header]="headers"
-  [entityType]="6"
-  [formData]="listMachineTemplate"
-  [(isvisible)]="isvisibleImport"
-  (import)="importConfirm($event)"
-  TemplateName="Template_Machine"
-></app-popup-import>
 
 <app-popup-copy
   *ngIf="isvisibleCopy"

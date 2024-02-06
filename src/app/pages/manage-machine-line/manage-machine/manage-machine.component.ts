@@ -20,7 +20,7 @@ import { ManageComponentService } from 'src/app/services/manage-component/manage
   templateUrl: './manage-machine.component.html',
   styleUrls: ['./manage-machine.component.css'],
 })
-export class ManageMachineComponent implements OnInit {
+export class ManageMachineComponent implements OnInit, OnDestroy {
   // New variables for dynamic form
   checked = false;
   indeterminate = false;
@@ -129,8 +129,10 @@ export class ManageMachineComponent implements OnInit {
     }
   }
 
-  async addColumnConfirm() {
-    this.getData({ page: this.pageNumber, size: this.pageSize });
+  async addColumnConfirm(event: any) {
+    if(event) {
+      this.getData({ page: this.pageNumber, size: this.pageSize });
+    }
   }
 
   noDataFound: boolean = false;
@@ -748,10 +750,10 @@ export class ManageMachineComponent implements OnInit {
     this.inforComponent(infor);
   }
 
-  // ngOnDestroy(): void {
-  //   console.log("ngOnDestroy");
-  //   localStorage.setItem('beforeBaseUrl', '');
-  // }
+  ngOnDestroy(): void {
+    console.log("ngOnDestroy");
+    // localStorage.setItem('beforeBaseUrl', '');
+  }
 
 
   /**
