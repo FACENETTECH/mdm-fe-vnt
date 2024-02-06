@@ -227,7 +227,14 @@ export class ConfigTableComponent {
     this.configService.getAllCategory().subscribe({
       next: (res) => {
         console.log(res);
-        this.listFunction = res.data
+        this.listFunction = res.data;
+        for(let i = 0; i < res.data.length; i++) {
+          if(res.data[i].children.length > 0) {
+            for(let j = 0; j < res.data[i].children.length; j++) {
+              this.listFunction.push(res.data[i].children[j])
+            }
+          }
+        }
       }, error: (err) => {
         this.toast.error(err.result.message);
       }
