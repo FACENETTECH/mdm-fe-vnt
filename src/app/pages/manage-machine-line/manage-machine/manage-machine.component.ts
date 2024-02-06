@@ -87,6 +87,21 @@ export class ManageMachineComponent implements OnInit {
   columnKey: string = ''; // Lưu trữ column được coi là khoá của bảng
   isInputFocused: boolean = false; // Lưu trữ giá trị khi focus hoặc blur ra khỏi ô input
 
+  // Dữ liệu cho cây tìm kiếm
+  selectedOptions: string[] = [];
+  searchTreeName: string = "";
+  searchTreeOptions: {
+    value: string,
+    checked: boolean
+  }[] = [];
+
+  treeVisible: boolean = true;
+
+  classList: any = {
+    searchTree: "search-tree-container-open",
+    content: "content-container-open",
+  }
+
   breadcrumbs = [
     {
       name: 'menu.management_machine',
@@ -254,6 +269,7 @@ export class ManageMachineComponent implements OnInit {
       filter: this.inforMachine,
       sortOrder: this.orderSort,
       sortProperty: this.propertySort,
+      searchOptions: this.selectedOptions,
     };
 
     this.loader.start();
@@ -412,6 +428,7 @@ export class ManageMachineComponent implements OnInit {
           }
         }
         this.getData({ page: this.pageNumber, size: this.pageSize });
+        this.handleSearchTreeOptions();
       }, error: (err) => {
         console.log(err);
       }
@@ -806,6 +823,51 @@ export class ManageMachineComponent implements OnInit {
   //   // event.defaultPrevented = true;
   //   console.log("Hoang: ", event);
   // }
+
+  /**
+   * Hàm thay đổi checkbox trong cây tìm kiếm
+   * @param options 
+   */
+  changeSearchTree(options: string[]) {
+    this.selectedOptions = options;
+    this.getData({ page: this.pageNumber, size: this.pageSize });
+  }
+
+  /**
+   * Hàm đóng mở cây tìm kiếm
+   */
+  changeTreeVisible() {
+    if (this.treeVisible) {
+      this.treeVisible = false;
+      this.classList = {
+        searchTree: "search-tree-container-close",
+        content: "content-container-close",
+      }
+    } else {
+      this.treeVisible = true;
+      this.classList = {
+        searchTree: "search-tree-container-open",
+        content: "content-container-open",
+      }
+    }
+  }
+
+  handleSearchTreeOptions() {
+    console.log("Column to find tree key",this.columns);
+    for (let column of this.columns) {
+      if (column.searchTree) {
+        this.searchTreeName = column.keyTitle;
+        this.manageComponentService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
+          next: (res) => {
+            this.searchTreeOptions = res.data;
+          }, error: (err) => {
+            this.toast.error(err.result.message);
+          }
+        })
+        break;
+      }
+    }
+  }
 
   protected readonly dataType = DATA_TYPE;
 }

@@ -41,3 +41,31 @@ td:not(.numeric-value) {
 .fn-icon-style {
   font-size: 16px;
 }
+
+.parent-container {
+  display: flex;
+}
+
+.search-tree-container-open {
+  position: relative;
+  width: 15%;
+}
+
+.content-container-open {
+  width: 85%;
+}
+
+.search-tree-container-close {
+  position: relative;
+  width: 3%;
+}
+
+.content-container-close {
+  width: 97%;
+}
+
+.close-search-tree-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

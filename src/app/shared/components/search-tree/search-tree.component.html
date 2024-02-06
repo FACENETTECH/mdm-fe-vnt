@@ -1,0 +1,21 @@
+<div>
+  <nz-checkbox-wrapper class="checkbox-parent-container">
+    <div class="search-tree-name">
+      <label
+        nz-checkbox
+        [(ngModel)]="allChecked"
+        (ngModelChange)="updateAllChecked()"
+        [nzIndeterminate]="indeterminate"
+        class="color-text-sider"
+      >{{searchTreeName}}</label>
+    </div>
+    <div *ngFor="let option of searchOptionList" class="checkbox-search-tree">
+      <label
+        nz-checkbox
+        [nzValue]="option.value"
+        [(ngModel)]="option.checked"
+        (ngModelChange)="updateCheckBox()"
+      >{{option.value}}</label>
+    </div>
+  </nz-checkbox-wrapper>
+</div>
