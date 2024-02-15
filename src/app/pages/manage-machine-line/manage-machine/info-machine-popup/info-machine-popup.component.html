@@ -62,18 +62,18 @@
                     ></label
                   >
                   <br />
-                  <!-- <nz-input-number
+                  <nz-input-number
                     nz-input
                     [(ngModel)]="inforMachine[col.keyName]"
                     (ngModelChange)="checkValid()"
                     (ngModelChange)="checkAction = true"
                     style="width: 100%"
                     disabled
-                  /> -->
-                  <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
+                  />
+                  <!-- <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
                     type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
                     (ngModelChange)="checkAction = true" disabled
-                  />
+                  /> -->
                   <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                     checkMachine[col.keyName]
                   }}</span>
@@ -239,7 +239,7 @@
                   ></label
                 >
                 <br />
-                <!-- <nz-input-number
+                <nz-input-number
                   [nzMin]="0"
                   [nzStep]="1"
                   [nzParser]="parser"
@@ -250,12 +250,12 @@
                   (ngModelChange)="checkAction = true"
                   style="width: 100%"
                   disabled
-                /> -->
-                <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
+                />
+                <!-- <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
                   type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
                   disabled
-                />
+                /> -->
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
                 }}</span>

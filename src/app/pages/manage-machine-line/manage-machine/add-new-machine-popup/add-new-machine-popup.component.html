@@ -62,7 +62,7 @@
                     ></label
                   >
                   <br />
-                  <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
+                  <input style="text-align: right; width:100%" nz-input nz-input
                   type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"/>
                   <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
@@ -291,7 +291,7 @@
                   ></label
                 >
                 <br />
-                <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
+                <input style="text-align: right; width:100%" nz-input nz-input
                   type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"/>
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
