@@ -95,11 +95,11 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
     checked: boolean
   }[] = [];
 
-  treeVisible: boolean = true;
+  treeVisible: boolean = false;
 
   classList: any = {
-    searchTree: "search-tree-container-open",
-    content: "content-container-open",
+    searchTree: "search-tree-container-close",
+    content: "content-container-close",
   }
 
   breadcrumbs = [
