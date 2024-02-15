@@ -307,6 +307,9 @@ export class AppComponent {
 
   }
 
+  /**
+   * Hàm lấy tên phân hệ khi redirect từ trang homepage
+   */
   getNameByCookie() { 
     console.log(window.location.href);
     console.log(localStorage.getItem('beforeBaseUrl'));
