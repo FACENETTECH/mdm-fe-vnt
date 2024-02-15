@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href=/mdm-v2/",
-    "watch": "ng build --watch --configuration development",
+    "build": "ng build --configuration production --base-href=/mdm-v2/",
+    "watch": "ng build --watch --configuration production",
     "test": "ng test"
   },
   "private": true,
