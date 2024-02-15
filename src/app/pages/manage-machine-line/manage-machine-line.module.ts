@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from 'src/app/shared/components/components.module';
 
@@ -6,7 +6,7 @@ import {ManageMachineLineRoutingModule} from './manage-machine-line-routing.modu
 
 
 // Import module ant design
-
+import { NgxNumberFormatModule } from 'ngx-number-format';
 import {NzAffixModule} from 'ng-zorro-antd/affix';
 import {NzAlertModule} from 'ng-zorro-antd/alert';
 import {NzAnchorModule} from 'ng-zorro-antd/anchor';
@@ -79,8 +79,6 @@ import {NzResizableModule} from 'ng-zorro-antd/resizable';
 import {NzPipesModule} from 'ng-zorro-antd/pipes';
 import {NzQRCodeModule} from 'ng-zorro-antd/qr-code';
 import {NzWaterMarkModule} from 'ng-zorro-antd/water-mark';
-// import { NgxNumberFormatModule } from 'ngx-number-format';
-//
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {TourMatMenuModule} from 'ngx-ui-tour-md-menu';
@@ -182,7 +180,9 @@ import { PopupDeleteListRecodrdComponent } from './manage-machine/popup-delete-l
         NzWaterMarkModule,
         TranslateModule.forChild(),
         TourMatMenuModule,
-        DragDropModule
-    ]
+        DragDropModule,
+        NgxNumberFormatModule
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
 export class ManageMachineLineModule {}
