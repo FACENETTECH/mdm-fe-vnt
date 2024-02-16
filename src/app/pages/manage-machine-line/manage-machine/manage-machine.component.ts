@@ -854,6 +854,9 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Hàm trả về danh sách option cây tìm kiếm
+   */
   handleSearchTreeOptions() {
     console.log("Column to find tree key",this.columns);
     for (let column of this.columns) {
@@ -869,6 +872,16 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
         break;
       }
     }
+  }
+
+  async commonAutoComplete(value: string) {
+    this.manageComponentService.getCommonAutoComplete(this.tableCode, value).subscribe({
+      next: (res) => {
+        this.optionsComplete = res.data;
+      }, error: (err) => {
+        console.log(err);
+      }
+    });
   }
 
   protected readonly dataType = DATA_TYPE;

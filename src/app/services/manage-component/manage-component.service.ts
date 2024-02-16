@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { environment } from 'src/environment/environment';
@@ -139,5 +139,16 @@ export class ManageComponentService {
    */
   addValuesParam(request: any): Observable<any> {
     return this.httpClient.post(`${this.url}/api/params`, request);
+  }
+
+  /**
+   * API lấy ra 10 giá trị auto complete khi nhập vào common search
+   * @param tableName tên danh mục
+   * @param value giá trị đã được nhập
+   * @returns 1 set 10 giá trị auto complete
+   */
+  getCommonAutoComplete(tableName: string, value: string): Observable<any> {
+    const params = new HttpParams().set('value', value);
+    return this.httpClient.get(`${this.url}/api/dynamic-tables/${tableName}/auto-complete`, { params });
   }
 }
