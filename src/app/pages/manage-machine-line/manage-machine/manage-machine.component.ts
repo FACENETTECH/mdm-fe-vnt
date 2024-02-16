@@ -124,16 +124,17 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
     return `${day}-${month}-${year}`;
   }
   ngOnInit() {
-    console.log()
-    this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
-    if(this.inforTable.children.length > 0) {
-      this.tableCode = localStorage.getItem('currentSider')!;
-    } else {
-      this.tableCode = this.inforTable.name
-    }
-    this.breadcrumbs[0].name = this.inforTable.displayName;
-    this.tableName = this.inforTable.displayName.toUpperCase();
-    this.getHeaders();
+    setTimeout(() => {
+      this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+      if(this.inforTable.children.length > 0) {
+        this.tableCode = localStorage.getItem('currentSider')!;
+      } else {
+        this.tableCode = this.inforTable.name
+      }
+      this.breadcrumbs[0].name = this.inforTable.displayName;
+      this.tableName = this.inforTable.displayName.toUpperCase();
+      this.getHeaders();
+    }, 600)
   }
 
   clearInput(keyName: string) {

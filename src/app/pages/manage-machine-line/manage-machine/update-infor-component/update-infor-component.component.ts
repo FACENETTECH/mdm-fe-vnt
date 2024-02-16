@@ -329,7 +329,7 @@ export class UpdateInforComponentComponent {
                 console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
-                this.isvisibleChange.emit(true);
+                this.isvisibleChange.emit(false);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -339,7 +339,7 @@ export class UpdateInforComponentComponent {
           } else {
             this.toast.success(res.result.message);
             this.isvisible = false;
-            this.isvisibleChange.emit(true);
+            this.isvisibleChange.emit(false);
             this.loader.stop();
           }
         }, error: (err) => {
