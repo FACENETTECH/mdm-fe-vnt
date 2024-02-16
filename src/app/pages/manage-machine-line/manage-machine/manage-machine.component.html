@@ -54,6 +54,7 @@
               placeholder="{{ 'placeHolderSearch' | translate }}"
               [(ngModel)]="common"
               (keyup)="search($event)"
+              (input)="commonAutoComplete(common)"
               (focus)="onInputFocus()"
               (blur)="onInputBlur()"
             />
