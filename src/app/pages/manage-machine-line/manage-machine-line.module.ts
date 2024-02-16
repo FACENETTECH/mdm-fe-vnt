@@ -179,7 +179,7 @@ import { PopupDeleteListRecodrdComponent } from './manage-machine/popup-delete-l
         NzWaterMarkModule,
         TranslateModule.forChild(),
         TourMatMenuModule,
-        DragDropModule
+        DragDropModule,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })

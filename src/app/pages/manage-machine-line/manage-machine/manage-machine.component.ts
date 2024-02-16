@@ -20,7 +20,7 @@ import { ManageComponentService } from 'src/app/services/manage-component/manage
   templateUrl: './manage-machine.component.html',
   styleUrls: ['./manage-machine.component.css'],
 })
-export class ManageMachineComponent implements OnInit, OnDestroy {
+export class ManageMachineComponent implements OnInit {
   // New variables for dynamic form
   checked = false;
   indeterminate = false;
@@ -766,11 +766,6 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
   onDblClickOnRowTable(infor: any) {
     console.log("test");
     this.inforComponent(infor);
-  }
-
-  ngOnDestroy(): void {
-    console.log("ngOnDestroy");
-    // localStorage.setItem('beforeBaseUrl', '');
   }
 
 

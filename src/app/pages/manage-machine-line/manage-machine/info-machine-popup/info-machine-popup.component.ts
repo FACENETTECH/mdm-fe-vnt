@@ -63,6 +63,7 @@ export class InfoMachinePopupComponent {
       this.tableCode = this.inforTable.name;
     }
     this.getColumn();
+    this.formatNumberInUpdate();
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -461,6 +462,15 @@ export class InfoMachinePopupComponent {
        }
      }
    }
+
+  formatNumberInUpdate() {
+    for(const property in this.inforComponent) {
+      if(property != 'id' && (typeof this.inforComponent[property] == 'number')) {
+        this.inforComponent[property] = this.inforComponent[property].toLocaleString('en-US', { useGrouping: true });
+      }
+    }
+    console.log('Infor: ', this.inforComponent);
+  }
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
