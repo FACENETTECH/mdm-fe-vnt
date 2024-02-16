@@ -289,6 +289,7 @@ export class AppComponent {
               children: []
             })
           }
+          this._router.navigate([`${this.siderList[0].path}`]);
         }
         // Nếu chức năng cha KHÔNG có chức năng con sẽ thêm các thông tin về router không có baseUrl là tên của chức năng cha 
         else {
