@@ -9,7 +9,19 @@ import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
   styleUrls: ['./sider.component.css'],
 })
 export class SiderComponent {
-  @Input() sider: any[] = [];
+  @Input() sider: {
+    displayName: string;
+    open: boolean;
+    path: string | null;
+    icon: string;
+    children: {
+      displayName: string;
+      open: boolean;
+      path: string;
+      requiredRoles: string[];
+    }[];
+    requiredRoles: string[];
+  }[] = [];
 
   param: string = '';
   routing: any;
@@ -49,15 +61,7 @@ export class SiderComponent {
     // });
   }
 
-  ngOnInit() {
-    if(localStorage.getItem('checkFetchSider') == '') {
-      setTimeout(() => {
-        this.sider[0].open = true;
-        localStorage.setItem('currentSider', this.sider[0].name);
-        localStorage.setItem('checkFetchSider', 'true'); 
-      }, 600)
-    }
-  }
+  ngOnInit() {}
 
   openParent(i: number) {
     this.sider[i].open = true;

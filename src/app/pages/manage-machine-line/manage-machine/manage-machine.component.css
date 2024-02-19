@@ -69,10 +69,3 @@ td:not(.numeric-value) {
   top: 5px;
   right: 5px;
 }
-
-/* Css để hiển thị nội dung dài trong bảng */
-.table-cell-ellipsis {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}

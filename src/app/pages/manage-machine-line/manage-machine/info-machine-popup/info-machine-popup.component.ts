@@ -63,7 +63,7 @@ export class InfoMachinePopupComponent {
       this.tableCode = this.inforTable.name;
     }
     this.getColumn();
-    this.formatNumberInUpdate();
+    console.log(this.inforComponent);
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -361,7 +361,6 @@ export class InfoMachinePopupComponent {
         this.inforMachine = this.inforComponent;
         this.getParamsOnInit();
         this.getImageByName();
-        this.getRowDataAsString(this.inforComponent);
       }
     })
   }
@@ -450,27 +449,6 @@ export class InfoMachinePopupComponent {
    handleImageClick() {
      // document.getElementById('fileInput')?.click();
    }
-
-  /**
-   * Hàm xử lý để sinh mã QR cho từng bản ghi
-   */
-   strQr: string = '';
-   getRowDataAsString(inforData: any) {
-     for(let i = 0; i < this.columns.length; i++) {
-       if(this.columns[i].isCode) {
-         this.strQr = inforData[this.columns[i].keyName];
-       }
-     }
-   }
-
-  formatNumberInUpdate() {
-    for(const property in this.inforComponent) {
-      if(property != 'id' && (typeof this.inforComponent[property] == 'number')) {
-        this.inforComponent[property] = this.inforComponent[property].toLocaleString('en-US', { useGrouping: true });
-      }
-    }
-    console.log('Infor: ', this.inforComponent);
-  }
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup

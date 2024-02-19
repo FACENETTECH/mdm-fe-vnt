@@ -54,7 +54,6 @@
               placeholder="{{ 'placeHolderSearch' | translate }}"
               [(ngModel)]="common"
               (keyup)="search($event)"
-              (input)="commonAutoComplete(common)"
               (focus)="onInputFocus()"
               (blur)="onInputBlur()"
             />
@@ -417,42 +416,22 @@
                     </ng-container>
                     <ng-container *ngSwitchDefault>
                       <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
-                        <td
-                        class="table-cell-ellipsis"
-                        [ngStyle]="{'max-width': column.width}"
-                        [nz-tooltip]="infor[column.keyName]"
-                        (dblclick)="onDblClickOnRowTable(infor)"
-                        >
+                        <td (dblclick)="onDblClickOnRowTable(infor)">
                           {{ infor[column.keyName] }}
                         </td>
                       </ng-container>
                       <ng-container *ngIf="column.dataType == dataType.NUMBER">
-                        <td
-                        class="table-cell-ellipsis fn-text-al-right"
-                        [ngStyle]="{'max-width': column.width}"
-                        [nz-tooltip]="infor[column.keyName] | number : '1.0-2'"
-                        (dblclick)="onDblClickOnRowTable(infor)"
-                        >
-                            {{ infor[column.keyName] | number : "1.0-2" }}
+                        <td class="fn-text-al-right" (dblclick)="onDblClickOnRowTable(infor)">
+                            {{ infor[column.keyName] | number : "1.0-0" }}
                         </td>
                       </ng-container>
                       <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
-                        <td
-                        class="table-cell-ellipsis fn-text-al-right"
-                        [ngStyle]="{'max-width': column.width}"
-                        [nz-tooltip]="infor[column.keyName]"
-                        (dblclick)="onDblClickOnRowTable(infor)"
-                        >
+                        <td class="fn-text-al-right" (dblclick)="onDblClickOnRowTable(infor)">
                           {{ infor[column.keyName] | date: 'dd-MM-yyyy' }}
                         </td>
                       </ng-container>
                       <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
-                        <td
-                        class="table-cell-ellipsis fn-text-al-center"
-                        [ngStyle]="{'max-width': column.width}"
-                        [nz-tooltip]="infor[column.keyName]"
-                        (dblclick)="onDblClickOnRowTable(infor)"
-                        >
+                        <td class="fn-text-al-center" (dblclick)="onDblClickOnRowTable(infor)">
                           <label nz-checkbox [(ngModel)]="infor[column.keyName]"></label>
                         </td>
                       </ng-container>

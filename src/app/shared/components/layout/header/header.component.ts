@@ -155,7 +155,6 @@ export class HeaderComponent {
 
   backToHomePage() {
     localStorage.setItem('beforeBaseUrl', '');
-    localStorage.setItem('checkFetchSider', '');
     window.location.href = environment.url_home_page;
   }
 

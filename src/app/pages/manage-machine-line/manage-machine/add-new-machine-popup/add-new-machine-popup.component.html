@@ -62,9 +62,13 @@
                     ></label
                   >
                   <br />
-                  <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
-                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
-                  (ngModelChange)="checkAction = true"/>
+                  <input
+                    nz-input
+                    [(ngModel)]="inforMachine[col.keyName]"
+                    (ngModelChange)="checkValid()"
+                    (ngModelChange)="checkAction = true"
+                    style="width: 100%"
+                  />
                   <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                     checkMachine[col.keyName]
                   }}</span>
@@ -291,12 +295,13 @@
                   ></label
                 >
                 <br />
-                <!-- <input style="text-align: right; width:100%" nz-input nz-input
-                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
-                  (ngModelChange)="checkAction = true"/> -->
-                <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
-                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
-                  (ngModelChange)="checkAction = true"/>
+                <input
+                  nz-input
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true"
+                  style="width: 100%"
+                />
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
                 }}</span>
