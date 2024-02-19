@@ -20,7 +20,7 @@ import { ManageComponentService } from 'src/app/services/manage-component/manage
   templateUrl: './manage-machine.component.html',
   styleUrls: ['./manage-machine.component.css'],
 })
-export class ManageMachineComponent implements OnInit, OnDestroy {
+export class ManageMachineComponent implements OnInit {
   // New variables for dynamic form
   checked = false;
   indeterminate = false;
@@ -95,11 +95,11 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
     checked: boolean
   }[] = [];
 
-  treeVisible: boolean = true;
+  treeVisible: boolean = false;
 
   classList: any = {
-    searchTree: "search-tree-container-open",
-    content: "content-container-open",
+    searchTree: "search-tree-container-close",
+    content: "content-container-close",
   }
 
   breadcrumbs = [
@@ -124,16 +124,17 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
     return `${day}-${month}-${year}`;
   }
   ngOnInit() {
-    console.log()
-    this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
-    if(this.inforTable.children.length > 0) {
-      this.tableCode = localStorage.getItem('currentSider')!;
-    } else {
-      this.tableCode = this.inforTable.name
-    }
-    this.breadcrumbs[0].name = this.inforTable.displayName;
-    this.tableName = this.inforTable.displayName.toUpperCase();
-    this.getHeaders();
+    setTimeout(() => {
+      this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+      if(this.inforTable.children.length > 0) {
+        this.tableCode = localStorage.getItem('currentSider')!;
+      } else {
+        this.tableCode = this.inforTable.name
+      }
+      this.breadcrumbs[0].name = this.inforTable.displayName;
+      this.tableName = this.inforTable.displayName.toUpperCase();
+      this.getHeaders();
+    }, 600)
   }
 
   clearInput(keyName: string) {
@@ -767,11 +768,6 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
     this.inforComponent(infor);
   }
 
-  ngOnDestroy(): void {
-    console.log("ngOnDestroy");
-    // localStorage.setItem('beforeBaseUrl', '');
-  }
-
 
   /**
    * Xử lý sự kiện nhấn phím tắt Shift + N để thêm mới bản ghi
@@ -854,6 +850,9 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Hàm trả về danh sách option cây tìm kiếm
+   */
   handleSearchTreeOptions() {
     console.log("Column to find tree key",this.columns);
     for (let column of this.columns) {
@@ -869,6 +868,16 @@ export class ManageMachineComponent implements OnInit, OnDestroy {
         break;
       }
     }
+  }
+
+  async commonAutoComplete(value: string) {
+    this.manageComponentService.getCommonAutoComplete(this.tableCode, value).subscribe({
+      next: (res) => {
+        this.optionsComplete = res.data;
+      }, error: (err) => {
+        console.log(err);
+      }
+    });
   }
 
   protected readonly dataType = DATA_TYPE;

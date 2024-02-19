@@ -338,6 +338,12 @@ export class AddNewMachinePopupComponent {
       }
     });
     if(check) {
+      for(let i = 0; i < this.columns.length; i++) {
+        if(this.columns[i].dataType == this.dataType.NUMBER) {
+          this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
+          this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
+        }
+      }
       this.manageService.addNewRecord(this.tableCode, this.inforMachine).subscribe({
         next: (res) => {
           console.log(res);
@@ -464,6 +470,24 @@ export class AddNewMachinePopupComponent {
    */
   handleImageClick() {
     // document.getElementById('fileInput')?.click();
+  }
+
+  
+  formatNumber(input: any) {
+    // Lấy giá trị đang nhập từ input
+    let value = input.value;
+  
+    // Loại bỏ tất cả các dấu phẩy
+    value = value.replace(/,/g, '');
+  
+    // Chuyển đổi giá trị thành số và kiểm tra nếu nó là một số hợp lệ
+    const numberValue = Number(value);
+    if (!isNaN(numberValue)) {
+      // Định dạng lại giá trị với dấu phẩy
+      const formattedValue = numberValue.toLocaleString('en-US', { useGrouping: true });
+      // Gán giá trị đã được định dạng lại vào input
+      input.value = formattedValue;
+    }
   }
 
   /**

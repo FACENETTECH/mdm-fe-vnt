@@ -62,13 +62,21 @@
                     ></label
                   >
                   <br />
-                  <nz-input-number
+                  <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
+                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true"
+                  />
+                  <!-- <nz-input-number
                     nz-input
                     [(ngModel)]="inforMachine[col.keyName]"
                     (ngModelChange)="checkValid()"
                     (ngModelChange)="checkAction = true"
                     style="width: 100%"
-                  />
+                  /> -->
+                  <!-- <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
+                    type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
+                    (ngModelChange)="checkAction = true"
+                    /> -->
                   <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                     checkMachine[col.keyName]
                   }}</span>
@@ -238,6 +246,10 @@
                   (ngModelChange)="checkAction = true"
                   style="width: 100%"
                 />
+                <!-- <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
+                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true"
+                /> -->
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
                 }}</span>
@@ -388,6 +400,12 @@
         </ng-container>
       </div>
       <div style="width: 30%;">
+        <div style="display: flex; flex-direction: column;">
+            <div id="QR" style="text-align: center">
+                <nz-qrcode [nzValue]="strQr"></nz-qrcode>
+            </div>
+            <span style="text-align: center;">{{ 'Mã QR' | translate }}</span>
+        </div>
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'">
             <div style="width: 100%; margin-bottom: 20px;" class="fn-df fn-df-justify-center">
@@ -450,8 +468,8 @@
     [entryType]="6"
     [(isvisible)]="isvisibleAddColumn"
   ></app-add-column>
-  <app-popup-add
+  <app-popup-update
     [(isvisible)]="isvisiblesubmit"
-    (add)="submit()"
-  ></app-popup-add>
+    (update)="submit()"
+  ></app-popup-update>
 </nz-modal>
