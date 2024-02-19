@@ -12,6 +12,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
 import { DATA_TYPE } from 'src/app/utils/constrant';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Component({
   selector: 'app-update-infor-component',
@@ -65,7 +66,7 @@ export class UpdateInforComponentComponent {
       this.tableCode = this.inforTable.name;
     }
     this.getColumn();
-    console.log(this.inforComponent);
+    this.formatNumberInUpdate();
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -313,6 +314,12 @@ export class UpdateInforComponentComponent {
       }
     });
     if(check) {
+      for(let i = 0; i < this.columns.length; i++) {
+        if(this.columns[i].dataType == this.dataType.NUMBER) {
+          this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
+          this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
+        }
+      }
       this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
         next: (res) => {
           console.log(res);
@@ -329,7 +336,7 @@ export class UpdateInforComponentComponent {
                 console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
-                this.isvisibleChange.emit(true);
+                this.isvisibleChange.emit(false);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -339,7 +346,7 @@ export class UpdateInforComponentComponent {
           } else {
             this.toast.success(res.result.message);
             this.isvisible = false;
-            this.isvisibleChange.emit(true);
+            this.isvisibleChange.emit(false);
             this.loader.stop();
           }
         }, error: (err) => {
@@ -377,6 +384,7 @@ export class UpdateInforComponentComponent {
         this.inforMachine = this.inforComponent;
         this.getParamsOnInit();
         this.getImageByName();
+        this.getRowDataAsString(this.inforComponent);
       }
     })
   }
@@ -465,6 +473,48 @@ export class UpdateInforComponentComponent {
    handleImageClick() {
      // document.getElementById('fileInput')?.click();
    }
+
+  /**
+   * Hàm xử lý để sinh mã QR cho từng bản ghi
+   */
+  strQr: string = '';
+  getRowDataAsString(inforData: any) {
+    for(let i = 0; i < this.columns.length; i++) {
+      if(this.columns[i].isCode) {
+        this.strQr = inforData[this.columns[i].keyName];
+      }
+    }
+  }
+
+  /**
+   * Hàm format định dạng dấu phẩy hàng nghìn, vd: 100000 -> 100,000
+   * @param input Giá trị người dùng nhập vào
+   */
+  formatNumber(input: any) {
+    // Lấy giá trị đang nhập từ input
+    let value = input.value;
+  
+    // Loại bỏ tất cả các dấu phẩy
+    value = value.replace(/,/g, '');
+  
+    // Chuyển đổi giá trị thành số và kiểm tra nếu nó là một số hợp lệ
+    const numberValue = Number(value);
+    if (!isNaN(numberValue)) {
+      // Định dạng lại giá trị với dấu phẩy
+      const formattedValue = numberValue.toLocaleString('en-US', { useGrouping: true });
+      // Gán giá trị đã được định dạng lại vào input
+      input.value = formattedValue;
+    }
+  }
+
+  formatNumberInUpdate() {
+    for(const property in this.inforComponent) {
+      if(property != 'id' && (typeof this.inforComponent[property] == 'number')) {
+        this.inforComponent[property] = this.inforComponent[property].toLocaleString('en-US', { useGrouping: true });
+      }
+    }
+    console.log('Infor: ', this.inforComponent);
+  }
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
