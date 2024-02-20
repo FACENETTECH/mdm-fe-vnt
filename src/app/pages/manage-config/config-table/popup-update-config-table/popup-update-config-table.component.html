@@ -438,6 +438,7 @@
                                         [(ngModel)]="item[column.keyName]"
                                         (ngModelChange)="checkValid()"
                                         [nz-tooltip]="item[column.keyName]"
+                                        (ngModelChange)="showPopoverRelation(item, column.keyName)"
                                         >
                                         <nz-option [nzValue]="1" [nzLabel]="'Number'"></nz-option>
                                         <nz-option [nzValue]="2" [nzLabel]="'String'"></nz-option>
@@ -449,6 +450,57 @@
                                         <nz-option [nzValue]="8" [nzLabel]="'Table'"></nz-option>
                                         <nz-option [nzValue]="9" [nzLabel]="'Param'"></nz-option>
                                     </nz-select>
+                                    <span
+                                        nz-popover
+                                        nzPopoverTitle="Chọn bảng quan hệ"
+                                        [nzPopoverContent]="contentTemplateRelation"
+                                        nzPopoverPlacement="bottomLeft"
+                                        [nzPopoverVisible]="item.showPopoverRelation"
+                                        (nzPopoverVisibleChange)="popoverVisibleChangeRelation($event, item)"
+                                        >
+                                    </span>
+                                    <ng-template #contentTemplateRelation>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <div style="width: 45%;">
+                                                <label class="fn-label"
+                                                  >{{ 'Bảng quan hệ' | translate
+                                                  }}<span style="color: red"
+                                                    >*</span
+                                                  ></label
+                                                >
+                                                <nz-select
+                                                  style="width: 100%"
+                                                  nzMode="default"
+                                                  nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                                                    'bảng cần quan hệ' | translate
+                                                  }} ----"
+                                                  [(ngModel)]="item.relateTable"
+                                                  (nzOpenChange)="getAllEntity()"
+                                                >
+                                                  <nz-option *ngFor="let option of listEntityByRelation" [nzValue]="option.name" [nzLabel]="option.label"></nz-option>
+                                                </nz-select>
+                                            </div>
+                                            <div style="width: 45%;">
+                                                <label class="fn-label"
+                                                  >{{ 'Cột quan hệ' | translate
+                                                  }}<span style="color: red"
+                                                    >*</span
+                                                  ></label
+                                                >
+                                                <nz-select
+                                                  style="width: 100%"
+                                                  nzMode="default"
+                                                  nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                                                    'cột cần quan hệ' | translate
+                                                  }} ----"
+                                                  [(ngModel)]="item.relateColumn"
+                                                  (nzOpenChange)="getAllColumnByEntityName(item)"
+                                                >
+                                                  <nz-option *ngFor="let option of listColumnByRelation" [nzValue]="option.keyName" [nzLabel]="option.keyTitle"></nz-option>
+                                                </nz-select>
+                                            </div>
+                                        </div>
+                                    </ng-template>
                                 </td>
                             </ng-container>
                         </ng-container>

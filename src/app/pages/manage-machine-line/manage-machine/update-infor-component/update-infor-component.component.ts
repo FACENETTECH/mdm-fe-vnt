@@ -13,6 +13,7 @@ import { ManageComponentService } from 'src/app/services/manage-component/manage
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
 import { DATA_TYPE } from 'src/app/utils/constrant';
 import { Pipe, PipeTransform } from '@angular/core';
+import { ConfigService } from 'src/app/services/manage-config/config.service';
 
 @Component({
   selector: 'app-update-infor-component',
@@ -26,11 +27,13 @@ export class UpdateInforComponentComponent {
     private fb: UntypedFormBuilder,
     private i18n: NzI18nService,
     private manageService: ManageComponentService,
-    private loader: NgxUiLoaderService
+    private loader: NgxUiLoaderService,
+    private configService: ConfigService
   ) {}
   @Input() isvisible: boolean = true;
   @Input() inforComponent: any = '';
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
+  @Output() isvisibleUpdate: EventEmitter<boolean> = new EventEmitter();
 
   machineCode: string = '';
   machineName: string = '';
@@ -55,6 +58,9 @@ export class UpdateInforComponentComponent {
   inforImage: Record<string, any> = {};
   tableCode: string = '';
   checkActionImage: boolean = false;
+  listEntityByRelation: any[] = [];
+  optionsRelation: any[] = [];
+  columnRelation?: string;
 
   onSubmit(): void {}
 
@@ -66,7 +72,6 @@ export class UpdateInforComponentComponent {
       this.tableCode = this.inforTable.name;
     }
     this.getColumn();
-    this.formatNumberInUpdate();
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -314,10 +319,13 @@ export class UpdateInforComponentComponent {
       }
     });
     if(check) {
+      console.log(this.columns)
       for(let i = 0; i < this.columns.length; i++) {
-        if(this.columns[i].dataType == this.dataType.NUMBER && this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
-          this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
-          this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
+        if(this.columns[i].dataType == this.dataType.NUMBER) {
+          if(typeof this.inforMachine[this.columns[i].keyName] == 'string') {
+            this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
+            this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
+          }
         }
       }
       this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
@@ -330,6 +338,8 @@ export class UpdateInforComponentComponent {
               break;
             }
           }
+          console.log(isImage);
+          console.log(this.checkActionImage);
           if(isImage && this.checkActionImage) {
             this.manageService.uploadImageInComponents(this.tableCode, this.inforMachine['id'], this.formUpload).subscribe({
               next: (data) => {
@@ -337,6 +347,7 @@ export class UpdateInforComponentComponent {
                 this.toast.success(res.result.message);
                 this.isvisible = false;
                 this.isvisibleChange.emit(false);
+                this.isvisibleUpdate.emit(true);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -347,10 +358,11 @@ export class UpdateInforComponentComponent {
             this.toast.success(res.result.message);
             this.isvisible = false;
             this.isvisibleChange.emit(false);
+            this.isvisibleUpdate.emit(true);
             this.loader.stop();
           }
         }, error: (err) => {
-          this.toast.error(err.result.message);
+          this.toast.error(err.error.result.message);
           this.loader.stop();
         }
       })
@@ -381,9 +393,7 @@ export class UpdateInforComponentComponent {
       next: (res) => {
         this.columns = res.data;
         console.log(this.columns);
-        this.inforMachine = this.inforComponent;
-        this.getParamsOnInit();
-        this.getImageByName();
+        this.formatNumberInUpdate();
         this.getRowDataAsString(this.inforComponent);
       }
     })
@@ -446,10 +456,12 @@ export class UpdateInforComponentComponent {
    */
   async getParamsOnInit() {
     for(let i = 0; i < this.columns.length; i++) {
-      if(this.columns[i].dataType == 9) {
+      if(this.columns[i].dataType == this.dataType.PARAM) {
         await this.handleOpenChangeDataTypeParam(true, this.columns[i]);
       } else if(this.columns[i].hasUnit) {
         await this.handleOpenChangeUnit(true, this.columns[i]);
+      } else if(this.columns[i].dataType == this.dataType.RELATION) {
+        await this.handleOpenChangeRelation(true, this.columns[i]);
       }
     }
   }
@@ -473,6 +485,75 @@ export class UpdateInforComponentComponent {
    handleImageClick() {
      // document.getElementById('fileInput')?.click();
    }
+
+   /**
+   * Hàm gọi API và xử lý dữ liệu option cho select box với trường có kiểu dữ liệu là relation
+   */
+  async handleOpenChangeRelation(event: any, column: any) {
+    this.columnRelation = '';
+    console.log(column);
+    console.log(this.listEntityByRelation);
+    if(this.listEntityByRelation.length > 0) {
+      let tableCode = '';
+      for(let i = 0; i < this.listEntityByRelation.length; i++) {
+        if(this.listEntityByRelation[i].id == Number.parseInt(column.relateTable)) {
+          tableCode = this.listEntityByRelation[i].name;
+        }
+      }
+      if(tableCode != '') {
+        let request = {
+          "pageNumber": 0,
+          "pageSize": 0,
+          "common": "",
+          "filter": {},
+          "sortOrder": "DESC",
+          "sortProperty": "index",
+          "searchOptions": []
+        }
+        this.manageService.getDataDynamicTable(tableCode, request).subscribe({
+          next: (res) => {
+            this.optionsRelation = res.data;
+            this.manageService.getColummnByTableName(tableCode).subscribe({
+              next: (res) => {
+                for(let i = 0; i < res.data.length; i++) {
+                  if(res.data[i].id == Number.parseInt(column.relateColumn)) {
+                    this.columnRelation = res.data[i].keyName;
+                    break;
+                  }
+                }
+              }
+            })
+          }, error: (err) => {
+            this.toast.error(err.result.message);
+          }
+        })
+      }
+    }
+  }
+
+  getAllEntity() {
+    this.listEntityByRelation = [];
+    this.configService.getAllCategory().subscribe({
+      next: (res) => {
+        for(let i = 0; i < res.data.length; i++) {
+          if(res.data[i].isEntity) {
+            this.listEntityByRelation.push(res.data[i])
+          }
+          if(res.data[i].children.length > 0) {
+            for(let j = 0; j < res.data[i].children.length; j++) {
+              if(res.data[i].children[j].isEntity) {
+                this.listEntityByRelation.push(res.data[i].children[j])
+              }
+            }
+          }
+        }
+        this.getParamsOnInit();
+        console.log(this.listEntityByRelation);
+      }, error: (err) => {
+        this.toast.error(err.result.message);
+      }
+    })
+  }
 
   /**
    * Hàm xử lý để sinh mã QR cho từng bản ghi
@@ -507,13 +588,21 @@ export class UpdateInforComponentComponent {
     }
   }
 
-  formatNumberInUpdate() {
+  async formatNumberInUpdate() {
     for(const property in this.inforComponent) {
       if(property != 'id' && (typeof this.inforComponent[property] == 'number')) {
         this.inforComponent[property] = this.inforComponent[property].toLocaleString('en-US', { useGrouping: true });
       }
     }
+    for(let i = 0; i < this.columns.length; i++) {
+      if(this.columns[i].dataType == this.dataType.RELATION) {
+        this.inforComponent[this.columns[i].keyName] = Number.parseInt(this.inforComponent[this.columns[i].keyName]);
+      }
+    }
     console.log('Infor: ', this.inforComponent);
+    this.inforMachine = this.inforComponent;
+    this.getAllEntity();
+    this.getImageByName();
   }
 
   /**

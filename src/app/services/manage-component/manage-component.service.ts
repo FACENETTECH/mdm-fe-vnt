@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { environment } from 'src/environment/environment';
@@ -9,14 +9,26 @@ import { Observable } from 'rxjs';
 })
 export class ManageComponentService {
   url: string = environment.api_end_point;
-  constructor(private baseService: BaseService, private httpClient: HttpClient,) {}
+  accpetLanguage: string = 'vi_VN';
+  constructor(private baseService: BaseService, private httpClient: HttpClient,) {
+    let language = localStorage.getItem('language');
+    if (language !== null) {
+      this.accpetLanguage = language;
+    } else {
+      this.accpetLanguage = 'vi_VN';
+    }
+  }
 
   /**
    * Lấy ra thông tin các bảng con trong chức năng
    * @param tableName: Trường name trong object thông tin bảng
    */
   getInforTables(tableName: any): Observable<any> {
-    return this.httpClient.get(`${this.url}/api/categories/${tableName}`)
+    return this.httpClient.get(`${this.url}/api/categories/${tableName}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    })
   }
 
   /**
@@ -25,7 +37,11 @@ export class ManageComponentService {
    * @returns 
    */
   getParamsByCode(param: any): Observable<any> {
-    return this.httpClient.get(`${this.url}/api/params/units/${param}`)
+    return this.httpClient.get(`${this.url}/api/params/units/${param}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    })
   }
 
   /**
@@ -35,7 +51,11 @@ export class ManageComponentService {
    * @returns 
    */
   getParamByTableNameAndColumnName(tableName: string, columnName: string): Observable<any> {
-    return this.httpClient.get(`${this.url}/api/params/columns/${tableName}/${columnName}`);
+    return this.httpClient.get(`${this.url}/api/params/columns/${tableName}/${columnName}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -44,7 +64,11 @@ export class ManageComponentService {
    * @returns 
    */
   getColummnByTableName(tableName: string): Observable<any> {
-    return this.httpClient.get(`${this.url}/api/columns/${tableName}`);
+    return this.httpClient.get(`${this.url}/api/columns/${tableName}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -54,7 +78,11 @@ export class ManageComponentService {
    * @returns 
    */
   getDataDynamicTable(tableName: string, request: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}/search`, request);
+    return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}/search`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -64,7 +92,11 @@ export class ManageComponentService {
    * @returns 
    */
   addNewRecord(tableName: string, request: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}`, request);
+    return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -74,7 +106,11 @@ export class ManageComponentService {
    * @returns 
    */
   addListRecord(tableName: string, request: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}/batch`, request);
+    return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}/batch`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -85,7 +121,11 @@ export class ManageComponentService {
    * @returns 
    */
   updateInforRecordById(tableName: string, id: any, request: any): Observable<any> {
-    return this.httpClient.put(`${this.url}/api/dynamic-tables/${tableName}/${id}`, request);
+    return this.httpClient.put(`${this.url}/api/dynamic-tables/${tableName}/${id}`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -95,7 +135,11 @@ export class ManageComponentService {
    * @returns 
    */
   deleteRecordById(tableName: string, id: any): Observable<any> {
-    return this.httpClient.delete(`${this.url}/api/dynamic-tables/${tableName}/${id}`);
+    return this.httpClient.delete(`${this.url}/api/dynamic-tables/${tableName}/${id}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -105,7 +149,11 @@ export class ManageComponentService {
    * @returns 
    */
   deleteListRecordByListId(tableName: string, listId: any): Observable<any> {
-    return this.httpClient.put(`${this.url}/api/dynamic-tables/${tableName}/delete-batch`, listId);
+    return this.httpClient.put(`${this.url}/api/dynamic-tables/${tableName}/delete-batch`, listId, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -117,7 +165,11 @@ export class ManageComponentService {
    * @returns 
    */
   uploadImageInComponents(tableName: any, id: any ,request: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/api/system-storage/${tableName}/${id}`, request);
+    return this.httpClient.post(`${this.url}/api/system-storage/${tableName}/${id}`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -129,7 +181,11 @@ export class ManageComponentService {
    * @returns 
    */
   getImageInComponents(tableName: any, id: any): Observable<any> {
-    return this.httpClient.get(`${this.url}/api/system-storage/${tableName}/${id}`);
+    return this.httpClient.get(`${this.url}/api/system-storage/${tableName}/${id}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -138,7 +194,11 @@ export class ManageComponentService {
    * @returns 
    */
   addValuesParam(request: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/api/params`, request);
+    return this.httpClient.post(`${this.url}/api/params`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**

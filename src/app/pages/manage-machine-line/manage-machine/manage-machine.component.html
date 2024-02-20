@@ -17,7 +17,7 @@
   <div [class]="classList.content">
     <app-breadcrumb nz-row [listBreadCrumb]="breadcrumbs"></app-breadcrumb>
     <nz-card
-      style="height: 100%; border-radius: 4px; padding-top: 10px;"
+      style="height: 96%; border-radius: 4px; padding-top: 10px;"
       class="color-border"
     >
       <h3 style="font-weight: 500; margin-bottom: 0; text-align: center;">{{ tableName | translate }}</h3>
@@ -526,14 +526,14 @@
 
 <app-add-new-machine-popup
   *ngIf="isvisibleAdd"
-  (isvisibleChange)="addColumnConfirm($event)"
+  (isvisibleAdd)="addColumnConfirm($event)"
   [(isvisible)]="isvisibleAdd"
 >
 </app-add-new-machine-popup>
 
 <app-update-infor-component
   *ngIf="isvisibleUpdate"
-  (isvisibleChange)="addColumnConfirm($event)"
+  (isvisibleUpdate)="addColumnConfirm($event)"
   [inforComponent]="currentMachine"
   [(isvisible)]="isvisibleUpdate"
 >

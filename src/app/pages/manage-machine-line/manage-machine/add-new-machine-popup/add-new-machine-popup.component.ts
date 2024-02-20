@@ -10,6 +10,7 @@ import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
+import { ConfigService } from 'src/app/services/manage-config/config.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
 import { DATA_TYPE } from 'src/app/utils/constrant';
 @Component({
@@ -24,10 +25,12 @@ export class AddNewMachinePopupComponent {
     private fb: UntypedFormBuilder,
     private i18n: NzI18nService,
     private manageService: ManageComponentService,
-    private loader: NgxUiLoaderService
+    private loader: NgxUiLoaderService,
+    private configService: ConfigService
   ) {}
   @Input() isvisible: boolean = true;
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
+  @Output() isvisibleAdd: EventEmitter<boolean> = new EventEmitter();
 
   machineCode: string = '';
   machineName: string = '';
@@ -52,6 +55,9 @@ export class AddNewMachinePopupComponent {
   columnKey: string = '';
   tableCode: string = '';
   checkActionImage: boolean = false;
+  listEntityByRelation: any[] = [];
+  optionsRelation: any[] = [];
+  columnRelation?: string;
 
   onSubmit(): void {}
 
@@ -63,6 +69,7 @@ export class AddNewMachinePopupComponent {
       this.tableCode = this.inforTable.name;
     }
     this.getColumn();
+    this.getAllEntity();
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -360,7 +367,8 @@ export class AddNewMachinePopupComponent {
                 console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
-                this.isvisibleChange.emit(true);
+                this.isvisibleChange.emit(false);
+                this.isvisibleAdd.emit(true);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -370,7 +378,8 @@ export class AddNewMachinePopupComponent {
           } else {
             this.toast.success(res.result.message);
             this.isvisible = false;
-            this.isvisibleChange.emit(true);
+            this.isvisibleChange.emit(false);
+            this.isvisibleAdd.emit(true);
             this.loader.stop();
           }
         }, error: (err) => {
@@ -450,6 +459,82 @@ export class AddNewMachinePopupComponent {
         this.toast.warning("Không tìm thấy tên cột!");
       }
     }
+  }
+
+  /**
+   * Hàm gọi API và xử lý dữ liệu option cho select box với trường có kiểu dữ liệu là relation
+   */
+  handleOpenChangeRelation(event: any, column: any) {
+    this.columnRelation = '';
+    console.log(column);
+    console.log(this.listEntityByRelation);
+    if(this.listEntityByRelation.length > 0) {
+      let tableCode = '';
+      for(let i = 0; i < this.listEntityByRelation.length; i++) {
+        if(this.listEntityByRelation[i].name == column.relateTable) {
+          tableCode = this.listEntityByRelation[i].name;
+        }
+      }
+      if(tableCode != '') {
+        let request = {
+          "pageNumber": 0,
+          "pageSize": 0,
+          "common": "",
+          "filter": {},
+          "sortOrder": "DESC",
+          "sortProperty": "index",
+          "searchOptions": []
+        }
+        this.manageService.getDataDynamicTable(tableCode, request).subscribe({
+          next: (res) => {
+            this.optionsRelation = res.data;
+            this.manageService.getColummnByTableName(tableCode).subscribe({
+              next: (res) => {
+                for(let i = 0; i < res.data.length; i++) {
+                  if(res.data[i].keyName == column.relateColumn) {
+                    this.columnRelation = res.data[i].keyName;
+                    break;
+                  }
+                }
+              }
+            })
+          }, error: (err) => {
+            this.toast.error(err.result.message);
+          }
+        })
+      }
+    }
+  }
+
+  isLoadingSelectRelation: boolean = false;
+  loadMoreResultRelation() {
+    this.isLoadingSelectRelation = true;
+    setTimeout(() => {
+      this.isLoadingSelectRelation = false;
+    }, 2000)
+  }
+
+  getAllEntity() {
+    this.listEntityByRelation = [];
+    this.configService.getAllCategory().subscribe({
+      next: (res) => {
+        for(let i = 0; i < res.data.length; i++) {
+          if(res.data[i].isEntity) {
+            this.listEntityByRelation.push(res.data[i])
+          }
+          if(res.data[i].children.length > 0) {
+            for(let j = 0; j < res.data[i].children.length; j++) {
+              if(res.data[i].children[j].isEntity) {
+                this.listEntityByRelation.push(res.data[i].children[j])
+              }
+            }
+          }
+        }
+        console.log(this.listEntityByRelation);
+      }, error: (err) => {
+        this.toast.error(err.result.message);
+      }
+    })
   }
 
   /**
