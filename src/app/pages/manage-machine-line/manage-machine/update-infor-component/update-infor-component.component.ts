@@ -319,7 +319,7 @@ export class UpdateInforComponentComponent {
     });
     if(check) {
       for(let i = 0; i < this.columns.length; i++) {
-        if(this.columns[i].dataType == this.dataType.NUMBER) {
+        if(this.columns[i].dataType == this.dataType.NUMBER && this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
           this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
           this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
         }
