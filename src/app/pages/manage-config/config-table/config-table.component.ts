@@ -80,7 +80,7 @@ export class ConfigTableComponent {
 
   breadcrumbs = [
     {
-      name: 'menu.management_machine',
+      name: 'Quản lý cấu hình',
       route: `/manage-machine-line/manage-machine`,
     },
   ];
@@ -236,7 +236,7 @@ export class ConfigTableComponent {
           }
         }
       }, error: (err) => {
-        this.toast.error(err.result.message);
+        this.toast.error(err.error.result.message);
       }
     })
     // this.pageNumber = page.page;
@@ -358,7 +358,7 @@ export class ConfigTableComponent {
         this.getData({ page: this.pageNumber, size: this.pageSize });
         this.loader.stop();
       }, error: (err) => {
-        this.toast.error(err.result.message);
+        this.toast.error(err.error.result.message);
         this.loader.stop();
       }
     })
@@ -376,7 +376,7 @@ export class ConfigTableComponent {
         this.refreshCheckedStatus();
         this.getData({ page: this.pageNumber, size: this.pageSize });
       }, error: (err) => {
-        this.toast.error(err.result.message);
+        this.toast.error(err.error.result.message);
       }
     })
   }

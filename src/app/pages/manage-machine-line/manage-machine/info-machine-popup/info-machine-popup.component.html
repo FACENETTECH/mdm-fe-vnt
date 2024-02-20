@@ -407,6 +407,33 @@
                 }}</span>
               </div>
             </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.RELATION">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <nz-select
+                  style="width: 100%"
+                  nzMode="default"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  (nzOpenChange)="handleOpenChangeRelation($event, col)"
+                  nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                    col.keyTitle | translate
+                  }} ----"
+                  (ngModelChange)="checkAction = true"
+                  disabled
+                >
+                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item.id" [nzLabel]="item[columnRelation!]"></nz-option>
+                </nz-select>
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
           </ng-container>
         </ng-container>
       </div>
