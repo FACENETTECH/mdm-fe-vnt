@@ -50,6 +50,8 @@ export class PopupUpdateConfigTableComponent {
   columnKey: string = '';
   listColumnInFunction: any = [];
   columnsFunction: any = [];
+  listEntityByRelation: any[] = [];
+  listColumnByRelation: any[] = [];
 
   onSubmit(): void {}
 
@@ -400,6 +402,80 @@ export class PopupUpdateConfigTableComponent {
       } else {
         this.toast.warning("Không tìm thấy tên cột!");
       }
+    }
+  }
+
+  /**
+   * Hàm xử lý sự kiện khi click ra ngoài popover sẽ đóng lại
+   * @param event 
+   * @param item 
+   */
+   popoverVisibleChangeRelation(event: any, item: any) {
+    item.showPopoverRelation = event;
+  }
+
+  /**
+   * Hàm xử lý sự kiện khi người dùng chọn kiểu dữ liệu là relation -> hiển thị popover
+   * @param item 
+   * @param keyName 
+   */
+  showPopoverRelation(item: any, keyName: string) {
+    if(item[keyName] == this.dataType.RELATION) {
+      item.showPopoverRelation = true;
+    }
+  }
+
+  /**
+   * Hàm lấy ra danh sách các bảng để gán cho trường có kiểu dữ liệu là relation
+   */
+  getAllEntity() {
+    this.listEntityByRelation = [];
+    this.configService.getAllCategory().subscribe({
+      next: (res) => {
+        for(let i = 0; i < res.data.length; i++) {
+          if(res.data[i].isEntity) {
+            this.listEntityByRelation.push(res.data[i])
+          }
+          if(res.data[i].children.length > 0) {
+            for(let j = 0; j < res.data[i].children.length; j++) {
+              if(res.data[i].children[j].isEntity) {
+                this.listEntityByRelation.push(res.data[i].children[j])
+              }
+            }
+          }
+        }
+        console.log(this.listEntityByRelation);
+      }, error: (err) => {
+        this.toast.error(err.result.message);
+      }
+    })
+  }
+
+  /**
+   * Hàm lấy ra danh sách các cột để gán cho trường có kiểu dữ liệu là relation
+   */
+  getAllColumnByEntityName(item: any) {
+    console.log(item);
+    if(item.hasOwnProperty('relateTable')) {
+      if(item.relateTable != null) {
+        let tableName = '';
+        for(let i = 0; i < this.listEntityByRelation.length; i++) {
+          if(this.listEntityByRelation[i].id == item.relateTable) {
+            tableName = this.listEntityByRelation[i].name;
+          }
+        }
+        this.manageService.getColummnByTableName(tableName).subscribe({
+          next: (res) => {
+            this.listColumnByRelation = res.data;
+          }, error: (err) => {
+            this.toast.error(err.result.message);
+          }
+        })
+      } else {
+        this.listColumnByRelation = [];
+      }
+    } else {
+      this.listColumnByRelation = [];
     }
   }
 
