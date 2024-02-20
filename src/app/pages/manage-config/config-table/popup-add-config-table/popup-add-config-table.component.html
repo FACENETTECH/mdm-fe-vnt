@@ -477,7 +477,7 @@
                                                   [(ngModel)]="item.relateTable"
                                                   (nzOpenChange)="getAllEntity()"
                                                 >
-                                                  <nz-option *ngFor="let option of listEntityByRelation" [nzValue]="option.id" [nzLabel]="option.label"></nz-option>
+                                                  <nz-option *ngFor="let option of listEntityByRelation" [nzValue]="option.name" [nzLabel]="option.label"></nz-option>
                                                 </nz-select>
                                             </div>
                                             <div style="width: 45%;">
@@ -496,7 +496,7 @@
                                                   [(ngModel)]="item.relateColumn"
                                                   (nzOpenChange)="getAllColumnByEntityName(item)"
                                                 >
-                                                  <nz-option *ngFor="let option of listColumnByRelation" [nzValue]="option.id" [nzLabel]="option.keyTitle"></nz-option>
+                                                  <nz-option *ngFor="let option of listColumnByRelation" [nzValue]="option.keyName" [nzLabel]="option.keyTitle"></nz-option>
                                                 </nz-select>
                                             </div>
                                         </div>

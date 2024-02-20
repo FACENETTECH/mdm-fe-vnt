@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environment/environment';
 
@@ -9,10 +9,18 @@ import { environment } from 'src/environment/environment';
 })
 export class ConfigService {
   url: string = environment.api_end_point;
+  accpetLanguage: string = 'vi_VN';
   constructor(
     private baseService: BaseService,
     private httpClient: HttpClient
-  ) { }
+  ) {
+    let language = localStorage.getItem('language');
+    if (language !== null) {
+      this.accpetLanguage = language;
+    } else {
+      this.accpetLanguage = 'vi_VN';
+    }
+  }
 
   /** API to get Column */
   async getColumn(entityType: number){
@@ -49,21 +57,33 @@ export class ConfigService {
    * API lấy ra danh sách chức năng
    */
   getAllCategory(): Observable<any> {
-    return this.httpClient.get(`${this.url}/api/categories`);
+    return this.httpClient.get(`${this.url}/api/categories`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
    * API lấy ra chức năng theo Name
    */
   getCategoryByName(tableName: any): Observable<any> {
-    return this.httpClient.get(`${this.url}/api/categories/${tableName}`);
+    return this.httpClient.get(`${this.url}/api/categories/${tableName}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
    * API thêm mới chức năng
    */
   addNewCategory(request: any) {
-    return this.httpClient.post(`${this.url}/api/categories`, request);
+    return this.httpClient.post(`${this.url}/api/categories`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -72,7 +92,11 @@ export class ConfigService {
    * @returns 
    */
   deleteCategory(tableName: any): Observable<any> {
-    return this.httpClient.delete(`${this.url}/api/categories/${tableName}`);
+    return this.httpClient.delete(`${this.url}/api/categories/${tableName}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 
   /**
@@ -82,6 +106,10 @@ export class ConfigService {
    * @returns 
    */
   updateInforTable(tableName: any, request: any): Observable<any> {
-    return this.httpClient.put(`${this.url}/api/categories/${tableName}`, request);
+    return this.httpClient.put(`${this.url}/api/categories/${tableName}`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
   }
 }

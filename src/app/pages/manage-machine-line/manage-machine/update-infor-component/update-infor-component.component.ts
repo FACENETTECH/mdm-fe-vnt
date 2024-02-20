@@ -33,6 +33,7 @@ export class UpdateInforComponentComponent {
   @Input() isvisible: boolean = true;
   @Input() inforComponent: any = '';
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
+  @Output() isvisibleUpdate: EventEmitter<boolean> = new EventEmitter();
 
   machineCode: string = '';
   machineName: string = '';
@@ -318,11 +319,12 @@ export class UpdateInforComponentComponent {
       }
     });
     if(check) {
+      console.log(this.columns)
       for(let i = 0; i < this.columns.length; i++) {
-        if(this.columns[i].dataType == this.dataType.NUMBER) {
-          this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
-          this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
-        }
+        // if(this.columns[i].dataType == this.dataType.NUMBER) {
+        //   this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
+        //   this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
+        // }
       }
       this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
         next: (res) => {
@@ -334,6 +336,8 @@ export class UpdateInforComponentComponent {
               break;
             }
           }
+          console.log(isImage);
+          console.log(this.checkActionImage);
           if(isImage && this.checkActionImage) {
             this.manageService.uploadImageInComponents(this.tableCode, this.inforMachine['id'], this.formUpload).subscribe({
               next: (data) => {
@@ -341,6 +345,7 @@ export class UpdateInforComponentComponent {
                 this.toast.success(res.result.message);
                 this.isvisible = false;
                 this.isvisibleChange.emit(false);
+                this.isvisibleUpdate.emit(true);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -351,6 +356,7 @@ export class UpdateInforComponentComponent {
             this.toast.success(res.result.message);
             this.isvisible = false;
             this.isvisibleChange.emit(false);
+            this.isvisibleUpdate.emit(true);
             this.loader.stop();
           }
         }, error: (err) => {

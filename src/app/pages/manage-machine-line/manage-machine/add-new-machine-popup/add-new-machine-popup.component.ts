@@ -30,6 +30,7 @@ export class AddNewMachinePopupComponent {
   ) {}
   @Input() isvisible: boolean = true;
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
+  @Output() isvisibleAdd: EventEmitter<boolean> = new EventEmitter();
 
   machineCode: string = '';
   machineName: string = '';
@@ -366,7 +367,8 @@ export class AddNewMachinePopupComponent {
                 console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
-                this.isvisibleChange.emit(true);
+                this.isvisibleChange.emit(false);
+                this.isvisibleAdd.emit(true);
                 this.loader.stop();
               }, error: (err) => {
                 console.log(err);
@@ -376,7 +378,8 @@ export class AddNewMachinePopupComponent {
           } else {
             this.toast.success(res.result.message);
             this.isvisible = false;
-            this.isvisibleChange.emit(true);
+            this.isvisibleChange.emit(false);
+            this.isvisibleAdd.emit(true);
             this.loader.stop();
           }
         }, error: (err) => {
@@ -468,7 +471,7 @@ export class AddNewMachinePopupComponent {
     if(this.listEntityByRelation.length > 0) {
       let tableCode = '';
       for(let i = 0; i < this.listEntityByRelation.length; i++) {
-        if(this.listEntityByRelation[i].id == Number.parseInt(column.relateTable)) {
+        if(this.listEntityByRelation[i].name == column.relateTable) {
           tableCode = this.listEntityByRelation[i].name;
         }
       }
@@ -488,7 +491,7 @@ export class AddNewMachinePopupComponent {
             this.manageService.getColummnByTableName(tableCode).subscribe({
               next: (res) => {
                 for(let i = 0; i < res.data.length; i++) {
-                  if(res.data[i].id == Number.parseInt(column.relateColumn)) {
+                  if(res.data[i].keyName == column.relateColumn) {
                     this.columnRelation = res.data[i].keyName;
                     break;
                   }

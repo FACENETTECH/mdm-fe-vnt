@@ -526,14 +526,14 @@
 
 <app-add-new-machine-popup
   *ngIf="isvisibleAdd"
-  (isvisibleChange)="addColumnConfirm($event)"
+  (isvisibleAdd)="addColumnConfirm($event)"
   [(isvisible)]="isvisibleAdd"
 >
 </app-add-new-machine-popup>
 
 <app-update-infor-component
   *ngIf="isvisibleUpdate"
-  (isvisibleChange)="addColumnConfirm($event)"
+  (isvisibleUpdate)="addColumnConfirm($event)"
   [inforComponent]="currentMachine"
   [(isvisible)]="isvisibleUpdate"
 >
