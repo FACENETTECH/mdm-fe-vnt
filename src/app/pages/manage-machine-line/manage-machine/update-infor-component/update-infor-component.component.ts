@@ -321,10 +321,12 @@ export class UpdateInforComponentComponent {
     if(check) {
       console.log(this.columns)
       for(let i = 0; i < this.columns.length; i++) {
-        // if(this.columns[i].dataType == this.dataType.NUMBER) {
-        //   this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
-        //   this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
-        // }
+        if(this.columns[i].dataType == this.dataType.NUMBER) {
+          if(typeof this.inforMachine[this.columns[i].keyName] == 'string') {
+            this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
+            this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
+          }
+        }
       }
       this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
         next: (res) => {
@@ -360,7 +362,7 @@ export class UpdateInforComponentComponent {
             this.loader.stop();
           }
         }, error: (err) => {
-          this.toast.error(err.result.message);
+          this.toast.error(err.error.result.message);
           this.loader.stop();
         }
       })
@@ -391,7 +393,6 @@ export class UpdateInforComponentComponent {
       next: (res) => {
         this.columns = res.data;
         console.log(this.columns);
-        this.getImageByName();
         this.formatNumberInUpdate();
         this.getRowDataAsString(this.inforComponent);
       }
@@ -601,6 +602,7 @@ export class UpdateInforComponentComponent {
     console.log('Infor: ', this.inforComponent);
     this.inforMachine = this.inforComponent;
     this.getAllEntity();
+    this.getImageByName();
   }
 
   /**
