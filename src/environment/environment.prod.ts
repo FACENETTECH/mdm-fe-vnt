@@ -5,7 +5,7 @@
 export const environment = {
   production: true,
   url_home_page:
-    'http://fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
+    'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
   api_end_point: 'http://222.252.25.37:10319',
   // api_end_point: 'http://localhost:10320',
   auth_api: '/api/auth/',
