@@ -343,7 +343,7 @@ export class AddNewMachinePopupComponent {
       for(let i = 0; i < this.columns.length; i++) {
         if(this.columns[i].dataType == this.dataType.NUMBER && this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
           this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
-          this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
+          this.inforMachine[this.columns[i].keyName] = Number.parseFloat(this.inforMachine[this.columns[i].keyName]);
         }
       }
       this.manageService.addNewRecord(this.tableCode, this.inforMachine).subscribe({
@@ -542,12 +542,18 @@ export class AddNewMachinePopupComponent {
     // Lấy giá trị đang nhập từ input
     let value = input.value;
   
-    // Loại bỏ tất cả các dấu phẩy
-    value = value.replace(/,/g, '');
+    // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
+    value = value.replace(/[^0-9.]/g, '');
   
-    // Chuyển đổi giá trị thành số và kiểm tra nếu nó là một số hợp lệ
-    const numberValue = Number(value);
-    if (!isNaN(numberValue)) {
+    // Kiểm tra nếu quá 2 kí tự sau dấu .
+    if (value.indexOf('.') != -1 && value.indexOf('.') < value.length - 3) {
+      value = value.slice(0, -1);
+    }
+    console.log("value", value);
+    // Convert string thành number 
+    const numberValue = Number.parseFloat(value);
+    console.log("num value", numberValue);
+    if (value[value.length - 1] != '.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
       const formattedValue = numberValue.toLocaleString('en-US', { useGrouping: true });
       // Gán giá trị đã được định dạng lại vào input
