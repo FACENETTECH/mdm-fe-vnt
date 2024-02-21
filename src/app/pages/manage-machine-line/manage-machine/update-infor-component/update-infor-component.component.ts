@@ -74,6 +74,19 @@ export class UpdateInforComponentComponent {
     this.getColumn();
   }
 
+  /**
+   * Hàm xử lý API để lấy ra thông tin bản ghi
+   */
+  getInforRecord() {
+    this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
+      next: (res) => {
+        this.formatNumberInUpdate(res.data);
+      }, error: (err) => {
+        this.toast.error(err.error.message);
+      }
+    })
+  }
+
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
   formatter = (value: any): string => {
     let result = `${value}`.replace(',', '');
@@ -135,7 +148,6 @@ export class UpdateInforComponentComponent {
         this.checkMachine[x.keyName] = '';
       }
     });
-    console.log(this.checkMachine);
   }
   async getParam() {
     const request = {
@@ -145,7 +157,6 @@ export class UpdateInforComponentComponent {
       },
     };
     let res = await this.machine.getMachineTypeList(request);
-    console.log(res);
     this.machineTypeList = res.data;
 
     return this.machineTypeList;
@@ -272,7 +283,6 @@ export class UpdateInforComponentComponent {
     }
   }
   convertToSeconds(value: number, unit: string): number {
-    console.log(value);
 
     if (isNaN(value)) {
       return 0;
@@ -308,7 +318,6 @@ export class UpdateInforComponentComponent {
 
   async submit() {
     this.loader.start();
-    console.log(this.inforMachine)
     this.checkValid();
     let check = true;
     this.columns.map((x: any) => {
@@ -319,7 +328,6 @@ export class UpdateInforComponentComponent {
       }
     });
     if(check) {
-      console.log(this.columns)
       for(let i = 0; i < this.columns.length; i++) {
         if(this.columns[i].dataType == this.dataType.NUMBER) {
           if(typeof this.inforMachine[this.columns[i].keyName] == 'string') {
@@ -330,7 +338,6 @@ export class UpdateInforComponentComponent {
       }
       this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
         next: (res) => {
-          console.log(res);
           let isImage = false;
           for(let i = 0; i < this.columns.length; i++) {
             if(this.columns[i].dataType == this.dataType.IMAGE) {
@@ -338,24 +345,21 @@ export class UpdateInforComponentComponent {
               break;
             }
           }
-          console.log(isImage);
-          console.log(this.checkActionImage);
           if(isImage && this.checkActionImage) {
             this.manageService.uploadImageInComponents(this.tableCode, this.inforMachine['id'], this.formUpload).subscribe({
               next: (data) => {
-                console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
                 this.isvisibleChange.emit(false);
                 this.isvisibleUpdate.emit(true);
                 this.loader.stop();
               }, error: (err) => {
-                console.log(err);
+                this.toast.error(err.error.result.message);
                 this.loader.stop();
               }
             })
           } else {
-            this.toast.success(res.result.message);
+            this.toast.success(res.error.result.message);
             this.isvisible = false;
             this.isvisibleChange.emit(false);
             this.isvisibleUpdate.emit(true);
@@ -384,16 +388,13 @@ export class UpdateInforComponentComponent {
       pageSize: page.size,
       filter: {},
     };
-
-    console.log(this.columns);
   }
 
   async getColumn() {
     this.manageService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
         this.columns = res.data;
-        console.log(this.columns);
-        this.formatNumberInUpdate();
+        this.getInforRecord();
         this.getRowDataAsString(this.inforComponent);
       }
     })
@@ -405,10 +406,9 @@ export class UpdateInforComponentComponent {
   getImageByName() {
     this.manageService.getImageInComponents(this.tableCode, this.inforMachine['id']).subscribe({
       next: (res) => {
-        console.log(res);
         this.inforImage = res.data;
       }, error: (err) => {
-        console.log(err);
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -417,14 +417,12 @@ export class UpdateInforComponentComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box
    */
   async handleOpenChangeDataTypeParam(data: any, column: any) {
-    console.log("Select: ", column);
     if(data) {
       this.manageService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
         next: (res) => {
-          console.log("Select data: ", res);
           this.valueSelectBox = res.data;
         }, error: (err) => {
-          this.toast.error(err.result.message);
+          this.toast.error(err.error.result.message);
         }
       })
     }
@@ -434,15 +432,13 @@ export class UpdateInforComponentComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có đơn vị tính
    */
   async handleOpenChangeUnit(data: any, column: any) {
-    console.log("Unit: ", column);
     if(data) {
       if(column.note != '' && column.note != null) {
         this.manageService.getParamsByCode(column.note).subscribe({
           next: (res) => {
-            console.log("Unit data: ", res);
             this.valueTypeParam = res.data;
           }, error: (err) => {
-            this.toast.error(err.result.message);
+            this.toast.error(err.error.result.message);
           }
         });
       } else {
@@ -471,12 +467,8 @@ export class UpdateInforComponentComponent {
    */
    formUpload= new FormData();
    handleChange(item: any, column: any) {
-     console.log(item.target.files['0']);
      this.formUpload.append(column.keyName, item.target.files['0']);
      this.inforMachine[column.keyName] = item.target.files['0'].name;
-     console.log(column);
-     console.log(this.inforMachine)
-     console.log(this.formUpload)
    };
  
    /**
@@ -491,8 +483,6 @@ export class UpdateInforComponentComponent {
    */
   async handleOpenChangeRelation(event: any, column: any) {
     this.columnRelation = '';
-    console.log(column);
-    console.log(this.listEntityByRelation);
     if(this.listEntityByRelation.length > 0) {
       let tableCode = '';
       for(let i = 0; i < this.listEntityByRelation.length; i++) {
@@ -524,13 +514,16 @@ export class UpdateInforComponentComponent {
               }
             })
           }, error: (err) => {
-            this.toast.error(err.result.message);
+            this.toast.error(err.error.result.message);
           }
         })
       }
     }
   }
 
+  /**
+   * Hàm lấy ra tất cả bảng trong database
+   */
   getAllEntity() {
     this.listEntityByRelation = [];
     this.configService.getAllCategory().subscribe({
@@ -547,10 +540,10 @@ export class UpdateInforComponentComponent {
             }
           }
         }
-        this.getParamsOnInit();
         console.log(this.listEntityByRelation);
+        this.getParamsOnInit();
       }, error: (err) => {
-        this.toast.error(err.result.message);
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -588,19 +581,21 @@ export class UpdateInforComponentComponent {
     }
   }
 
-  async formatNumberInUpdate() {
-    for(const property in this.inforComponent) {
-      if(property != 'id' && (typeof this.inforComponent[property] == 'number')) {
-        this.inforComponent[property] = this.inforComponent[property].toLocaleString('en-US', { useGrouping: true });
+  /**
+   * Hàm xử lý định dạng lại giá trị số với trường có kiểu dữ liệu là number
+   */
+  async formatNumberInUpdate(inforComponent: any) {
+    for(const property in inforComponent) {
+      if(property != 'id' && property != 'index' && (typeof inforComponent[property] == 'number')) {
+        inforComponent[property] = inforComponent[property].toLocaleString('en-US', { useGrouping: true });
       }
     }
     for(let i = 0; i < this.columns.length; i++) {
       if(this.columns[i].dataType == this.dataType.RELATION) {
-        this.inforComponent[this.columns[i].keyName] = Number.parseInt(this.inforComponent[this.columns[i].keyName]);
+        inforComponent[this.columns[i].keyName] = Number.parseInt(inforComponent[this.columns[i].keyName]);
       }
     }
-    console.log('Infor: ', this.inforComponent);
-    this.inforMachine = this.inforComponent;
+    this.inforMachine = inforComponent;
     this.getAllEntity();
     this.getImageByName();
   }
@@ -611,7 +606,6 @@ export class UpdateInforComponentComponent {
    */
    @HostListener('document:keydown.Escape', ['$event'])
    handleEscape(event: any) {
-     console.log(event);
      this.handleCancel();
    }
 

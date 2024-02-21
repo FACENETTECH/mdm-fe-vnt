@@ -506,14 +506,9 @@ export class AddNewMachinePopupComponent {
     }
   }
 
-  isLoadingSelectRelation: boolean = false;
-  loadMoreResultRelation() {
-    this.isLoadingSelectRelation = true;
-    setTimeout(() => {
-      this.isLoadingSelectRelation = false;
-    }, 2000)
-  }
-
+  /**
+   * Hàm lấy ra tất cả bảng trong database
+   */
   getAllEntity() {
     this.listEntityByRelation = [];
     this.configService.getAllCategory().subscribe({

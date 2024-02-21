@@ -211,4 +211,18 @@ export class ManageComponentService {
     const params = new HttpParams().set('value', value);
     return this.httpClient.get(`${this.url}/api/dynamic-tables/${tableName}/auto-complete`, { params });
   }
+
+  /**
+   * API lấy ra thông tin bản ghi theo id và mã bảng truyền vào
+   * @param tableCode mã bảng cần lấy bản ghi
+   * @param id id của bản ghi cần lấy
+   * @returns 
+   */
+  getInforRecordById(tableCode: any, id: any): Observable<any> {
+    return this.httpClient.get(`${this.url}/api/dynamic-tables/${tableCode}/${id}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
+  }
 }

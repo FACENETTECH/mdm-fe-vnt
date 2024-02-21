@@ -586,6 +586,9 @@ export class InfoMachinePopupComponent {
     }
   }
 
+  /**
+   * Hàm xử lý định dạng lại giá trị số với trường có kiểu dữ liệu là number
+   */
   async formatNumberInUpdate() {
     for(const property in this.inforComponent) {
       if(property != 'id' && (typeof this.inforComponent[property] == 'number')) {
