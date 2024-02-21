@@ -309,6 +309,7 @@ export class ManageMachineComponent implements OnInit {
         this.loader.stop();
       }, error: (err) => {
         this.toast.error(err.error.result.message);
+        this.loader.stop();
       }
     })
   }
