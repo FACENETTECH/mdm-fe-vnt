@@ -570,8 +570,8 @@ export class UpdateInforComponentComponent {
     // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
     value = value.replace(/[^0-9.]/g, '');
   
-    // Kiểm tra nếu quá 2 kí tự sau dấu .
-    if (value.indexOf('.') != -1 && value.indexOf('.') < value.length - 3) {
+    // Kiểm tra nếu quá 3 kí tự sau dấu .
+    if (value.indexOf('.') != -1 && value.indexOf('.') < value.length - 4) {
       value = value.slice(0, -1);
     }
     // Convert string thành number 
