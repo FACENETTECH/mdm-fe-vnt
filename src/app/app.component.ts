@@ -50,15 +50,20 @@ export class AppComponent {
     private toast: ToastrService,
     private configService: ConfigService
   ) {
-    // this.getNameByCookie();
     let arr = window.location.href.split('/');
-    console.log(arr);
-    console.log(arr[arr.length - 1]);
     if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
       this.isVisableLayout = false;
     } else {
-      this.isVisableLayout = true;
-      this.getListFunctionByName(arr[arr.length - 1]);
+      let baseUrl = JSON.parse(localStorage.getItem('baseUrl')!);
+      if(baseUrl.children.length > 0) {
+        if(baseUrl.name != arr[arr.length - 2]) {
+          this.getListFunctionByName(arr[arr.length - 1], false);
+        } else {
+          this.getListFunctionByName(baseUrl.name, true, arr[arr.length - 1]);
+        }
+      } else {
+        this.getListFunctionByName(arr[arr.length - 1], false);
+      }
     }
   }
 
@@ -288,7 +293,7 @@ export class AppComponent {
   /**
    * Đây là hàm lấy ra danh sách chức năng con theo tên chức năng cha
    */
-  getListFunctionByName(data: any) {
+  getListFunctionByName(data: any, check: boolean, childrenName?: any) {
     let sider: any;
     this.manageComponentService.getInforTables(data).subscribe({
       next: (res) => {
@@ -306,7 +311,6 @@ export class AppComponent {
               children: []
             })
           }
-          // this._router.navigate([`${this.siderList[0].path}`]);
         }
         // Nếu chức năng cha KHÔNG có chức năng con sẽ thêm các thông tin về router không có baseUrl là tên của chức năng cha 
         else {
@@ -318,8 +322,12 @@ export class AppComponent {
             requiredRoles: ['admin_business'],
           })
         }
-        this._router.navigate([`/mdm/${data}`]);
-        // window.location.href = `${environment.domain_name_mdm}/mdm/${data}`;
+        this.isVisableLayout = true;
+        if(check) {
+          this._router.navigate([`/mdm/${data}/${childrenName}`]);
+        } else {
+          this._router.navigate([`/mdm/${data}`]);
+        }
       }, error: (err) => {
         console.log(err);
       }
@@ -327,67 +335,11 @@ export class AppComponent {
 
   }
 
-  /**
-   * Hàm lấy tên phân hệ khi redirect từ trang homepage
-   */
-  getNameByCookie() { 
-    // console.log(window.location.href);
-    // console.log(localStorage.getItem('beforeBaseUrl'));
-    // if(localStorage.getItem('beforeBaseUrl') == null || localStorage.getItem('beforeBaseUrl') == '') {
-    //   let arr = window.location.href.split('/');
-    //   console.log(arr);
-    //   console.log(arr[arr.length - 1]);
-    //   if(arr[arr.length - 1] == '') {
-    //     if(localStorage.getItem("tableNameMDM") != null && localStorage.getItem("tableNameMDM") != '') {
-    //       this.getListFunctionByName(localStorage.getItem("tableNameMDM"));
-    //     } else {
-    //       console.log(window.location.href);
-    //       let arr = window.location.href.split('/');
-    //       console.log(arr[arr.length - 1]);
-    //       localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
-    //       this.getListFunctionByName(arr[arr.length - 1]);
-    //     }
-    //   } else {
-    //     localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
-    //     this.getListFunctionByName(arr[arr.length - 1]);
-    //   }
-    //   localStorage.setItem('beforeBaseUrl', arr[arr.length - 1])
-    // } else {
-    //   this.getListFunctionByName(localStorage.getItem('beforeBaseUrl'));
-    // }
-
-
-    // if(localStorage.getItem("tableNameMDM") != null && localStorage.getItem("tableNameMDM") != '') {
-    //   this.getListFunctionByName(localStorage.getItem("tableNameMDM"));
-    // } else {
-    //   console.log(window.location.href);
-    //   let arr = window.location.href.split('/');
-    //   console.log(arr[arr.length - 1]);
-    //   localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
-    //   this.getListFunctionByName(arr[arr.length - 1]);
-    // }
-
-    // const cookies = document.cookie.split(';');
-    // let data;
-    // for (const cookie of cookies) {
-    //   const [name, value] = cookie.split('=');
-    //   if (name.trim() === 'data') {
-    //     data = JSON.parse(decodeURIComponent(value));
-    //     break;
-    //   }
-    // }
-    // console.log(data);
-    // if(data != undefined && data != null && data != '') {
-    //   this.getListFunctionByName(data);
-    // }
-  }
-
-
   /** Block xử lý các chức năng trong phân hệ MDM */
   /** 
    * Đây làm hàm link về trang chứa các phân hệ của hệ thống
   */
-   goToHomePage() {
+  goToHomePage() {
     // this.router.navigateByUrl('/auth/business-acc-setting/home-page')
   }
 
@@ -397,9 +349,7 @@ export class AppComponent {
   */
   directProduct(item: any) {
     this.isVisableLayout = true;
-    this.getListFunctionByName(item.name);
-    
-    // window.location.href = item.link + '/mdm/' + item.name; // Hiện tại dữ liệu trả về chưa có trường nào có thông tin của phân hệ nên đang fix cứng phân hệ MDM
+    this.getListFunctionByName(item.name, false);
   }
 
   /**

@@ -49,21 +49,12 @@ export class SiderComponent {
     // });
   }
 
-  ngOnInit() {
-    // if(localStorage.getItem('checkFetchSider') == '') {
-    //   setTimeout(() => {
-    //     this.sider[0].open = true;
-    //     localStorage.setItem('currentSider', this.sider[0].name);
-    //     localStorage.setItem('checkFetchSider', 'true'); 
-    //   }, 600)
-    // }
-  }
+  ngOnInit() {}
 
   openParent(i: number) {
     this.sider[i].open = true;
   }
   clickParent(i: number, link: any, parent: any) {
-    localStorage.setItem('currentSider', parent.name);
     this.router.navigateByUrl(link);
     this.closeAllParentReal();
     this.closeAllChildren();

@@ -66,11 +66,8 @@ export class UpdateInforComponentComponent {
 
   ngOnInit() {
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
-    if(this.inforTable.children.length > 0) {
-      this.tableCode = localStorage.getItem('currentSider')!;
-    } else {
-      this.tableCode = this.inforTable.name;
-    }
+    let arr = window.location.href.split('/');
+    this.tableCode = arr[arr.length - 1];
     this.getColumn();
   }
 
