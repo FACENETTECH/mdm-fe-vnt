@@ -112,4 +112,11 @@ export class ConfigService {
       }),
     });
   }
+
+  /**
+   * Đây là hàm lấy ra danh sách chức năng của từng phân hệ
+   */
+   getAllFunction(): Observable<any> {
+    return this.httpClient.get(`${this.url}/api/categories`)
+  }
 }

@@ -149,7 +149,36 @@
 <app-popup-logout *ngIf="isvisibleLogout"  [(isvisible)]="isvisibleLogout" (logout)="logOut()"  ></app-popup-logout>
 <tour-step-template></tour-step-template> -->
 
-<fn-layout [data]="siderList">
+<div *ngIf="!isVisableLayout">
+  <div class="menu">
+    <app-header> </app-header>
+  </div>
+  <div style="display: flex; padding-top: 4%;">
+    <div class="btn-back">
+    </div>
+    <div class="container-homepage">
+      <ng-container *ngFor="let item of lstFunction">
+          <ng-container *ngIf="item.parent == null">
+              <div class="items" (click)="directProduct(item)">
+                  <div class="container-item">
+                    <div class="top-item">
+                      <div>
+                        <img class="item-icons" [src]="item.icon" alt="" />
+                      </div>
+                    </div>
+                    <br />
+                    <div class="bot-item" style="justify-content: start; padding: 0px 10px">
+                      <p>{{ item.displayName }}</p>
+                    </div>
+                  </div>
+              </div>
+          </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<fn-layout *ngIf="isVisableLayout" [data]="siderList">
   <router-outlet></router-outlet>
 </fn-layout>
 

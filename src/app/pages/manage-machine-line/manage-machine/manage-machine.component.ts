@@ -124,17 +124,38 @@ export class ManageMachineComponent implements OnInit {
     return `${day}-${month}-${year}`;
   }
   ngOnInit() {
-    setTimeout(() => {
-      this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
-      if(this.inforTable.children.length > 0) {
-        this.tableCode = localStorage.getItem('currentSider')!;
-      } else {
-        this.tableCode = this.inforTable.name
-      }
-      this.breadcrumbs[0].name = this.inforTable.displayName;
-      this.tableName = this.inforTable.displayName.toUpperCase();
-      this.getHeaders();
-    }, 600)
+    // setTimeout(() => {
+    //   this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+    //   console.log(this.inforTable);
+    //   if(this.inforTable.children.length > 0) {
+    //     this.tableCode = localStorage.getItem('currentSider')!;
+    //   } else {
+    //     this.tableCode = this.inforTable.name
+    //   }
+    //   this.breadcrumbs[0].name = this.inforTable.displayName;
+    //   this.tableName = this.inforTable.displayName.toUpperCase();
+    //   this.getHeaders();
+    // }, 2000)
+    
+    this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+    let arr = window.location.href.split('/');
+    console.log(arr);
+    console.log(arr[arr.length - 1]);
+    this.tableCode = arr[arr.length - 1];
+    this.breadcrumbs[0].name = this.inforTable.displayName;
+    this.tableName = this.inforTable.displayName.toUpperCase();
+    this.getHeaders();
+
+    // this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
+    // console.log(this.inforTable);
+    // if(this.inforTable.children.length > 0) {
+    //   this.tableCode = localStorage.getItem('currentSider')!;
+    //   this.breadcrumbs[0].name = this.inforTable.displayName;
+    //   this.tableName = this.inforTable.displayName.toUpperCase();
+    //   this.getHeaders();
+    // } else {
+    //   this.tableCode = this.inforTable.name;
+    // }
   }
 
   clearInput(keyName: string) {

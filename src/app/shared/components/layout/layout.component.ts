@@ -1,6 +1,5 @@
 import { Component, OnInit, NgModule, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
@@ -28,8 +27,11 @@ export class LayoutComponent {
   menuRevealMode = 'expand';
   minMenuSize = 0;
   shaderEnabled = false;
+  lstFunction: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router
+  ) {}
 
   ngOnInit() {}
 

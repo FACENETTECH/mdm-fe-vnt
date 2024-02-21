@@ -50,13 +50,13 @@ export class SiderComponent {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('checkFetchSider') == '') {
-      setTimeout(() => {
-        this.sider[0].open = true;
-        localStorage.setItem('currentSider', this.sider[0].name);
-        localStorage.setItem('checkFetchSider', 'true'); 
-      }, 600)
-    }
+    // if(localStorage.getItem('checkFetchSider') == '') {
+    //   setTimeout(() => {
+    //     this.sider[0].open = true;
+    //     localStorage.setItem('currentSider', this.sider[0].name);
+    //     localStorage.setItem('checkFetchSider', 'true'); 
+    //   }, 600)
+    // }
   }
 
   openParent(i: number) {
