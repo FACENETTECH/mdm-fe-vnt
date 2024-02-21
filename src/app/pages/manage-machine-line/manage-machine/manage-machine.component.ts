@@ -278,7 +278,6 @@ export class ManageMachineComponent implements OnInit {
     this.loader.start();
     this.manageComponentService.getDataDynamicTable(this.tableCode, request).subscribe({
       next: (res) => {
-        console.log(res);
         this.listMachine = res.data;
         this.total = res.dataCount;
         for (let j = 0; j < this.columns.length; j++) {
@@ -308,7 +307,8 @@ export class ManageMachineComponent implements OnInit {
           this.noDataFound = false;
         }
         this.loader.stop();
-        console.log('List Manchine: ', this.listMachine);
+      }, error: (err) => {
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -340,7 +340,6 @@ export class ManageMachineComponent implements OnInit {
   listMachineToExport: any[] = [];
   addMachine() {
     this.isvisibleAdd = true;
-    console.log("record choose: ", this.setOfCheckedId);
   }
 
   childOut() {
@@ -363,7 +362,6 @@ export class ManageMachineComponent implements OnInit {
   }
 
   openPopupCopy() {
-    console.log(this.setOfCheckedId.size);
     if(this.setOfCheckedId.size > 0) {
       this.isvisibleCopy = true;
     } else {
@@ -372,7 +370,6 @@ export class ManageMachineComponent implements OnInit {
   }
 
   openPopupDeleteList() {
-    console.log(this.setOfCheckedId.size);
     if(this.setOfCheckedId.size > 0) {
       this.isvisibleDeleteList = true;
     } else {
@@ -386,7 +383,7 @@ export class ManageMachineComponent implements OnInit {
         this.toast.success(res.result.message);
         this.getData({ page: this.pageNumber, size: this.pageSize });
       }, error: (err) => {
-        this.toast.error(err.result.message);
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -403,7 +400,7 @@ export class ManageMachineComponent implements OnInit {
         this.refreshCheckedStatus();
         this.getData({ page: this.pageNumber, size: this.pageSize });
       }, error: (err) => {
-        this.toast.error(err.result.message);
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -419,7 +416,6 @@ export class ManageMachineComponent implements OnInit {
   getHeaders() {
     this.manageComponentService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
-        console.log(res);
         this.columns = res.data;
         for(let i = 0; i < this.columns.length; i++) {
           this.columns[i].localCheck = true;
@@ -433,7 +429,7 @@ export class ManageMachineComponent implements OnInit {
         this.getData({ page: this.pageNumber, size: this.pageSize });
         this.handleSearchTreeOptions();
       }, error: (err) => {
-        console.log(err);
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -648,7 +644,7 @@ export class ManageMachineComponent implements OnInit {
       ).subscribe({
         next: (res) => {
         }, error: (err) => {
-          console.log(err);
+          this.toast.error(err.error.result.message);
         }
       })
     } else {
@@ -659,8 +655,9 @@ export class ManageMachineComponent implements OnInit {
         this.listMachine[event.currentIndex]
       ).subscribe({
         next: (res) => {
+
         }, error: (err) => {
-          console.log(err);
+          this.toast.error(err.error.result.message);
         }
       })
     }
@@ -700,7 +697,7 @@ export class ManageMachineComponent implements OnInit {
             this.getData({ page: this.pageNumber, size: this.pageSize });
             this.loader.stop();
           }, error: (err) => {
-            this.toast.error(err.result.message);
+            this.toast.error(err.error.result.message);
             this.setOfCheckedId = new Set<number>();
             this.refreshCheckedStatus();
             this.loader.stop();
@@ -740,7 +737,7 @@ export class ManageMachineComponent implements OnInit {
         next: (res) => {
           this.valueSelectBox = res.data;
         }, error: (err) => {
-          this.toast.error(err.result.message);
+          this.toast.error(err.error.result.message);
         }
       })
     }
@@ -764,7 +761,6 @@ export class ManageMachineComponent implements OnInit {
    * Xử lý sự kiện double click trên dòng trong table
    */
   onDblClickOnRowTable(infor: any) {
-    console.log("test");
     this.inforComponent(infor);
   }
 
@@ -786,7 +782,6 @@ export class ManageMachineComponent implements OnInit {
    */
   @HostListener('document:keydown.delete', ['$event'])
   handleDelete(event: any) {
-    console.log(event);
     if(this.setOfCheckedId.size > 0) {
       this.openPopupDeleteList();
     } else {
@@ -800,7 +795,6 @@ export class ManageMachineComponent implements OnInit {
    */
   @HostListener('document:keydown.F2', ['$event'])
   handleUpdate(event: any) {
-    console.log(event);
   }
 
   /**
@@ -854,7 +848,6 @@ export class ManageMachineComponent implements OnInit {
    * Hàm trả về danh sách option cây tìm kiếm
    */
   handleSearchTreeOptions() {
-    console.log("Column to find tree key",this.columns);
     for (let column of this.columns) {
       if (column.searchTree) {
         this.searchTreeName = column.keyTitle;
@@ -862,7 +855,7 @@ export class ManageMachineComponent implements OnInit {
           next: (res) => {
             this.searchTreeOptions = res.data;
           }, error: (err) => {
-            this.toast.error(err.result.message);
+            this.toast.error(err.error.result.message);
           }
         })
         break;
@@ -875,7 +868,7 @@ export class ManageMachineComponent implements OnInit {
       next: (res) => {
         this.optionsComplete = res.data;
       }, error: (err) => {
-        console.log(err);
+        this.toast.error(err.error.result.message);
       }
     });
   }

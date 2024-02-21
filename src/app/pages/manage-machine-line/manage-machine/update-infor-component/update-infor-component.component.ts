@@ -82,7 +82,7 @@ export class UpdateInforComponentComponent {
       next: (res) => {
         this.formatNumberInUpdate(res.data);
       }, error: (err) => {
-        this.toast.error(err.error.message);
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -359,7 +359,7 @@ export class UpdateInforComponentComponent {
               }
             })
           } else {
-            this.toast.success(res.error.result.message);
+            this.toast.success(res.result.message);
             this.isvisible = false;
             this.isvisibleChange.emit(false);
             this.isvisibleUpdate.emit(true);
@@ -486,7 +486,7 @@ export class UpdateInforComponentComponent {
     if(this.listEntityByRelation.length > 0) {
       let tableCode = '';
       for(let i = 0; i < this.listEntityByRelation.length; i++) {
-        if(this.listEntityByRelation[i].id == Number.parseInt(column.relateTable)) {
+        if(this.listEntityByRelation[i].name == column.relateTable) {
           tableCode = this.listEntityByRelation[i].name;
         }
       }
@@ -506,7 +506,7 @@ export class UpdateInforComponentComponent {
             this.manageService.getColummnByTableName(tableCode).subscribe({
               next: (res) => {
                 for(let i = 0; i < res.data.length; i++) {
-                  if(res.data[i].id == Number.parseInt(column.relateColumn)) {
+                  if(res.data[i].keyName == column.relateColumn) {
                     this.columnRelation = res.data[i].keyName;
                     break;
                   }
@@ -540,7 +540,6 @@ export class UpdateInforComponentComponent {
             }
           }
         }
-        console.log(this.listEntityByRelation);
         this.getParamsOnInit();
       }, error: (err) => {
         this.toast.error(err.error.result.message);
