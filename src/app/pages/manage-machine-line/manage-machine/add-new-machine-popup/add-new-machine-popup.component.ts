@@ -32,6 +32,7 @@ export class AddNewMachinePopupComponent {
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() isvisibleAdd: EventEmitter<boolean> = new EventEmitter();
 
+  isVisibleManageParam: boolean = false;
   machineCode: string = '';
   machineName: string = '';
   status: string = '1';
@@ -101,35 +102,36 @@ export class AddNewMachinePopupComponent {
     return !isEmpty && !containsSpecialCharacter;
   }
   addItem(inputElement: HTMLInputElement, isParam: any, column: any): void {
-    const newItem = inputElement.value.trim();
-    if(isParam) {
-      let request = {
-        value: newItem,
-        tableName: this.tableCode,
-        columnName: column.keyName
-      }
-      this.manageService.addValuesParam(request).subscribe({
-        next: (res) => {
-          inputElement.value = '';
-          this.handleOpenChangeDataTypeParam(true, column);
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
-    } else {
-      let request = {
-        value: newItem,
-        paramCode: column.note
-      }
-      this.manageService.addValuesParam(request).subscribe({
-        next: (res) => {
-          inputElement.value = '';
-          this.handleOpenChangeUnit(true, column);
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
-    }
+    this.isVisibleManageParam = true;
+    // const newItem = inputElement.value.trim();
+    // if(isParam) {
+    //   let request = {
+    //     value: newItem,
+    //     tableName: this.tableCode,
+    //     columnName: column.keyName
+    //   }
+    //   this.manageService.addValuesParam(request).subscribe({
+    //     next: (res) => {
+    //       inputElement.value = '';
+    //       this.handleOpenChangeDataTypeParam(true, column);
+    //     }, error: (err) => {
+    //       this.toast.error(err.error.result.message);
+    //     }
+    //   })
+    // } else {
+    //   let request = {
+    //     value: newItem,
+    //     paramCode: column.note
+    //   }
+    //   this.manageService.addValuesParam(request).subscribe({
+    //     next: (res) => {
+    //       inputElement.value = '';
+    //       this.handleOpenChangeUnit(true, column);
+    //     }, error: (err) => {
+    //       this.toast.error(err.error.result.message);
+    //     }
+    //   })
+    // }
   }
 
   machineTypeList: any[] = [];

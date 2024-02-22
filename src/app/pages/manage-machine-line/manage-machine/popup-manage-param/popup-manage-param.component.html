@@ -1,0 +1,379 @@
+<!-- Dưới đây là popup quản lý param (CRUD) -->
+<nz-modal
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="960"
+>
+  <ng-template #modalTitle>
+    <div
+      class="fn-bg-header-default"
+      style="
+        display: flex;
+        align-items: center;
+        padding: 5px 0px 10px 16px;
+      "
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+      >
+        <g clip-path="url(#clip0_822_19458)">
+          <path
+            d="M21.6 0.5H2.4C1.08 0.5 0 1.58 0 2.9V24.5L4.8 19.7H21.6C22.92 19.7 24 18.62 24 17.3V2.9C24 1.58 22.92 0.5 21.6 0.5ZM12 11.3C11.34 11.3 10.8 10.76 10.8 10.1V5.3C10.8 4.64 11.34 4.1 12 4.1C12.66 4.1 13.2 4.64 13.2 5.3V10.1C13.2 10.76 12.66 11.3 12 11.3ZM13.2 16.1H10.8V13.7H13.2V16.1Z"
+            fill="#2A3884"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_822_19458">
+            <rect
+              width="24"
+              height="24"
+              fill="white"
+              transform="translate(0 0.5)"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+      <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+        {{ 'Quản lý tham số' | translate }}
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <div>
+        <div style="display: flex; float: right; gap: 12px;">
+            <div nz-col style="display: flex; align-items: center">
+              <button
+                style="color: #01aba8"
+                nz-button
+                nzType="text"
+                class="mb-6"
+                nz-tooltip="{{ 'Thêm mới (Shift + N)' | translate }}"
+              >
+                <span nz-icon nzType="plus-circle" nzTheme="outline" class="fn-icon-style"></span>
+                {{ "add.btn" | translate }}
+              </button>
+            </div>
+            <div nz-col>
+              <button
+                style="color: #01aba8"
+                nz-button
+                nzType="text"
+                class="mb-6"
+                nz-tooltip="{{ 'Sao chép (Shift + C)' | translate }}"
+              >
+                <span nz-icon nzType="copy" nzTheme="outline" class="fn-icon-style"></span>
+                {{ "btn.copy" | translate }}
+              </button>
+            </div>
+            <div nz-col>
+              <button
+                style="color: #01aba8"
+                nz-button
+                nzType="text"
+                class="mb-6"
+                nz-tooltip="{{ 'Xoá (Delete)' | translate }}"
+              >
+                <span nz-icon nzType="delete" nzTheme="outline" class="fn-icon-style"></span>
+                {{ "btn.delete" | translate }}
+              </button>
+            </div>
+        </div>
+        <nz-table
+            nzBordered
+            nzShowPagination="false"
+            [nzScroll]="{ x: 'auto' }"
+            [nzData]="listParam"
+            #MachineTable
+            [nzSize]="'small'"
+            >
+            <thead class="color-header-row">
+                <tr>
+                <ng-container *ngFor="let column of columns; let i = index">
+                    <ng-container *ngIf="column.localCheck">
+                    <th
+                        nz-resizable
+                        [nzWidth]="column.width"
+                        (nzResize)="onResize($event, i)"
+                        [nzAlign]="'center'"
+                        (nzSortOrderChange)="customSortFunction($event, column.keyName)"
+                    >
+                        <div class="editable-cell">
+                        {{ column.keyTitle | translate}}
+                        <nz-resize-handle nzDirection="right">
+                            <div class="resize-trigger"></div>
+                        </nz-resize-handle>
+                        </div>
+                    </th>
+                    </ng-container>
+                </ng-container>
+                <th nzWidth="100px" nzAlign="center" [nzRight]="true">
+                    {{ "Thao tác" | translate }}
+                </th>
+                </tr>
+            </thead>
+            <tbody class="striped-tr">
+                <tr>
+                <ng-container *ngFor="let column of columns">
+                    <ng-container
+                    *ngIf="
+                        column.localCheck &&
+                        column.keyName != 'status' &&
+                        column.dataType != dataType.DATE_TIME &&
+                        column.dataType != dataType.PARAM
+                    "
+                    >
+                    <td>
+                        <nz-input-group
+                        [nzPrefix]="machineCodePrefix"
+                        [nzSuffix]="machineSuffix"
+                        >
+                        <ng-template #machineCodePrefix
+                            ><span
+                            nz-icon
+                            nzType="search"
+                            nzTheme="outline"
+                            style="color: #d8c6bf"
+                            ></span
+                        ></ng-template>
+                        <ng-template #machineSuffix
+                            ><span
+                            *ngIf="inforParam[column.keyName]"
+                            (click)="clearInput(column.keyName)"
+                            nz-icon
+                            nzType="close-circle"
+                            nzTheme="fill"
+                            style="
+                                font-size: 12px;
+                                cursor: pointer;
+                                color: rgb(172, 170, 170);
+                            "
+                            ></span
+                        ></ng-template>
+                        <input
+                            type="text"
+                            nz-input
+                            [(ngModel)]="inforParam[column.keyName]"
+                            (keyup)="search($event)"
+                            nz-popover
+                            nzPopoverTrigger="hover"
+                            #popover="nzPopover"
+                        />
+                        
+                        </nz-input-group>
+                        
+                    </td>
+                    </ng-container>
+                    <ng-container
+                    *ngIf="
+                        column.localCheck &&
+                        column.keyName == 'status'
+                    "
+                    >
+                    <td>
+                        <i
+                        style="
+                            position: absolute;
+                            z-index: 1;
+                            top: 17px;
+                            left: 20px;
+                            color: #d8c6bf;
+                        "
+                        nz-icon
+                        nzType="search"
+                        nzTheme="outline"
+                        ></i>
+
+                        <nz-select
+                        class="select-search"
+                        style="width: 100%"
+                        nzAllowClear
+                        [(ngModel)]="inforParam[column.keyName]"
+                        (ngModelChange)="searchSelectBox(column.keyName)"
+                        >
+                        <nz-option
+                            [nzValue]="1"
+                            nzLabel="{{ 'Hoạt động' | translate }}"
+                        ></nz-option>
+                        <nz-option
+                            [nzValue]="0"
+                            nzLabel="{{ 'Ngừng hoạt động' | translate }}"
+                        ></nz-option>
+                        </nz-select>
+                    </td>
+                    </ng-container>
+                    <ng-container *ngIf="
+                    column.localCheck &&
+                    column.keyName != 'status' &&
+                    column.dataType == dataType.PARAM
+                    ">
+                    <td>
+                        <i
+                        style="
+                            position: absolute;
+                            z-index: 1;
+                            top: 17px;
+                            left: 20px;
+                            color: #d8c6bf;
+                        "
+                        nz-icon
+                        nzType="search"
+                        nzTheme="outline"
+                        ></i>
+                        <nz-select
+                        style="width: 100%"
+                        nzMode="default"
+                        [(ngModel)]="inforParam[column.keyName]"
+                        (ngModelChange)="searchSelectBox($event)"
+                        (nzOpenChange)="handleOpenChangeDataTypeParam($event, column)"
+                        >
+                        <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                        </nz-select>
+                    </td>
+                    </ng-container>
+                    <ng-container *ngIf="column.localCheck && column.dataType == dataType.DATE_TIME">
+                    <td>
+                        <i
+                        style="
+                            position: absolute;
+                            z-index: 1;
+                            top: 17px;
+                            left: 20px;
+                            color: #d8c6bf;
+                        "
+                        nz-icon
+                        nzType="search"
+                        nzTheme="outline"
+                        ></i>
+
+                        <nz-date-picker
+                        class="select-search"
+                        [nzPlaceHolder]="''"
+                        style="width: 100%"
+                        type="text"
+                        nz-input
+                        [(ngModel)]="inforParam[column.keyName]"
+                        (ngModelChange)="searchSelectBox(column.keyName)"
+                        nz-popover
+                        nzPopoverTrigger="hover"
+                        [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+                        #popover="nzPopover"
+                        >
+                        </nz-date-picker>
+                        <ng-template #contentTemplate>
+                        <td>
+                            <button nz-button nzType="link">
+                            + {{ "add.btn" | translate }}
+                            </button>
+                        </td>
+                        </ng-template>
+                    </td>
+                    </ng-container>
+                </ng-container>
+                <td [nzRight]="true"></td>
+                </tr>
+                <ng-container *ngFor="let infor of listParam; let i = index">
+                <tr>
+                    <ng-container *ngFor="let column of columns">
+                    <ng-container *ngIf="column.localCheck">
+                        <ng-container [ngSwitch]="column.keyName">
+                        <ng-container *ngSwitchCase="'status'">
+                            <td>
+                            <div [ngSwitch]="infor[column.keyName]" nzAlign="center">
+                                <div
+                                class="border-element bordered-element__status_1"
+                                *ngSwitchCase="'1'"
+                                >
+                                {{ "Hoạt động" | translate }}
+                                </div>
+                                <div
+                                class="border-element bordered-element__status_2"
+                                *ngSwitchCase="'0'"
+                                >
+                                {{ "Ngừng hoạt động" | translate }}
+                                </div>
+                            </div>
+                            </td>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                            <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
+                            <td
+                            class="table-cell-ellipsis"
+                            [ngStyle]="{'max-width': column.width}"
+                            [nz-tooltip]="infor[column.keyName]"
+                            >
+                                {{ infor[column.keyName] }}
+                            </td>
+                            </ng-container>
+                            <ng-container *ngIf="column.dataType == dataType.NUMBER">
+                            <td
+                            class="table-cell-ellipsis fn-text-al-right"
+                            [ngStyle]="{'max-width': column.width}"
+                            [nz-tooltip]="infor[column.keyName] | number : '1.0-2'"
+                            >
+                                {{ infor[column.keyName] | number : "1.0-2" }}
+                            </td>
+                            </ng-container>
+                            <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
+                            <td
+                            class="table-cell-ellipsis fn-text-al-right"
+                            [ngStyle]="{'max-width': column.width}"
+                            [nz-tooltip]="infor[column.keyName]"
+                            >
+                                {{ infor[column.keyName] | date: 'dd-MM-yyyy' }}
+                            </td>
+                            </ng-container>
+                            <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
+                            <td
+                            class="table-cell-ellipsis fn-text-al-center"
+                            [ngStyle]="{'max-width': column.width}"
+                            [nz-tooltip]="infor[column.keyName]"
+                            >
+                                <label nz-checkbox [(ngModel)]="infor[column.keyName]"></label>
+                            </td>
+                            </ng-container>
+                        </ng-container>
+                        </ng-container>
+                    </ng-container>
+                    </ng-container>
+                    <td nzAlign="center" [nzRight]="true">
+                    <div class="fn-css-action-grid">
+                        <button
+                        nz-button
+                        nzType="link"
+                        nz-tooltip="{{ 'btn.viewDetail' | translate }}"
+                        >
+                        <img src="./assets/icons/Eye.svg">
+                        </button>
+                        <button
+                        nz-button
+                        nzType="link"
+                        nz-tooltip="{{ 'btn.edit' | translate }}"
+                        >
+                        <img src="./assets/icons/Edit-VNT.svg">
+                        </button>
+                        <button
+                        nz-button
+                        nzType="link"
+                        nz-tooltip="{{ 'btn.delete' | translate }}"
+                        >
+                        <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
+                        </button>
+                    </div>
+                    </td>
+                </tr>
+                </ng-container>
+            </tbody>
+            </nz-table>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter></ng-template>
+</nz-modal>
