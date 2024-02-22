@@ -51,6 +51,9 @@ export class AppComponent {
     private configService: ConfigService
   ) {
     let arr = window.location.href.split('/');
+    console.log('arr: ', arr);
+    console.log('arr stt 1: ', arr[arr.length - 1]);
+    console.log('arr stt 2: ', arr[arr.length - 2]);
     if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
       this.isVisableLayout = false;
     } else {
