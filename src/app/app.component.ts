@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, HostListener } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AppI18nService } from 'src/app/services/AppI18n.service';
 import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
@@ -311,6 +311,12 @@ export class AppComponent {
               children: []
             })
           }
+          this.isVisableLayout = true;
+          if(check) {
+            this._router.navigate([`/mdm/${data}/${childrenName}`]);
+          } else {
+            this._router.navigate([`/mdm/${data}/${this.siderList[0].name}`]);
+          }
         }
         // Nếu chức năng cha KHÔNG có chức năng con sẽ thêm các thông tin về router không có baseUrl là tên của chức năng cha 
         else {
@@ -321,12 +327,12 @@ export class AppComponent {
             path: '/mdm/' + sider.name,
             requiredRoles: ['admin_business'],
           })
-        }
-        this.isVisableLayout = true;
-        if(check) {
-          this._router.navigate([`/mdm/${data}/${childrenName}`]);
-        } else {
-          this._router.navigate([`/mdm/${data}`]);
+          this.isVisableLayout = true;
+          if(check) {
+            this._router.navigate([`/mdm/${data}/${childrenName}`]);
+          } else {
+            this._router.navigate([`/mdm/${data}`]);
+          }
         }
       }, error: (err) => {
         console.log(err);
@@ -365,5 +371,14 @@ export class AppComponent {
         this.toast.error(err.error.message);
       }
     })
+  }
+
+  /**
+   * Hàm xử lý sự kiện back ở trình duyệt, khi phát hiện được sự kiện sẽ load lại trang với href được lấy ở trong đối Window
+   * @param event 
+   */
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    window.location.href = window.location.href;
   }
 }
