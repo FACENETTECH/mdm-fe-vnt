@@ -58,16 +58,14 @@ export class AddNewMachinePopupComponent {
   listEntityByRelation: any[] = [];
   optionsRelation: any[] = [];
   columnRelation?: string;
+  imagesByColumn: Record<string, any> = {};
 
   onSubmit(): void {}
 
   ngOnInit() {
     this.inforTable = JSON.parse(localStorage.getItem('baseUrl')!);
-    if(this.inforTable.children.length > 0) {
-      this.tableCode = localStorage.getItem('currentSider')!;
-    } else {
-      this.tableCode = this.inforTable.name;
-    }
+    let arr = window.location.href.split('/');
+    this.tableCode = arr[arr.length - 1];
     this.getColumn();
     this.getAllEntity();
   }
@@ -115,7 +113,7 @@ export class AddNewMachinePopupComponent {
           inputElement.value = '';
           this.handleOpenChangeDataTypeParam(true, column);
         }, error: (err) => {
-          console.log(err);
+          this.toast.error(err.error.result.message);
         }
       })
     } else {
@@ -128,7 +126,7 @@ export class AddNewMachinePopupComponent {
           inputElement.value = '';
           this.handleOpenChangeUnit(true, column);
         }, error: (err) => {
-          console.log(err);
+          this.toast.error(err.error.result.message);
         }
       })
     }
@@ -161,7 +159,6 @@ export class AddNewMachinePopupComponent {
         this.checkMachine[x.keyName] = '';
       }
     });
-    console.log(this.checkMachine);
   }
   async getParam() {
     const request = {
@@ -171,7 +168,6 @@ export class AddNewMachinePopupComponent {
       },
     };
     let res = await this.machine.getMachineTypeList(request);
-    console.log(res);
     this.machineTypeList = res.data;
 
     return this.machineTypeList;
@@ -298,8 +294,6 @@ export class AddNewMachinePopupComponent {
     }
   }
   convertToSeconds(value: number, unit: string): number {
-    console.log(value);
-
     if (isNaN(value)) {
       return 0;
     }
@@ -334,7 +328,6 @@ export class AddNewMachinePopupComponent {
 
   async submit() {
     this.loader.start();
-    console.log(this.inforMachine)
     this.checkValid();
     let check = true;
     this.columns.map((x: any) => {
@@ -348,12 +341,11 @@ export class AddNewMachinePopupComponent {
       for(let i = 0; i < this.columns.length; i++) {
         if(this.columns[i].dataType == this.dataType.NUMBER && this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
           this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
-          this.inforMachine[this.columns[i].keyName] = Number.parseInt(this.inforMachine[this.columns[i].keyName]);
+          this.inforMachine[this.columns[i].keyName] = Number.parseFloat(this.inforMachine[this.columns[i].keyName]);
         }
       }
       this.manageService.addNewRecord(this.tableCode, this.inforMachine).subscribe({
         next: (res) => {
-          console.log(res);
           let isImage = false;
           for(let i = 0; i < this.columns.length; i++) {
             if(this.columns[i].dataType == this.dataType.IMAGE) {
@@ -383,7 +375,7 @@ export class AddNewMachinePopupComponent {
             this.loader.stop();
           }
         }, error: (err) => {
-          this.toast.error(err.result.message);
+          this.toast.error(err.error.result.message);
           this.loader.stop();
         }
       })
@@ -404,8 +396,6 @@ export class AddNewMachinePopupComponent {
       pageSize: page.size,
       filter: {},
     };
-
-    console.log(this.columns);
   }
 
   async getColumn() {
@@ -418,7 +408,6 @@ export class AddNewMachinePopupComponent {
             break;
           }
         }
-        console.log(this.columns);
       }
     })
   }
@@ -427,14 +416,12 @@ export class AddNewMachinePopupComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box
    */
   handleOpenChangeDataTypeParam(data: any, column: any) {
-    console.log("Select: ", column);
     if(data) {
       this.manageService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
         next: (res) => {
-          console.log("Select data: ", res);
           this.valueSelectBox = res.data;
         }, error: (err) => {
-          this.toast.error(err.result.message);
+          this.toast.error(err.error.result.message);
         }
       })
     }
@@ -444,7 +431,6 @@ export class AddNewMachinePopupComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có đơn vị tính
    */
   handleOpenChangeUnit(data: any, column: any) {
-    console.log("Unit: ", column);
     if(data) {
       if(column.note != '' && column.note != null) {
         this.manageService.getParamsByCode(column.note).subscribe({
@@ -452,7 +438,7 @@ export class AddNewMachinePopupComponent {
             console.log("Unit data: ", res);
             this.valueTypeParam = res.data;
           }, error: (err) => {
-            this.toast.error(err.result.message);
+            this.toast.error(err.error.result.message);
           }
         });
       } else {
@@ -466,8 +452,6 @@ export class AddNewMachinePopupComponent {
    */
   handleOpenChangeRelation(event: any, column: any) {
     this.columnRelation = '';
-    console.log(column);
-    console.log(this.listEntityByRelation);
     if(this.listEntityByRelation.length > 0) {
       let tableCode = '';
       for(let i = 0; i < this.listEntityByRelation.length; i++) {
@@ -499,21 +483,16 @@ export class AddNewMachinePopupComponent {
               }
             })
           }, error: (err) => {
-            this.toast.error(err.result.message);
+            this.toast.error(err.error.result.message);
           }
         })
       }
     }
   }
 
-  isLoadingSelectRelation: boolean = false;
-  loadMoreResultRelation() {
-    this.isLoadingSelectRelation = true;
-    setTimeout(() => {
-      this.isLoadingSelectRelation = false;
-    }, 2000)
-  }
-
+  /**
+   * Hàm lấy ra tất cả bảng trong database
+   */
   getAllEntity() {
     this.listEntityByRelation = [];
     this.configService.getAllCategory().subscribe({
@@ -530,9 +509,8 @@ export class AddNewMachinePopupComponent {
             }
           }
         }
-        console.log(this.listEntityByRelation);
       }, error: (err) => {
-        this.toast.error(err.result.message);
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -545,9 +523,16 @@ export class AddNewMachinePopupComponent {
     console.log(item.target.files['0']);
     this.formUpload.append(column.keyName, item.target.files['0']);
     this.inforMachine[column.keyName] = item.target.files['0'].name;
-    console.log(column);
-    console.log(this.inforMachine)
-    console.log(this.formUpload)
+    if (item.target.files && item.target.files[0]) {
+      const file = item.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        this.imagesByColumn[column.keyName] = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   /**
@@ -562,12 +547,18 @@ export class AddNewMachinePopupComponent {
     // Lấy giá trị đang nhập từ input
     let value = input.value;
   
-    // Loại bỏ tất cả các dấu phẩy
-    value = value.replace(/,/g, '');
+    // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
+    value = value.replace(/[^0-9.]/g, '');
   
-    // Chuyển đổi giá trị thành số và kiểm tra nếu nó là một số hợp lệ
-    const numberValue = Number(value);
-    if (!isNaN(numberValue)) {
+    // Kiểm tra nếu quá 3 kí tự sau dấu .
+    if (value.indexOf('.') != -1 && value.indexOf('.') < value.length - 4) {
+      value = value.slice(0, -1);
+    }
+    console.log("value", value);
+    // Convert string thành number 
+    const numberValue = Number.parseFloat(value);
+    console.log("num value", numberValue);
+    if (value[value.length - 1] != '.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
       const formattedValue = numberValue.toLocaleString('en-US', { useGrouping: true });
       // Gán giá trị đã được định dạng lại vào input

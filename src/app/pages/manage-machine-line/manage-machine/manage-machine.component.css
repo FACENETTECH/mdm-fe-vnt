@@ -46,21 +46,31 @@ td:not(.numeric-value) {
   display: flex;
 }
 
+/* Css để hiển thị cây tìm kiếm */
+
 .search-tree-container-open {
+  border-radius: 4px;
+  padding: 0 12px 0 12px;
   position: relative;
   width: 15%;
 }
 
 .content-container-open {
+  border-radius: 4px;
+  padding: 12px 12px 12px 12px;
   width: 85%;
 }
 
 .search-tree-container-close {
+  border-radius: 4px;
+  padding:0 12px 0 12px;
   position: relative;
   width: 3%;
 }
 
 .content-container-close {
+  border-radius: 4px;
+  padding: 12px 12px 48px 12px;
   width: 97%;
 }
 
@@ -68,6 +78,7 @@ td:not(.numeric-value) {
   position: absolute;
   top: 5px;
   right: 5px;
+  color: #1890FF;
 }
 
 /* Css để hiển thị nội dung dài trong bảng */

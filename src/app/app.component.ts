@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, HostListener } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AppI18nService } from 'src/app/services/AppI18n.service';
 import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
@@ -17,6 +17,8 @@ import { InforAccountService } from './services/infor-account/infor-account.serv
 import jwtDecode from 'jwt-decode';
 import vi from '@angular/common/locales/vi';
 import { ManageComponentService } from './services/manage-component/manage-component.service';
+import { ConfigService } from 'src/app/services/manage-config/config.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +27,8 @@ import { ManageComponentService } from './services/manage-component/manage-compo
 })
 export class AppComponent {
   siderList: any = [];
+  isVisableLayout: boolean = false;
+  isCheckRefresh: boolean = false;
 
   ///manage-user/list-account
 
@@ -42,9 +46,25 @@ export class AppComponent {
     @Inject(DOCUMENT) private document: any,
     private themeService: ThemeService,
     private inforAccountService: InforAccountService,
-    private manageComponentService: ManageComponentService
+    private manageComponentService: ManageComponentService,
+    private toast: ToastrService,
+    private configService: ConfigService
   ) {
-    this.getNameByCookie();
+    let arr = window.location.href.split('/');
+    if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
+      this.isVisableLayout = false;
+    } else {
+      let baseUrl = JSON.parse(localStorage.getItem('baseUrl')!);
+      if(baseUrl.children.length > 0) {
+        if(baseUrl.name != arr[arr.length - 2]) {
+          this.getListFunctionByName(arr[arr.length - 1], false);
+        } else {
+          this.getListFunctionByName(baseUrl.name, true, arr[arr.length - 1]);
+        }
+      } else {
+        this.getListFunctionByName(arr[arr.length - 1], false);
+      }
+    }
   }
 
   isCollapsed: boolean = false;
@@ -61,6 +81,7 @@ export class AppComponent {
   name: string = '';
   userRole = this.keycloak.getUserRoles(true);
   roles: any[] = [];
+  lstFunction: any[] = [];
 
   // Logo
   logoBusiness: string = '';
@@ -68,6 +89,7 @@ export class AppComponent {
 
   async ngOnInit() {
     this.getInfoBusiness();
+    this.getFunctionsByType();
 
     await this.keycloak.getToken().then((token) => {
       const decodedToken: any = jwtDecode(token);
@@ -271,7 +293,7 @@ export class AppComponent {
   /**
    * Đây là hàm lấy ra danh sách chức năng con theo tên chức năng cha
    */
-  getListFunctionByName(data: any) {
+  getListFunctionByName(data: any, check: boolean, childrenName?: any) {
     let sider: any;
     this.manageComponentService.getInforTables(data).subscribe({
       next: (res) => {
@@ -289,7 +311,12 @@ export class AppComponent {
               children: []
             })
           }
-          this._router.navigate([`${this.siderList[0].path}`]);
+          this.isVisableLayout = true;
+          if(check) {
+            this._router.navigate([`/mdm/${data}/${childrenName}`]);
+          } else {
+            this._router.navigate([`/mdm/${data}/${this.siderList[0].name}`]);
+          }
         }
         // Nếu chức năng cha KHÔNG có chức năng con sẽ thêm các thông tin về router không có baseUrl là tên của chức năng cha 
         else {
@@ -300,6 +327,12 @@ export class AppComponent {
             path: '/mdm/' + sider.name,
             requiredRoles: ['admin_business'],
           })
+          this.isVisableLayout = true;
+          if(check) {
+            this._router.navigate([`/mdm/${data}/${childrenName}`]);
+          } else {
+            this._router.navigate([`/mdm/${data}`]);
+          }
         }
       }, error: (err) => {
         console.log(err);
@@ -308,176 +341,44 @@ export class AppComponent {
 
   }
 
-  /**
-   * Hàm lấy tên phân hệ khi redirect từ trang homepage
-   */
-  getNameByCookie() { 
-    console.log(window.location.href);
-    console.log(localStorage.getItem('beforeBaseUrl'));
-    if(localStorage.getItem('beforeBaseUrl') == null || localStorage.getItem('beforeBaseUrl') == '') {
-      let arr = window.location.href.split('/');
-      console.log(arr);
-      console.log(arr[arr.length - 1]);
-      if(arr[arr.length - 1] == '') {
-        if(localStorage.getItem("tableNameMDM") != null && localStorage.getItem("tableNameMDM") != '') {
-          this.getListFunctionByName(localStorage.getItem("tableNameMDM"));
-        } else {
-          console.log(window.location.href);
-          let arr = window.location.href.split('/');
-          console.log(arr[arr.length - 1]);
-          localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
-          this.getListFunctionByName(arr[arr.length - 1]);
-        }
-      } else {
-        localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
-        this.getListFunctionByName(arr[arr.length - 1]);
-      }
-      localStorage.setItem('beforeBaseUrl', arr[arr.length - 1])
-    } else {
-      this.getListFunctionByName(localStorage.getItem('beforeBaseUrl'));
-    }
-    // if(localStorage.getItem("tableNameMDM") != null && localStorage.getItem("tableNameMDM") != '') {
-    //   this.getListFunctionByName(localStorage.getItem("tableNameMDM"));
-    // } else {
-    //   console.log(window.location.href);
-    //   let arr = window.location.href.split('/');
-    //   console.log(arr[arr.length - 1]);
-    //   localStorage.setItem("tableNameMDM", arr[arr.length - 1]);
-    //   this.getListFunctionByName(arr[arr.length - 1]);
-    // }
+  /** Block xử lý các chức năng trong phân hệ MDM */
+  /** 
+   * Đây làm hàm link về trang chứa các phân hệ của hệ thống
+  */
+  goToHomePage() {
+    // this.router.navigateByUrl('/auth/business-acc-setting/home-page')
+  }
 
-    // const cookies = document.cookie.split(';');
-    // let data;
-    // for (const cookie of cookies) {
-    //   const [name, value] = cookie.split('=');
-    //   if (name.trim() === 'data') {
-    //     data = JSON.parse(decodeURIComponent(value));
-    //     break;
-    //   }
-    // }
-    // console.log(data);
-    // if(data != undefined && data != null && data != '') {
-    //   this.getListFunctionByName(data);
-    // }
+  /** 
+   * Đây làm hàm link tới các phân hệ trong hệ thống
+   * Param: item là biến chứa thông tin của phân hệ di chuyển đến
+  */
+  directProduct(item: any) {
+    this.isVisableLayout = true;
+    this.getListFunctionByName(item.name, false);
+  }
+
+  /**
+   * Đây là hàm lấy ra danh sách các chức năng của từng phân hệ được phân biệt theo Type
+   */
+   getFunctionsByType() {
+    // Xử lý thông tin phân hệ nhận được từ state trong router và gọi API để lấy ra danh sách chức năng
+    this.configService.getAllFunction().subscribe({
+      next: (res) => {
+        console.log(res);
+        this.lstFunction = res.data;
+      }, error: (err) => {
+        this.toast.error(err.error.message);
+      }
+    })
+  }
+
+  /**
+   * Hàm xử lý sự kiện back ở trình duyệt, khi phát hiện được sự kiện sẽ load lại trang với href được lấy ở trong đối Window
+   * @param event 
+   */
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    window.location.href = window.location.href;
   }
 }
-
-// const dummySider = [
-//   {
-//     label: 'sider.configurationManagement',
-//     icon: './assets/icons/sider/mdm.svg',
-//     open: false,
-//     path: '/manage-machine-line/manage-machine',
-//     requiredRoles: [
-//       'admin_business',
-//       'mdm_config-manage',
-//       'mdm_config-machine',
-//       'mdm_config-stage',
-//       'mdm_config-error',
-//       'mdm_config-provider',
-//       'mdm_config-employee',
-//       'mdm_config-metarial',
-//       'mdm_config-product',
-//     ],
-//     children: [
-//       {
-//         label: 'sider.configureMachine',
-//         open: false,
-//         path: '/manage-config/6',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-machine',
-//         ],
-//       },
-//       {
-//         label: 'sider.configureStage',
-//         open: false,
-//         path: '/manage-config/1',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-stage',
-//         ],
-//       },
-//       {
-//         label: 'sider.configureError',
-//         open: false,
-//         path: '/manage-config/4',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-error',
-//         ],
-//       },
-//       {
-//         label: 'sider.configureFileDesign',
-//         open: false,
-//         path: '/manage-config/103',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-file-design',
-//         ],
-//       },
-//       {
-//         label: 'sider.configureSupplier',
-//         open: false,
-//         path: '/manage-config/2',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-provider',
-//         ],
-//       },
-//       {
-//         label: 'sider.configureEmployee',
-//         open: false,
-//         path: '/manage-config/11',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-employee',
-//         ],
-//       },
-//       {
-//         label: 'sider.configureProduct',
-//         open: false,
-//         path: '/manage-config/9',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-product',
-//         ],
-//       },
-//       {
-//         label: 'sider.configureBOM',
-//         open: false,
-//         path: '/manage-config/16',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-product',
-//         ],
-//       },
-//       {
-//         label: 'sider.configureMaterial',
-//         open: false,
-//         path: '/manage-config/10',
-//         requiredRoles: [
-//           'admin_business',
-//           'mdm_config-manage',
-//           'mdm_config-product',
-//         ],
-//       },
-//     ],
-//   },
-//   {
-//     label: 'sider.machineManagement',
-//     icon: './assets/icons/sider/machineManagement.svg',
-//     open: false,
-//     path: '/manage-machine-line/manage-machine',
-//     children: [],
-//     requiredRoles: ['admin_business', 'mdm_machine-management'],
-//   },
-// ];

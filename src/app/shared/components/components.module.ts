@@ -62,7 +62,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     PopupUpdateComponent,
     PopupLogoutComponent,
     PopupCopyComponent,
-    SearchTreeComponent,
+    SearchTreeComponent
   ],
   imports: [
     CommonModule,
