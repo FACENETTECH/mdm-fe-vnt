@@ -481,7 +481,8 @@
             <div style="width: 100%; margin-bottom: 20px;" class="fn-df fn-df-justify-center">
               <div class="fn-pd-8 fn-df-column">
                 <label [for]="'fileInput' + col.keyName" class="fn-text-align-center">
-                  <img class="fn-css-img-form-add" src="./assets/icons/no-image.png" alt="No image" (click)="handleImageClick()"><br>
+                  <img *ngIf="imagesByColumn[col.keyName] == null || imagesByColumn[col.keyName] == undefined" class="fn-css-img-form-add" src="./assets/icons/no-image.png" alt="No image" (click)="handleImageClick()">
+                  <img *ngIf="imagesByColumn[col.keyName] != null && imagesByColumn[col.keyName] != undefined" class="fn-css-img-form-add" [src]="imagesByColumn[col.keyName]" alt="No image" (click)="handleImageClick()"><br/>
                   <span style="color: #01aba8">{{ inforMachine[col.keyName] }}</span>
                 </label>
                 <label class="fn-label"

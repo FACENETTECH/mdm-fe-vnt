@@ -58,6 +58,7 @@ export class AddNewMachinePopupComponent {
   listEntityByRelation: any[] = [];
   optionsRelation: any[] = [];
   columnRelation?: string;
+  imagesByColumn: Record<string, any> = {};
 
   onSubmit(): void {}
 
@@ -522,9 +523,16 @@ export class AddNewMachinePopupComponent {
     console.log(item.target.files['0']);
     this.formUpload.append(column.keyName, item.target.files['0']);
     this.inforMachine[column.keyName] = item.target.files['0'].name;
-    console.log(column);
-    console.log(this.inforMachine)
-    console.log(this.formUpload)
+    if (item.target.files && item.target.files[0]) {
+      const file = item.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        this.imagesByColumn[column.keyName] = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   /**

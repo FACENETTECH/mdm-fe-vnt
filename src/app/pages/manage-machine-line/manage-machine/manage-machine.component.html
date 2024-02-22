@@ -8,10 +8,26 @@
       ></app-search-tree>
     </ng-container>
     <ng-container *ngIf="treeVisible; else elseBlock">
-      <span (click)="changeTreeVisible()" class="close-search-tree-btn" nz-icon nzType="double-left" nzTheme="outline"></span>
+      <span 
+        (click)="changeTreeVisible()" 
+        class="close-search-tree-btn" 
+        nz-icon 
+        nzType="double-left" 
+        nzTheme="outline"
+        nz-tooltip="{{ 'Đóng cây tìm kiếm' | translate }}"
+      >
+      </span>
     </ng-container>
     <ng-template #elseBlock>
-      <span (click)="changeTreeVisible()" class="close-search-tree-btn" nz-icon nzType="double-right" nzTheme="outline"></span>
+      <span 
+        (click)="changeTreeVisible()" 
+        class="close-search-tree-btn" 
+        nz-icon 
+        nzType="double-right" 
+        nzTheme="outline"
+        nz-tooltip="{{ 'Mở cây tìm kiếm' | translate }}"
+      >
+      </span>
     </ng-template>
   </div>
   <div [class]="classList.content" class="color-border">
@@ -72,6 +88,7 @@
             nzType="text"
             (click)="addMachine()"
             class="mb-6"
+            nz-tooltip="{{ 'Thêm mới (Shift + N)' | translate }}"
           >
             <span nz-icon nzType="plus-circle" nzTheme="outline" class="fn-icon-style"></span>
             {{ "add.btn" | translate }}
@@ -84,6 +101,7 @@
             nzType="text"
             (click)="openPopupCopy()"
             class="mb-6"
+            nz-tooltip="{{ 'Sao chép (Shift + C)' | translate }}"
           >
             <span nz-icon nzType="copy" nzTheme="outline" class="fn-icon-style"></span>
             {{ "btn.copy" | translate }}
@@ -96,6 +114,7 @@
             nzType="text"
             (click)="openPopupDeleteList()"
             class="mb-6"
+            nz-tooltip="{{ 'Xoá (Delete)' | translate }}"
           >
             <span nz-icon nzType="delete" nzTheme="outline" class="fn-icon-style"></span>
             {{ "btn.delete" | translate }}
