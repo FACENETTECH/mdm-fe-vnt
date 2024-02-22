@@ -7,7 +7,7 @@ export const environment = {
   url_home_page:
     'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
   api_end_point: 'http://dev.apifcim.facenet.vn/mdm-v2',
-  domain_name_mdm: 'http://localhost:4300',
+  domain_name_mdm: 'http://dev.fcim.facenet.vn/mdm-v2/',
   // api_end_point: 'http://222.252.25.37:10319',
   // api_end_point: 'http://localhost:10320',
   auth_api: '/api/auth/',
