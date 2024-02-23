@@ -86,8 +86,7 @@
                   </nz-select>
                   <ng-template #renderTemplate>
                     <div class="container">
-                      <input type="text" nz-input #inputElement />
-                      <a class="add-item" (click)="addItem(inputElement, false, col)">
+                      <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
                       </a>
@@ -145,8 +144,7 @@
                   </nz-select>
                   <ng-template #renderTemplate>
                     <div class="container">
-                      <input type="text" nz-input #inputElement />
-                      <a class="add-item" (click)="addItem(inputElement, false, col)">
+                      <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
                       </a>
@@ -204,8 +202,7 @@
                   </nz-select>
                   <ng-template #renderTemplate>
                     <div class="container">
-                      <input type="text" nz-input #inputElement />
-                      <a class="add-item" (click)="addItem(inputElement, false, col)">
+                      <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
                       </a>
@@ -263,8 +260,7 @@
                   </nz-select>
                   <ng-template #renderTemplate>
                     <div class="container">
-                      <input type="text" nz-input #inputElement />
-                      <a class="add-item" (click)="addItem(inputElement, false, col)">
+                      <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
                       </a>
@@ -394,8 +390,7 @@
                 </nz-select>
                 <ng-template #renderTemplate>
                   <div class="container">
-                    <input type="text" nz-input #inputElement />
-                    <a class="add-item" (click)="addItem(inputElement, true, col)">
+                    <a class="add-item" (click)="addItem(true, col)">
                       <span nz-icon nzType="plus"></span>
                       {{ "add.btn" | translate }}
                     </a>
@@ -547,6 +542,7 @@
   ></app-popup-add>
   <app-popup-manage-param
   [(isvisible)]="isVisibleManageParam"
+  [requestAddNewParam]="requestAddNewParam"
   >
   </app-popup-manage-param>
 </nz-modal>

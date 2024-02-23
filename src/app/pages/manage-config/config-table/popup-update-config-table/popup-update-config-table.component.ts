@@ -460,7 +460,7 @@ export class PopupUpdateConfigTableComponent {
       if(item.relateTable != null) {
         let tableName = '';
         for(let i = 0; i < this.listEntityByRelation.length; i++) {
-          if(this.listEntityByRelation[i].id == item.relateTable) {
+          if(this.listEntityByRelation[i].name == item.relateTable) {
             tableName = this.listEntityByRelation[i].name;
           }
         }

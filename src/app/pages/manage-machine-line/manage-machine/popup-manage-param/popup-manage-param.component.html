@@ -55,7 +55,7 @@
                 nz-button
                 nzType="text"
                 class="mb-6"
-                nz-tooltip="{{ 'Thêm mới (Shift + N)' | translate }}"
+                (click)="openModalAddParam()"
               >
                 <span nz-icon nzType="plus-circle" nzTheme="outline" class="fn-icon-style"></span>
                 {{ "add.btn" | translate }}
@@ -345,4 +345,83 @@
   </ng-template>
 
   <ng-template #modalFooter></ng-template>
+</nz-modal>
+
+<!-- Dưới đây là popup thêm mới param -->
+<nz-modal
+  [(nzVisible)]="isvisiblePopupAddParam"
+  [nzTitle]="modalTitleAddParam"
+  [nzContent]="modalContentAddParam"
+  [nzFooter]="modalFooterAddParam"
+  (nzOnCancel)="handleCancelPopupAdd()"
+  [nzWidth]="860"
+>
+  <ng-template #modalTitleAddParam>
+    <div
+      class="fn-bg-header-default"
+      style="
+        display: flex;
+        align-items: center;
+        padding: 5px 0px 10px 16px;
+      "
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+      >
+        <g clip-path="url(#clip0_822_19458)">
+          <path
+            d="M21.6 0.5H2.4C1.08 0.5 0 1.58 0 2.9V24.5L4.8 19.7H21.6C22.92 19.7 24 18.62 24 17.3V2.9C24 1.58 22.92 0.5 21.6 0.5ZM12 11.3C11.34 11.3 10.8 10.76 10.8 10.1V5.3C10.8 4.64 11.34 4.1 12 4.1C12.66 4.1 13.2 4.64 13.2 5.3V10.1C13.2 10.76 12.66 11.3 12 11.3ZM13.2 16.1H10.8V13.7H13.2V16.1Z"
+            fill="#2A3884"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_822_19458">
+            <rect
+              width="24"
+              height="24"
+              fill="white"
+              transform="translate(0 0.5)"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+      <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+        {{ 'Thêm mới tham số' | translate }}
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalContentAddParam>
+    <div class="block-modal-add-param">
+        <div class="block-modal-add-param-item">
+            <label class="fn-label">{{ columns[2].keyTitle | translate}}<span *ngIf="columns[2].isRequired == true" style="color: red">*</span></label>
+            <br />
+            <input style="width:100%" nz-input nz-input (ngModelChange)="checkValid(columns[2].keyName, columns[2].keyTitle, columns[2].isRequired)"
+                type="text" [(ngModel)]="inforParamAddNew[columns[2].keyName]"/>
+            <span style="color: red" *ngIf="checkMachine[columns[2].keyName]">{{checkMachine[columns[2].keyName]}}</span>
+        </div>
+        <div class="block-modal-add-param-item">
+            <label class="fn-label">{{ columns[3].keyTitle | translate}}<span *ngIf="columns[3].isRequired == true" style="color: red">*</span></label>
+            <br />
+            <input style="width:100%" nz-input nz-input (ngModelChange)="checkValid(columns[3].keyName, columns[3].keyTitle, columns[3].isRequired)"
+                type="text" [(ngModel)]="inforParamAddNew[columns[3].keyName]"/>
+            <span style="color: red" *ngIf="checkMachine[columns[3].keyName]">{{checkMachine[columns[3].keyName]}}</span>
+        </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooterAddParam>
+    <button
+        nz-button
+        (click)="submitAddNewParam()"
+        class="fn-bg-default"
+        style="border-radius: 4px;width: 86px; text-align: center;"
+      >
+        <span>{{ 'Thêm mới' | translate }}</span>
+    </button>
+  </ng-template>
 </nz-modal>

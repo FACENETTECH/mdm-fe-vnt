@@ -87,3 +87,14 @@ td.numeric-value {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+
+  .block-modal-add-param {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .block-modal-add-param-item {
+    width: 45%;
+  }

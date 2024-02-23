@@ -60,6 +60,7 @@ export class AddNewMachinePopupComponent {
   optionsRelation: any[] = [];
   columnRelation?: string;
   imagesByColumn: Record<string, any> = {};
+  requestAddNewParam: any;
 
   onSubmit(): void {}
 
@@ -101,7 +102,17 @@ export class AddNewMachinePopupComponent {
       /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(input);
     return !isEmpty && !containsSpecialCharacter;
   }
-  addItem(inputElement: HTMLInputElement, isParam: any, column: any): void {
+  addItem(isParam: any, column: any): void {
+    if(isParam) {
+      this.requestAddNewParam = {
+        tableName: this.tableCode,
+        columnName: column.keyName
+      }
+    } else {
+      this.requestAddNewParam = {
+        paramCode: column.note
+      }
+    }
     this.isVisibleManageParam = true;
     // const newItem = inputElement.value.trim();
     // if(isParam) {
