@@ -51,21 +51,28 @@ export class AppComponent {
     private configService: ConfigService
   ) {
     let arr = window.location.href.split('/');
-    if(arr[arr.length - 1] === 'list-config') {
+    console.log('arr: ', arr);
+    console.log('arr stt 1: ', arr[arr.length - 1]);
+    console.log('arr stt 2: ', arr[arr.length - 2]);
+    if(arr[arr.length - 1] == 'list-config') {
       this.navigateToConfigTable('/manage-config/config-table/list-config');
     } else {
-      if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
+      if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm' || arr[arr.length - 1] == 'mdm-v2') {
         this.isVisableLayout = false;
       } else {
-        let baseUrl = JSON.parse(localStorage.getItem('baseUrl')!);
-        if(baseUrl.children.length > 0) {
-          if(baseUrl.name != arr[arr.length - 2]) {
-            this.getListFunctionByName(arr[arr.length - 1], false);
-          } else {
-            this.getListFunctionByName(baseUrl.name, true, arr[arr.length - 1]);
-          }
+        if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
+          this.isVisableLayout = false;
         } else {
-          this.getListFunctionByName(arr[arr.length - 1], false);
+          let baseUrl = JSON.parse(localStorage.getItem('baseUrl')!);
+          if(baseUrl.children.length > 0) {
+            if(baseUrl.name != arr[arr.length - 2]) {
+              this.getListFunctionByName(arr[arr.length - 1], false);
+            } else {
+              this.getListFunctionByName(baseUrl.name, true, arr[arr.length - 1]);
+            }
+          } else {
+            this.getListFunctionByName(arr[arr.length - 1], false);
+          }
         }
       }
     }
