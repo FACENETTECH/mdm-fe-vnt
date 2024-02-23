@@ -1,0 +1,89 @@
+td.numeric-value {
+    text-align: right;
+  }
+  
+  /* Align text values to the left */
+  td:not(.numeric-value) {
+    text-align: left;
+  }
+  
+  /* Các css dành riêng cho Facenet */
+  .fn-text-al-right {
+    text-align: right !important;
+  }
+  
+  .fn-text-al-center {
+    text-align: center !important;
+  }
+  
+  .fn-css-action-grid {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .ant-table-tbody > tr > td {
+    height: 20px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
+  
+  .ant-table-tbody > tr:nth-child(2) > td {
+    padding: 6px 8px;
+  }
+  
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  
+  .fn-icon-style {
+    font-size: 16px;
+  }
+  
+  .parent-container {
+    display: flex;
+  }
+  
+  /* Css để hiển thị cây tìm kiếm */
+  
+  .search-tree-container-open {
+    border-radius: 4px;
+    padding: 0 12px 0 12px;
+    position: relative;
+    width: 15%;
+  }
+  
+  .content-container-open {
+    border-radius: 4px;
+    padding: 12px 12px 12px 12px;
+    width: 85%;
+  }
+  
+  .search-tree-container-close {
+    border-radius: 4px;
+    padding:0 12px 0 12px;
+    position: relative;
+    width: 3%;
+  }
+  
+  .content-container-close {
+    border-radius: 4px;
+    padding: 12px 12px 48px 12px;
+    width: 97%;
+  }
+  
+  .close-search-tree-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #1890FF;
+  }
+  
+  /* Css để hiển thị nội dung dài trong bảng */
+  .table-cell-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }

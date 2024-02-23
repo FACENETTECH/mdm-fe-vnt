@@ -51,18 +51,22 @@ export class AppComponent {
     private configService: ConfigService
   ) {
     let arr = window.location.href.split('/');
-    if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
-      this.isVisableLayout = false;
+    if(arr[arr.length - 1] === 'list-config') {
+      this.navigateToConfigTable('/manage-config/config-table/list-config');
     } else {
-      let baseUrl = JSON.parse(localStorage.getItem('baseUrl')!);
-      if(baseUrl.children.length > 0) {
-        if(baseUrl.name != arr[arr.length - 2]) {
-          this.getListFunctionByName(arr[arr.length - 1], false);
-        } else {
-          this.getListFunctionByName(baseUrl.name, true, arr[arr.length - 1]);
-        }
+      if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
+        this.isVisableLayout = false;
       } else {
-        this.getListFunctionByName(arr[arr.length - 1], false);
+        let baseUrl = JSON.parse(localStorage.getItem('baseUrl')!);
+        if(baseUrl.children.length > 0) {
+          if(baseUrl.name != arr[arr.length - 2]) {
+            this.getListFunctionByName(arr[arr.length - 1], false);
+          } else {
+            this.getListFunctionByName(baseUrl.name, true, arr[arr.length - 1]);
+          }
+        } else {
+          this.getListFunctionByName(arr[arr.length - 1], false);
+        }
       }
     }
   }
@@ -125,6 +129,11 @@ export class AppComponent {
     if (this.roles.includes('admin_fcim')) {
       this._router.navigate([`exception/403`]);
     }
+  }
+
+  navigateToConfigTable(url: string) {
+    this.isVisableLayout = true;
+    this._router.navigate([url]);
   }
 
   getInfoBusiness() {

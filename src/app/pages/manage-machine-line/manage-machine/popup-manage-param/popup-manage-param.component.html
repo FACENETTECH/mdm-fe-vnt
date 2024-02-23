@@ -61,30 +61,6 @@
                 {{ "add.btn" | translate }}
               </button>
             </div>
-            <div nz-col>
-              <button
-                style="color: #01aba8"
-                nz-button
-                nzType="text"
-                class="mb-6"
-                nz-tooltip="{{ 'Sao chép (Shift + C)' | translate }}"
-              >
-                <span nz-icon nzType="copy" nzTheme="outline" class="fn-icon-style"></span>
-                {{ "btn.copy" | translate }}
-              </button>
-            </div>
-            <div nz-col>
-              <button
-                style="color: #01aba8"
-                nz-button
-                nzType="text"
-                class="mb-6"
-                nz-tooltip="{{ 'Xoá (Delete)' | translate }}"
-              >
-                <span nz-icon nzType="delete" nzTheme="outline" class="fn-icon-style"></span>
-                {{ "btn.delete" | translate }}
-              </button>
-            </div>
         </div>
         <nz-table
             nzBordered
@@ -345,13 +321,6 @@
                     </ng-container>
                     <td nzAlign="center" [nzRight]="true">
                     <div class="fn-css-action-grid">
-                        <button
-                        nz-button
-                        nzType="link"
-                        nz-tooltip="{{ 'btn.viewDetail' | translate }}"
-                        >
-                        <img src="./assets/icons/Eye.svg">
-                        </button>
                         <button
                         nz-button
                         nzType="link"
