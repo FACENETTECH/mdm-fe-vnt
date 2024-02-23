@@ -474,7 +474,7 @@ export class InfoMachinePopupComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có kiểu dữ liệu là relation
    */
   async handleOpenChangeRelation(event: any, column: any) {
-    this.columnRelation = '';
+    // this.columnRelation = '';
     if(this.listEntityByRelation.length > 0) {
       let tableCode = '';
       for(let i = 0; i < this.listEntityByRelation.length; i++) {

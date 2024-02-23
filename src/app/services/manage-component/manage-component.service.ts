@@ -202,6 +202,32 @@ export class ManageComponentService {
   }
 
   /**
+   * API cập nhật thông tin giá trị trong bảng param
+   * @param request 
+   * @returns 
+   */
+  updateValuesParam(request: any): Observable<any> {
+    return this.httpClient.put(`${this.url}/api/params`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
+  }
+
+  /**
+   * Xoá thông tin bản ghi param bằng id
+   * @param id id bản ghi param cần xoá
+   * @returns 
+   */
+   deleteValueParamById(id: any): Observable<any> {
+    return this.httpClient.delete(`${this.url}/api/params/${id}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
+  }
+
+  /**
    * API lấy ra 10 giá trị auto complete khi nhập vào common search
    * @param tableName tên danh mục
    * @param value giá trị đã được nhập

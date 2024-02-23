@@ -541,6 +541,7 @@
     (add)="submit()"
   ></app-popup-add>
   <app-popup-manage-param
+  *ngIf="isVisibleManageParam"
   [(isvisible)]="isVisibleManageParam"
   [requestAddNewParam]="requestAddNewParam"
   >

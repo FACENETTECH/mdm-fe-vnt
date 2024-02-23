@@ -23,13 +23,13 @@ td.numeric-value {
   
   .ant-table-tbody > tr > td {
     height: 20px;
-    padding: 0 8px;
+    padding: 2px 8px;
     font-size: 12px;
   }
   
-  .ant-table-tbody > tr:nth-child(2) > td {
+  /* .ant-table-tbody > tr:nth-child(2) > td {
     padding: 6px 8px;
-  }
+  } */
   
   .truncate {
     white-space: nowrap;
@@ -97,4 +97,17 @@ td.numeric-value {
 
   .block-modal-add-param-item {
     width: 45%;
+  }
+
+  .fn-btn-delete {
+    color: #FFFFFF;
+    background-color: #ec0000;
+  }
+  
+  ::ng-deep .ant-modal-footer {
+    padding-right: 24px !important;
+  }
+  
+  .fn-footer-center {
+    text-align: center;
   }

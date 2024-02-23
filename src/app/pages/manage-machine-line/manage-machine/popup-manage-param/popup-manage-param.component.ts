@@ -15,6 +15,8 @@ export class PopupManageParamComponent {
   @Input() requestAddNewParam: any;
 
   isvisiblePopupAddParam: boolean = false;
+  isvisiblePopupUpdateParam: boolean = false;
+  isvisiblePopupDeleteParam: boolean = false;
   columns: any[] = [];
   listParam: any[] = [];
   inforParam: Record<string, any> = {};
@@ -29,7 +31,13 @@ export class PopupManageParamComponent {
 
   ngOnInit() {
     this.columns = dummyColumns;
-    this.listParam = dummyData;
+    if(this.requestAddNewParam != undefined && this.requestAddNewParam != null) {
+      if(this.requestAddNewParam.hasOwnProperty('tableName') && this.requestAddNewParam.hasOwnProperty('columnName')) {
+        this.handleOpenChangeDataTypeParam(this.requestAddNewParam);
+      } else if(this.requestAddNewParam.hasOwnProperty('paramCode')) {
+        this.handleOpenChangeUnit(this.requestAddNewParam);
+      }
+    }
   }
 
   handleCancel(): void {
@@ -43,8 +51,34 @@ export class PopupManageParamComponent {
     // this.isvisibleChange.emit(false);
   }
 
+  handleCancelPopupUpdate(): void {
+    this.inforParamAddNew = {};
+    this.isvisiblePopupUpdateParam = false;
+    // this.isvisibleChange.emit(false);
+  }
+
+  handleCancelPopupDelete(): void {
+    this.inforParamAddNew = {};
+    this.isvisiblePopupDeleteParam = false;
+    // this.isvisibleChange.emit(false);
+  }
+
   openModalAddParam() {
     this.isvisiblePopupAddParam = true;
+  }
+
+  openModalUpdateParam(infor: any) {
+    this.columns.forEach((col) => {
+      this.inforParamAddNew[col.keyName] = infor[col.keyName];
+    })
+    this.isvisiblePopupUpdateParam = true;
+  }
+
+  openModalDeleteParam(infor: any) {
+    this.columns.forEach((col) => {
+      this.inforParamAddNew[col.keyName] = infor[col.keyName];
+    })
+    this.isvisiblePopupDeleteParam = true;
   }
 
   id = -1;
@@ -84,16 +118,28 @@ export class PopupManageParamComponent {
   /**
    * Hàm gọi API và xử lý dữ liệu option cho select box
    */
-   handleOpenChangeDataTypeParam(data: any, column: any) {
-    // if(data) {
-    //   this.manageComponentService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
-    //     next: (res) => {
-    //       this.valueSelectBox = res.data;
-    //     }, error: (err) => {
-    //       this.toast.error(err.error.result.message);
-    //     }
-    //   })
-    // }
+  handleOpenChangeDataTypeParam(data: any) {
+    this.manageService.getParamByTableNameAndColumnName(data.tableName, data.columnName).subscribe({
+      next: (res: any) => {
+        // this.listParam = res.data;
+        this.listParam = res.data;
+      }, error: (err) => {
+        this.toast.error(err.error.result.message);
+      }
+    })
+  }
+
+  /**
+   * Hàm gọi API và xử lý dữ liệu option cho select box với trường có đơn vị tính
+   */
+  handleOpenChangeUnit(data: any) {
+    this.manageService.getParamsByCode(data.paramCode).subscribe({
+      next: (res) => {
+        this.listParam = res.data;
+      }, error: (err) => {
+        this.toast.error(err.error.result.message);
+      }
+    });
   }
 
   checkMachine: Record<string, any> = {};
@@ -118,15 +164,16 @@ export class PopupManageParamComponent {
   }
 
   submitAddNewParam() {
-    let check = this.checkValid(this.columns[2].keyName, this.columns[2].keyTitle, this.columns[2].isRequired);
+    let check = this.checkValid(this.columns[1].keyName, this.columns[1].keyTitle, this.columns[1].isRequired);
     if(check) {
-      this.requestAddNewParam.value = this.inforParamAddNew[this.columns[2].keyName];
-      console.log(this.requestAddNewParam);
+      this.requestAddNewParam.value = this.inforParamAddNew[this.columns[1].keyName];
+      this.requestAddNewParam.description = this.inforParamAddNew.hasOwnProperty(this.columns[2].keyName) ? this.inforParamAddNew[this.columns[2].keyName] : null;
       this.manageService.addValuesParam(this.requestAddNewParam).subscribe({
         next: (res) => {
           this.toast.success(res.result.message);
           this.inforParamAddNew = {};
           this.isvisiblePopupAddParam = false;
+          this.ngOnInit();
         }, error: (err) => {
           this.toast.error(err.error.result.message);
         }
@@ -134,6 +181,40 @@ export class PopupManageParamComponent {
     } else {
       this.toast.warning('Vui lòng kiểm tra lại giá trị của các trường bắt buộc!')
     }
+  }
+
+  submitUpdateParam() {
+    let check = this.checkValid(this.columns[1].keyName, this.columns[1].keyTitle, this.columns[1].isRequired);
+    if(check) {
+      this.requestAddNewParam.id = this.inforParamAddNew[this.columns[0].keyName];
+      this.requestAddNewParam.value = this.inforParamAddNew[this.columns[1].keyName];
+      this.requestAddNewParam.description = this.inforParamAddNew.hasOwnProperty(this.columns[2].keyName) ? this.inforParamAddNew[this.columns[2].keyName] : null;
+      this.manageService.updateValuesParam(this.requestAddNewParam).subscribe({
+        next: (res) => {
+          this.toast.success(res.result.message);
+          this.inforParamAddNew = {};
+          this.isvisiblePopupUpdateParam = false;
+          this.ngOnInit();
+        }, error: (err) => {
+          this.toast.error(err.error.result.message);
+        }
+      })
+    } else {
+      this.toast.warning('Vui lòng kiểm tra lại giá trị của các trường bắt buộc!')
+    }
+  }
+
+  submitDeleteParam() {
+    this.manageService.deleteValueParamById(this.inforParamAddNew[this.columns[0].keyName]).subscribe({
+      next: (res) => {
+        this.toast.success(res.result.message);
+        this.inforParamAddNew = {};
+        this.isvisiblePopupDeleteParam = false;
+        this.ngOnInit();
+      }, error: (err) => {
+        this.toast.error(err.error.result.message);
+      }
+    })
   }
 
   protected readonly dataType = DATA_TYPE;
@@ -144,7 +225,7 @@ const dummyColumns = [
     "id": 88,
     "index": 1,
     "tableName": "param",
-    "keyName": "param_id",
+    "keyName": "id",
     "keyTitle": "Id tham số",
     "isRequired": true,
     "dataType": 2,
@@ -162,8 +243,8 @@ const dummyColumns = [
     "id": 88,
     "index": 2,
     "tableName": "param",
-    "keyName": "param_code",
-    "keyTitle": "Mã tham số",
+    "keyName": "value",
+    "keyTitle": "Giá trị tham số",
     "isRequired": true,
     "dataType": 2,
     "hasUnit": false,
@@ -180,25 +261,7 @@ const dummyColumns = [
     "id": 88,
     "index": 3,
     "tableName": "param",
-    "keyName": "param_value",
-    "keyTitle": "Giá trị tham số",
-    "isRequired": true,
-    "dataType": 2,
-    "hasUnit": false,
-    "relateTable": null,
-    "relateColumn": null,
-    "note": null,
-    "addition": null,
-    "width": "200px",
-    "isCode": false,
-    "searchTree": null,
-    "localCheck": true
-  },
-  {
-    "id": 88,
-    "index": 4,
-    "tableName": "param",
-    "keyName": "param_desc",
+    "keyName": "description",
     "keyTitle": "Mô tả",
     "isRequired": false,
     "dataType": 2,
@@ -211,26 +274,5 @@ const dummyColumns = [
     "isCode": false,
     "searchTree": null,
     "localCheck": true
-  }
-]
-
-const dummyData = [
-  {
-    param_id: 1,
-    param_code: 'PR001',
-    param_value: 'CRV',
-    param_desc: 'Note'
-  },
-  {
-    param_id: 1,
-    param_code: 'PR001',
-    param_value: 'CRV',
-    param_desc: 'Note'
-  },
-  {
-    param_id: 1,
-    param_code: 'PR001',
-    param_value: 'CRV',
-    param_desc: 'Note'
   }
 ]
