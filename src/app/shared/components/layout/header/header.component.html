@@ -28,7 +28,7 @@
   </div>
   <div class="function-block">
     <div class="account-block">
-      <img src="./assets/icons/avatar.svg" alt="avatar" />
+      <img src="./assets/icons/icon_account_.svg" alt="avatar" />
       <div class="user-block">
         <span style="font-size: 14px; margin: 0px; line-height: 16px">{{
           "welcome" | translate
@@ -114,7 +114,19 @@
         fill="white"
       />
     </svg>
-    <svg
+    <img 
+      id="noti"
+      src="./assets/icons/Icon_Bell.svg" 
+      alt="notification" 
+      (click)="openNotification()" 
+      nz-tooltip
+      nzTooltipTitle="{{ 'header.noti' | translate }}"
+      nzTooltipPlacement="bottom"
+      style="margin-left: 24px; cursor: pointer"
+      width="27px"
+      height="28px"
+      />
+    <!-- <svg
       nz-tooltip
       nzTooltipTitle="{{ 'header.noti' | translate }}"
       nzTooltipPlacement="bottom"
@@ -135,7 +147,7 @@
         d="M16.6836 23.0113C16.2111 24.3163 14.9624 25.25 13.4999 25.25C12.6111 25.25 11.7336 24.89 11.1149 24.2488C10.7549 23.9113 10.4849 23.4613 10.3274 23C10.4736 23.0225 10.6199 23.0337 10.7774 23.0562C11.0361 23.09 11.3061 23.1237 11.5761 23.1462C12.2174 23.2025 12.8699 23.2362 13.5224 23.2362C14.1636 23.2362 14.8049 23.2025 15.4349 23.1462C15.6711 23.1237 15.9074 23.1125 16.1324 23.0787C16.3124 23.0562 16.4924 23.0338 16.6836 23.0113Z"
         fill="white"
       />
-    </svg>
+    </svg> -->
     <div class="notification-box" *ngIf="notificationOpen">
       <div class="fn-row-space-between">
         <p style="font-size: 24px">Thông báo</p>

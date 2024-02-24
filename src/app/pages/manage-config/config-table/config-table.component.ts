@@ -390,8 +390,8 @@ export class ConfigTableComponent {
   headers: any[] = [];
 
   getHeaders() {
-    this.manageComponentService.getColummnByTableName(this.inforTable.name).subscribe({
-      next: (res) => {
+    // this.manageComponentService.getColummnByTableName(this.inforTable.name).subscribe({
+    //   next: (res) => {
         // console.log(res);
         // this.columns = res.data;
         // for(let i = 0; i < this.columns.length; i++) {
@@ -403,12 +403,14 @@ export class ConfigTableComponent {
         //     break;
         //   }
         // }
-        this.columns = dummyColumn;
-        this.getData({ page: this.pageNumber, size: this.pageSize });
-      }, error: (err) => {
-        console.log(err);
-      }
-    })
+    //     this.columns = dummyColumn;
+    //     this.getData({ page: this.pageNumber, size: this.pageSize });
+    //   }, error: (err) => {
+    //     console.log(err);
+    //   }
+    // })
+    this.columns = dummyColumn;
+    this.getData({ page: this.pageNumber, size: this.pageSize });
   }
 
   onClickIcon(element: any) {

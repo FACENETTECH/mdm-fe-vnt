@@ -32,6 +32,7 @@ export class AddNewMachinePopupComponent {
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() isvisibleAdd: EventEmitter<boolean> = new EventEmitter();
 
+  isVisibleManageParam: boolean = false;
   machineCode: string = '';
   machineName: string = '';
   status: string = '1';
@@ -59,6 +60,7 @@ export class AddNewMachinePopupComponent {
   optionsRelation: any[] = [];
   columnRelation?: string;
   imagesByColumn: Record<string, any> = {};
+  requestAddNewParam: any;
 
   onSubmit(): void {}
 
@@ -100,36 +102,47 @@ export class AddNewMachinePopupComponent {
       /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(input);
     return !isEmpty && !containsSpecialCharacter;
   }
-  addItem(inputElement: HTMLInputElement, isParam: any, column: any): void {
-    const newItem = inputElement.value.trim();
+  addItem(isParam: any, column: any): void {
     if(isParam) {
-      let request = {
-        value: newItem,
+      this.requestAddNewParam = {
         tableName: this.tableCode,
         columnName: column.keyName
       }
-      this.manageService.addValuesParam(request).subscribe({
-        next: (res) => {
-          inputElement.value = '';
-          this.handleOpenChangeDataTypeParam(true, column);
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
     } else {
-      let request = {
-        value: newItem,
+      this.requestAddNewParam = {
         paramCode: column.note
       }
-      this.manageService.addValuesParam(request).subscribe({
-        next: (res) => {
-          inputElement.value = '';
-          this.handleOpenChangeUnit(true, column);
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
     }
+    this.isVisibleManageParam = true;
+    // const newItem = inputElement.value.trim();
+    // if(isParam) {
+    //   let request = {
+    //     value: newItem,
+    //     tableName: this.tableCode,
+    //     columnName: column.keyName
+    //   }
+    //   this.manageService.addValuesParam(request).subscribe({
+    //     next: (res) => {
+    //       inputElement.value = '';
+    //       this.handleOpenChangeDataTypeParam(true, column);
+    //     }, error: (err) => {
+    //       this.toast.error(err.error.result.message);
+    //     }
+    //   })
+    // } else {
+    //   let request = {
+    //     value: newItem,
+    //     paramCode: column.note
+    //   }
+    //   this.manageService.addValuesParam(request).subscribe({
+    //     next: (res) => {
+    //       inputElement.value = '';
+    //       this.handleOpenChangeUnit(true, column);
+    //     }, error: (err) => {
+    //       this.toast.error(err.error.result.message);
+    //     }
+    //   })
+    // }
   }
 
   machineTypeList: any[] = [];
@@ -344,6 +357,12 @@ export class AddNewMachinePopupComponent {
           this.inforMachine[this.columns[i].keyName] = Number.parseFloat(this.inforMachine[this.columns[i].keyName]);
         }
       }
+      for(let i = 0; i < this.columns.length; i++) {
+        if(this.columns[i].dataType == this.dataType.RELATION) {
+          this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].id;
+        }
+      }
+      console.log(this.inforMachine);
       this.manageService.addNewRecord(this.tableCode, this.inforMachine).subscribe({
         next: (res) => {
           let isImage = false;
@@ -419,6 +438,7 @@ export class AddNewMachinePopupComponent {
     if(data) {
       this.manageService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
         next: (res) => {
+          console.log(res);
           this.valueSelectBox = res.data;
         }, error: (err) => {
           this.toast.error(err.error.result.message);
@@ -451,7 +471,7 @@ export class AddNewMachinePopupComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có kiểu dữ liệu là relation
    */
   handleOpenChangeRelation(event: any, column: any) {
-    this.columnRelation = '';
+    // this.columnRelation = '';
     if(this.listEntityByRelation.length > 0) {
       let tableCode = '';
       for(let i = 0; i < this.listEntityByRelation.length; i++) {
@@ -459,6 +479,7 @@ export class AddNewMachinePopupComponent {
           tableCode = this.listEntityByRelation[i].name;
         }
       }
+      console.log(tableCode);
       if(tableCode != '') {
         let request = {
           "pageNumber": 0,
