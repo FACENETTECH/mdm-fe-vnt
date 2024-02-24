@@ -4,7 +4,7 @@
   [nzContent]="modalContent"
   [nzFooter]="modalFooter"
   (nzOnCancel)="handleCancel()"
-  [nzWidth]="1360"
+  [nzWidth]="1160"
 >
   <ng-template #modalTitle>
     <div
@@ -53,8 +53,8 @@
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.hasUnit && col.keyName != 'status'">
             <ng-container *ngIf="col.dataType == dataType.NUMBER">
-              <div style="width: 45%; margin-bottom: 20px;" class="fn-df-center">
-                <div style="width: 50%;">
+              <div class="fn-df-center block-item-unit">
+                <div class="block-item-unit-left">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
                     }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -69,7 +69,7 @@
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
-                <div style="width: 45%;">
+                <div class="block-item-unit-right">
                   <label class="fn-label"
                     >{{ "Đơn vị tính" | translate }}</label
                   >
@@ -103,8 +103,8 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
-              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
-                <div style="width: 50%;">
+              <div class="fn-df-center block-item-unit">
+                <div class="block-item-unit-left">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
                     }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -112,22 +112,18 @@
                     ></label
                   >
                   <br />
-                  <nz-input-number
-                    [nzMin]="0"
-                    [nzStep]="1"
-                    [nzParser]="parser"
-                    [nzFormatter]="formatter"
-                    nz-input
+                  <nz-date-picker
+                    style="width: 100%"
                     [(ngModel)]="inforMachine[col.keyName]"
                     (ngModelChange)="checkValid()"
                     (ngModelChange)="checkAction = true"
-                    style="width: 100%"
-                  />
+                    nzFormat="dd/MM/yyyy"
+                  ></nz-date-picker>
                   <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
-                <div style="width: 45%;">
+                <div class="block-item-unit-right">
                   <label class="fn-label"
                     >{{ "Đơn vị tính" | translate }}</label
                   >
@@ -161,8 +157,8 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.STRING">
-              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
-                <div style="width: 50%;">
+              <div class="fn-df-center block-item-unit">
+                <div class="block-item-unit-left">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
                     }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -185,7 +181,7 @@
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
-                <div style="width: 45%;">
+                <div class="block-item-unit-right">
                   <label class="fn-label"
                     >{{ "Đơn vị tính" | translate }}</label
                   >
@@ -219,8 +215,8 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
-              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
-                <div style="width: 50%;">
+              <div class="fn-df-center block-item-unit">
+                <div class="block-item-unit-left">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
                     }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -243,7 +239,7 @@
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
-                <div style="width: 45%;">
+                <div class="block-item-unit-right">
                   <label class="fn-label"
                     >{{ "Đơn vị tính" | translate }}</label
                   >
@@ -279,7 +275,7 @@
           </ng-container>
           <ng-container *ngIf="!col.hasUnit && col.keyName != 'status'">
             <ng-container *ngIf="col.dataType == dataType.NUMBER">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -299,7 +295,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -311,8 +307,8 @@
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
-                  [nzFormat]="'yyyy-MM-dd HH:mm:ss'"
-                ></nz-date-picker>
+                  nzFormat="dd/MM/yyyy">
+                </nz-date-picker>
                 <span
                   style="color: red"
                   *ngIf="col.isRequired == true && checkMachine[col.keyName]"
@@ -321,7 +317,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.STRING">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -344,7 +340,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -367,7 +363,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.PARAM">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -409,7 +405,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.BOOLEAN">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -441,7 +437,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.RELATION">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
