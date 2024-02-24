@@ -113,7 +113,7 @@
                     [(ngModel)]="inforMachine[col.keyName]"
                     (ngModelChange)="checkValid()"
                     (ngModelChange)="checkAction = true"
-                    [nzFormat]="'yyyy/MM/dd'"
+                    nzFormat="dd/MM/yyyy"
                   ></nz-date-picker>
                   <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                     checkMachine[col.keyName]
@@ -264,7 +264,7 @@
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
-                  [nzFormat]="'yyyy/MM/dd'"
+                  nzFormat="dd/MM/yyyy"
                 ></nz-date-picker>
                 <span
                   style="color: red"
@@ -402,6 +402,7 @@
                   ></label
                 >
                 <nz-select
+                  [compareWith]="compareFn"
                   style="width: 100%"
                   nzMode="default"
                   [(ngModel)]="inforMachine[col.keyName]"
@@ -413,7 +414,7 @@
                   (ngModelChange)="checkAction = true"
                   [nzShowSearch]="true"
                 >
-                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item.id" [nzLabel]="item[columnRelation!]"></nz-option>
+                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
                 </nz-select>
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]

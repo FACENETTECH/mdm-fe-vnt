@@ -78,6 +78,7 @@ export class UpdateInforComponentComponent {
   getInforRecord() {
     this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
       next: (res) => {
+        console.log(res);
         this.formatNumberInUpdate(res.data);
       }, error: (err) => {
         this.toast.error(err.error.result.message);
@@ -601,15 +602,25 @@ export class UpdateInforComponentComponent {
         inforComponent[property] = inforComponent[property].toLocaleString('en-US', { useGrouping: true });
       }
     }
-    for(let i = 0; i < this.columns.length; i++) {
-      if(this.columns[i].dataType == this.dataType.RELATION) {
-        inforComponent[this.columns[i].keyName] = Number.parseInt(inforComponent[this.columns[i].keyName]);
-      }
-    }
+    // for(let i = 0; i < this.columns.length; i++) {
+    //   if(this.columns[i].dataType == this.dataType.RELATION) {
+    //     inforComponent[this.columns[i].keyName] = Number.parseInt(inforComponent[this.columns[i].keyName]);
+    //   }
+    // }
     this.inforMachine = inforComponent;
+    console.log(this.inforMachine);
     this.getAllEntity();
     this.getImageByName();
   }
+
+  /**
+   * Hàm so sánh giá trị của select box
+   * @param o1 
+   * @param o2 
+   * @returns 
+   */
+  compareFn = (o1: any, o2: any): boolean =>
+    o1 && o2 ? o1.id === o2.id : o1 === o2;
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
