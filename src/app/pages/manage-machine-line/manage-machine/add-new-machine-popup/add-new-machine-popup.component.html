@@ -460,7 +460,7 @@
                   (ngModelChange)="checkAction = true"
                   [nzShowSearch]="true"
                 >
-                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item.id" [nzLabel]="item[columnRelation!]"></nz-option>
+                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
                 </nz-select>
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]

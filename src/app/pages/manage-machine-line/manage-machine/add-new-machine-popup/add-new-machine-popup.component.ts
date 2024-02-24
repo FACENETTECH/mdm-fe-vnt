@@ -357,6 +357,12 @@ export class AddNewMachinePopupComponent {
           this.inforMachine[this.columns[i].keyName] = Number.parseFloat(this.inforMachine[this.columns[i].keyName]);
         }
       }
+      for(let i = 0; i < this.columns.length; i++) {
+        if(this.columns[i].dataType == this.dataType.RELATION) {
+          this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].id;
+        }
+      }
+      console.log(this.inforMachine);
       this.manageService.addNewRecord(this.tableCode, this.inforMachine).subscribe({
         next: (res) => {
           let isImage = false;
