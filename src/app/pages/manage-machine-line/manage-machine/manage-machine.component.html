@@ -458,7 +458,7 @@
                       [nz-tooltip]="infor[column.keyName]"
                       (dblclick)="onDblClickOnRowTable(infor)"
                       >
-                        {{ infor[column.keyName] | date: 'dd-MM-yyyy' }}
+                        {{ infor[column.keyName] | date: 'dd/MM/yyyy' }}
                       </td>
                     </ng-container>
                     <ng-container *ngIf="column.dataType == dataType.BOOLEAN">

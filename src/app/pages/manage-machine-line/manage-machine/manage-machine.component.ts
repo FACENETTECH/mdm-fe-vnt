@@ -91,7 +91,8 @@ export class ManageMachineComponent implements OnInit {
   selectedOptions: string[] = [];
   searchTreeName: string = "";
   searchTreeOptions: {
-    value: string,
+    label: string,
+    value: any,
     checked: boolean
   }[] = [];
 
@@ -858,13 +859,67 @@ export class ManageMachineComponent implements OnInit {
     for (let column of this.columns) {
       if (column.searchTree) {
         this.searchTreeName = column.keyTitle;
-        this.manageComponentService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
-          next: (res) => {
-            this.searchTreeOptions = res.data;
-          }, error: (err) => {
-            this.toast.error(err.error.result.message);
-          }
-        })
+
+        switch (column.dataType) {
+          case this.dataType.PARAM:
+            this.loader.start();
+            this.manageComponentService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
+              next: (res) => {
+                this.searchTreeOptions = res.data.map((item: any) => (
+                  {
+                    value: item.value,
+                    label: item.value,
+                    checked: false
+                  }
+                ));
+                this.loader.stop();
+              }, error: (err) => {
+                this.loader.stop();
+                this.toast.error(err.error.result.message);
+              }
+            });
+            break;
+          case this.dataType.RELATION:
+            let request = {
+              pageNumber: 0,
+              pageSize: 0,
+              filter: {},
+              sortOrder: "ASC",
+              sortProperty: column.relateColumn,
+            }
+            this.loader.start();
+            this.manageComponentService.getDataDynamicTable(column.relateTable, request).subscribe({
+              next: (res) => {
+                this.searchTreeOptions = res.data.map((item: any) => (
+                  {
+                    value: item.id,
+                    label: item[column.relateColumn],
+                    checked: false
+                  }
+                ));
+                this.loader.stop();
+              }, error: (err) => {
+                this.loader.stop();
+                this.toast.error(err.error.result.message);
+              }
+            });
+            break;
+          case this.dataType.BOOLEAN:
+            this.searchTreeOptions = [
+              {
+                value: true,
+                label: "True",
+                checked: false
+              },
+              {
+                value: false,
+                label: "False",
+                checked: false
+              }
+            ];
+            break;
+        }
+
         break;
       }
     }
