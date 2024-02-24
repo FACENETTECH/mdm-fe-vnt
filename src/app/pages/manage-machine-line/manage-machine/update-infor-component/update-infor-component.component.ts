@@ -116,9 +116,7 @@ export class UpdateInforComponentComponent {
       /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(input);
     return !isEmpty && !containsSpecialCharacter;
   }
-  addItem(inputElement: HTMLInputElement): void {
-    
-  }
+  addItem(inputElement: HTMLInputElement): void {}
 
   machineTypeList: any[] = [];
   id: string = '';
@@ -335,6 +333,13 @@ export class UpdateInforComponentComponent {
           }
         }
       }
+      for(let i = 0; i < this.columns.length; i++) {
+        if(this.columns[i].dataType == this.dataType.RELATION) {
+          if(this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
+            this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].id;
+          }
+        }
+      }
       this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
         next: (res) => {
           let isImage = false;
@@ -520,6 +525,10 @@ export class UpdateInforComponentComponent {
                     break;
                   }
                 }
+
+                for(let i = 0; i < this.optionsRelation.length; i++) {
+                  this.optionsRelation[i]['compareBy'] = this.optionsRelation[i].id + this.optionsRelation[i][`${this.columnRelation}`];
+                }
               }
             })
           }, error: (err) => {
@@ -608,19 +617,26 @@ export class UpdateInforComponentComponent {
     //   }
     // }
     this.inforMachine = inforComponent;
-    console.log(this.inforMachine);
+    for(let i = 0; i < this.columns.length; i++) {
+      if(this.columns[i].dataType == this.dataType.RELATION) {
+        this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+      }
+    }
     this.getAllEntity();
     this.getImageByName();
   }
 
   /**
    * Hàm so sánh giá trị của select box
-   * @param o1 
-   * @param o2 
+   * @param object1 
+   * @param object2 
    * @returns 
    */
-  compareFn = (o1: any, o2: any): boolean =>
-    o1 && o2 ? o1.id === o2.id : o1 === o2;
+  compareFn = (object1: any, object2: any): boolean => {
+    // console.log(object1);
+    // console.log(object2);
+    return object1 && object2 ? object1.compareBy === object2.compareBy : object1 === object2;
+  }
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
