@@ -117,7 +117,7 @@
                     [(ngModel)]="inforMachine[col.keyName]"
                     (ngModelChange)="checkValid()"
                     (ngModelChange)="checkAction = true"
-                    [nzFormat]="'dd-MM-yyyy'"
+                    [nzFormat]="'yyyy/MM/dd'"
                   ></nz-date-picker>
                   <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                     checkMachine[col.keyName]
@@ -307,7 +307,7 @@
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
-                  [nzFormat]="'dd-MM-yyyy'">
+                  [nzFormat]="'yyyy/MM/dd'">
                 </nz-date-picker>
                 <span
                   style="color: red"
