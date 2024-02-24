@@ -359,7 +359,9 @@ export class AddNewMachinePopupComponent {
       }
       for(let i = 0; i < this.columns.length; i++) {
         if(this.columns[i].dataType == this.dataType.RELATION) {
-          this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].id;
+          if(this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
+            this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].id;
+          }
         }
       }
       console.log(this.inforMachine);

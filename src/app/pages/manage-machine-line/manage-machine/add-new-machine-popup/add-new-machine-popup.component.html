@@ -4,7 +4,7 @@
   [nzContent]="modalContent"
   [nzFooter]="modalFooter"
   (nzOnCancel)="handleCancel()"
-  [nzWidth]="1360"
+  [nzWidth]="1260"
 >
   <ng-template #modalTitle>
     <div
@@ -53,7 +53,7 @@
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.hasUnit && col.keyName != 'status'">
             <ng-container *ngIf="col.dataType == dataType.NUMBER">
-              <div style="width: 45%; margin-bottom: 20px;" class="fn-df-center">
+              <div class="fn-df-center block-item-unit">
                 <div style="width: 50%;">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
@@ -103,7 +103,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
-              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+              <div class="fn-df-center block-item-unit">
                 <div style="width: 50%;">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
@@ -161,7 +161,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.STRING">
-              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+              <div class="fn-df-center block-item-unit">
                 <div style="width: 50%;">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
@@ -219,7 +219,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
-              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+              <div class="fn-df-center block-item-unit">
                 <div style="width: 50%;">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
@@ -279,7 +279,7 @@
           </ng-container>
           <ng-container *ngIf="!col.hasUnit && col.keyName != 'status'">
             <ng-container *ngIf="col.dataType == dataType.NUMBER">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -299,7 +299,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -321,7 +321,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.STRING">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -344,7 +344,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -367,7 +367,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.PARAM">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -409,7 +409,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.BOOLEAN">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -441,7 +441,7 @@
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.RELATION">
-              <div style="width: 45%; margin-bottom: 20px">
+              <div class="block-item-unit">
                 <label class="fn-label"
                   >{{ col.keyTitle | translate
                   }}<span *ngIf="col.isRequired == true" style="color: red"
