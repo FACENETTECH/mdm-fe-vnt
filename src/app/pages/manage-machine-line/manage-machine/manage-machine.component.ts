@@ -357,8 +357,8 @@ export class ManageMachineComponent implements OnInit {
     this.ivisibleInfor = true;
   }
 
-  editMachine(machine: any) {
-    this.currentMachine = machine;
+  editMachine(infor: any) {
+    this.currentMachine = infor;
     this.isvisibleUpdate = true;
   }
 
@@ -768,7 +768,7 @@ export class ManageMachineComponent implements OnInit {
    * Xử lý sự kiện double click trên dòng trong table
    */
   onDblClickOnRowTable(infor: any) {
-    this.inforComponent(infor);
+    this.editMachine(infor);
   }
 
 
