@@ -8,7 +8,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NZ_I18N, NzI18nService } from 'ng-zorro-antd/i18n';
+import { NZ_I18N, NzI18nService, NZ_DATE_LOCALE } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import { vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
@@ -25,6 +25,7 @@ import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzI18nModule } from 'ng-zorro-antd/i18n';
+import { enUS } from 'date-fns/locale';
 
 //
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -129,6 +130,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       multi: true,
       deps: [KeycloakService],
     },
+    { provide: NZ_DATE_LOCALE, useValue: enUS },
     // {
     //   provide: HTTP_INTERCEPTORS,
     //   useClass: TokenInterceptor,
