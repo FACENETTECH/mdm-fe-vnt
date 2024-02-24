@@ -50,5 +50,13 @@
 
   .block-item-unit {
     width: 45%;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+  }
+
+  .block-item-unit-left {
+    width: 60%;
+  }
+
+  .block-item-unit-right {
+    width: 35%;
   }

@@ -47,3 +47,16 @@
 .fn-text-align-center {
   text-align: center;
 }
+
+.block-item-unit {
+  width: 45%;
+  margin-bottom: 16px;
+}
+
+.block-item-unit-left {
+  width: 60%;
+}
+
+.block-item-unit-right {
+  width: 35%;
+}
