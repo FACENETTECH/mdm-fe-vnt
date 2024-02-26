@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration production --base-href=/mdm-v2/",
+    "build:prod": "ng build --configuration production --base-href=/mdm-v2/",
+    "build:dev": "ng build --configuration development --base-href=/mdm-v2/",
     "watch": "ng build --watch --configuration production",
     "test": "ng test"
   },
