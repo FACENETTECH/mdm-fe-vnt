@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Build and Run') {
             steps {
-                sh 'env=dev docker compose up -d --build'
+                sh 'docker compose up -d --build'
              }
         }
     }

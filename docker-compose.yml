@@ -4,8 +4,6 @@ services:
     container_name: v2-fcim-cloud-mdm-fe
     build:
       dockerfile: Dockerfile
-      args:
-      - profile=${env}
     image: v2-fcim-cloud-mdm-fe
     restart: always
     ports:
