@@ -460,8 +460,52 @@ export class UpdateInforComponentComponent {
         await this.handleOpenChangeDataTypeParam(true, this.columns[i]);
       } else if(this.columns[i].hasUnit) {
         await this.handleOpenChangeUnit(true, this.columns[i]);
-      } else if(this.columns[i].dataType == this.dataType.RELATION) {
-        await this.handleOpenChangeRelation(true, this.columns[i]);
+      }
+    }
+    await this.handleOpenChangeRelation(true, this.columns, true);
+  }
+
+  /**
+   * Hàm lấy danh sách bản ghi phụ thuộc theo kiểu dữ liệu là RELATION
+   */
+  async getRelationOnInit() {
+    for(let x = 0; x < this.columns.length; x++) {
+      try {
+        if(this.columns[x].dataType == this.dataType.RELATION) {
+          let tableCode = '';
+          for(let i = 0; i < this.listEntityByRelation.length; i++) {
+            if(this.listEntityByRelation[i].name == this.columns[x].relateTable) {
+              tableCode = this.listEntityByRelation[i].name;
+            }
+          }
+          if(tableCode != '') {
+            let request = {
+              "pageNumber": 0,
+              "pageSize": 0,
+              "common": "",
+              "filter": {},
+              "sortOrder": "DESC",
+              "sortProperty": "index",
+              "searchOptions": []
+            }
+            const res = await this.manageService.getDataDynamicTableOnInit(tableCode, request);
+            this.optionsRelation = res.data;
+            const result = await this.manageService.getColummnByTableNameOnInit(tableCode);
+            for(let i = 0; i < res.data.length; i++) {
+              if(result.data[i].keyName == this.columns[x].relateColumn) {
+                this.columnRelation = result.data[i].keyName;
+                break;
+              }
+            }
+
+            for(let i = 0; i < this.optionsRelation.length; i++) {
+              this.optionsRelation[i]['compareBy'] = this.optionsRelation[i].id + this.optionsRelation[i][`${this.columnRelation}`];
+            }
+          }
+        }
+      } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error(error);
       }
     }
   }
@@ -495,46 +539,50 @@ export class UpdateInforComponentComponent {
    /**
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có kiểu dữ liệu là relation
    */
-  async handleOpenChangeRelation(event: any, column: any) {
-    // this.columnRelation = '';
-    if(this.listEntityByRelation.length > 0) {
-      let tableCode = '';
-      for(let i = 0; i < this.listEntityByRelation.length; i++) {
-        if(this.listEntityByRelation[i].name == column.relateTable) {
-          tableCode = this.listEntityByRelation[i].name;
+  async handleOpenChangeRelation(event: any, column: any, isInit: boolean) {
+    if(isInit) {
+      await this.getRelationOnInit();
+    } else {
+      // this.columnRelation = '';
+      if(this.listEntityByRelation.length > 0) {
+        let tableCode = '';
+        for(let i = 0; i < this.listEntityByRelation.length; i++) {
+          if(this.listEntityByRelation[i].name == column.relateTable) {
+            tableCode = this.listEntityByRelation[i].name;
+          }
         }
-      }
-      if(tableCode != '') {
-        let request = {
-          "pageNumber": 0,
-          "pageSize": 0,
-          "common": "",
-          "filter": {},
-          "sortOrder": "DESC",
-          "sortProperty": "index",
-          "searchOptions": []
-        }
-        this.manageService.getDataDynamicTable(tableCode, request).subscribe({
-          next: (res) => {
-            this.optionsRelation = res.data;
-            this.manageService.getColummnByTableName(tableCode).subscribe({
-              next: (res) => {
-                for(let i = 0; i < res.data.length; i++) {
-                  if(res.data[i].keyName == column.relateColumn) {
-                    this.columnRelation = res.data[i].keyName;
-                    break;
+        if(tableCode != '') {
+          let request = {
+            "pageNumber": 0,
+            "pageSize": 0,
+            "common": "",
+            "filter": {},
+            "sortOrder": "DESC",
+            "sortProperty": "index",
+            "searchOptions": []
+          }
+          this.manageService.getDataDynamicTable(tableCode, request).subscribe({
+            next: (res) => {
+              this.optionsRelation = res.data;
+              this.manageService.getColummnByTableName(tableCode).subscribe({
+                next: (res) => {
+                  for(let i = 0; i < res.data.length; i++) {
+                    if(res.data[i].keyName == column.relateColumn) {
+                      this.columnRelation = res.data[i].keyName;
+                      break;
+                    }
+                  }
+
+                  for(let i = 0; i < this.optionsRelation.length; i++) {
+                    this.optionsRelation[i]['compareBy'] = this.optionsRelation[i].id + this.optionsRelation[i][`${this.columnRelation}`];
                   }
                 }
-
-                for(let i = 0; i < this.optionsRelation.length; i++) {
-                  this.optionsRelation[i]['compareBy'] = this.optionsRelation[i].id + this.optionsRelation[i][`${this.columnRelation}`];
-                }
-              }
-            })
-          }, error: (err) => {
-            this.toast.error(err.error.result.message);
-          }
-        })
+              })
+            }, error: (err) => {
+              this.toast.error(err.error.result.message);
+            }
+          })
+        }
       }
     }
   }

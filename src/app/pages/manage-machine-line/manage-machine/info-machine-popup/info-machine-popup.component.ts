@@ -59,6 +59,7 @@ export class InfoMachinePopupComponent {
   listEntityByRelation: any[] = [];
   optionsRelation: any[] = [];
   columnRelation?: string;
+  imagesByColumn: Record<string, any> = {};
 
   onSubmit(): void {}
 
@@ -72,12 +73,13 @@ export class InfoMachinePopupComponent {
   /**
    * Hàm xử lý API để lấy ra thông tin bản ghi
    */
-   getInforRecord() {
+  getInforRecord() {
     this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
       next: (res) => {
+        console.log(res);
         this.formatNumberInUpdate(res.data);
       }, error: (err) => {
-        this.toast.error(err.error.message);
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -112,9 +114,7 @@ export class InfoMachinePopupComponent {
       /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(input);
     return !isEmpty && !containsSpecialCharacter;
   }
-  addItem(inputElement: HTMLInputElement): void {
-    
-  }
+  addItem(inputElement: HTMLInputElement): void {}
 
   machineTypeList: any[] = [];
   id: string = '';
@@ -278,6 +278,7 @@ export class InfoMachinePopupComponent {
     }
   }
   convertToSeconds(value: number, unit: string): number {
+
     if (isNaN(value)) {
       return 0;
     }
@@ -330,6 +331,13 @@ export class InfoMachinePopupComponent {
           }
         }
       }
+      for(let i = 0; i < this.columns.length; i++) {
+        if(this.columns[i].dataType == this.dataType.RELATION) {
+          if(this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
+            this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].id;
+          }
+        }
+      }
       this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
         next: (res) => {
           let isImage = false;
@@ -348,6 +356,7 @@ export class InfoMachinePopupComponent {
                 this.isvisibleUpdate.emit(true);
                 this.loader.stop();
               }, error: (err) => {
+                this.toast.error(err.error.result.message);
                 this.loader.stop();
               }
             })
@@ -401,6 +410,7 @@ export class InfoMachinePopupComponent {
       next: (res) => {
         this.inforImage = res.data;
       }, error: (err) => {
+        this.toast.error(err.error.result.message);
       }
     })
   }
@@ -414,7 +424,7 @@ export class InfoMachinePopupComponent {
         next: (res) => {
           this.valueSelectBox = res.data;
         }, error: (err) => {
-          this.toast.error(err.result.message);
+          this.toast.error(err.error.result.message);
         }
       })
     }
@@ -430,7 +440,7 @@ export class InfoMachinePopupComponent {
           next: (res) => {
             this.valueTypeParam = res.data;
           }, error: (err) => {
-            this.toast.error(err.result.message);
+            this.toast.error(err.error.result.message);
           }
         });
       } else {
@@ -448,8 +458,52 @@ export class InfoMachinePopupComponent {
         await this.handleOpenChangeDataTypeParam(true, this.columns[i]);
       } else if(this.columns[i].hasUnit) {
         await this.handleOpenChangeUnit(true, this.columns[i]);
-      } else if(this.columns[i].dataType == this.dataType.RELATION) {
-        await this.handleOpenChangeRelation(true, this.columns[i]);
+      }
+    }
+    await this.handleOpenChangeRelation(true, this.columns, true);
+  }
+
+  /**
+   * Hàm lấy danh sách bản ghi phụ thuộc theo kiểu dữ liệu là RELATION
+   */
+   async getRelationOnInit() {
+    for(let x = 0; x < this.columns.length; x++) {
+      try {
+        if(this.columns[x].dataType == this.dataType.RELATION) {
+          let tableCode = '';
+          for(let i = 0; i < this.listEntityByRelation.length; i++) {
+            if(this.listEntityByRelation[i].name == this.columns[x].relateTable) {
+              tableCode = this.listEntityByRelation[i].name;
+            }
+          }
+          if(tableCode != '') {
+            let request = {
+              "pageNumber": 0,
+              "pageSize": 0,
+              "common": "",
+              "filter": {},
+              "sortOrder": "DESC",
+              "sortProperty": "index",
+              "searchOptions": []
+            }
+            const res = await this.manageService.getDataDynamicTableOnInit(tableCode, request);
+            this.optionsRelation = res.data;
+            const result = await this.manageService.getColummnByTableNameOnInit(tableCode);
+            for(let i = 0; i < res.data.length; i++) {
+              if(result.data[i].keyName == this.columns[x].relateColumn) {
+                this.columnRelation = result.data[i].keyName;
+                break;
+              }
+            }
+
+            for(let i = 0; i < this.optionsRelation.length; i++) {
+              this.optionsRelation[i]['compareBy'] = this.optionsRelation[i].id + this.optionsRelation[i][`${this.columnRelation}`];
+            }
+          }
+        }
+      } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error(error);
       }
     }
   }
@@ -461,6 +515,16 @@ export class InfoMachinePopupComponent {
    handleChange(item: any, column: any) {
      this.formUpload.append(column.keyName, item.target.files['0']);
      this.inforMachine[column.keyName] = item.target.files['0'].name;
+     if (item.target.files && item.target.files[0]) {
+      const file = item.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        this.imagesByColumn[column.keyName] = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
    };
  
    /**
@@ -473,46 +537,57 @@ export class InfoMachinePopupComponent {
    /**
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có kiểu dữ liệu là relation
    */
-  async handleOpenChangeRelation(event: any, column: any) {
-    // this.columnRelation = '';
-    if(this.listEntityByRelation.length > 0) {
-      let tableCode = '';
-      for(let i = 0; i < this.listEntityByRelation.length; i++) {
-        if(this.listEntityByRelation[i].name == column.relateTable) {
-          tableCode = this.listEntityByRelation[i].name;
+  async handleOpenChangeRelation(event: any, column: any, isInit: boolean) {
+    if(isInit) {
+      await this.getRelationOnInit();
+    } else {
+      // this.columnRelation = '';
+      if(this.listEntityByRelation.length > 0) {
+        let tableCode = '';
+        for(let i = 0; i < this.listEntityByRelation.length; i++) {
+          if(this.listEntityByRelation[i].name == column.relateTable) {
+            tableCode = this.listEntityByRelation[i].name;
+          }
         }
-      }
-      if(tableCode != '') {
-        let request = {
-          "pageNumber": 0,
-          "pageSize": 0,
-          "common": "",
-          "filter": {},
-          "sortOrder": "DESC",
-          "sortProperty": "index",
-          "searchOptions": []
-        }
-        this.manageService.getDataDynamicTable(tableCode, request).subscribe({
-          next: (res) => {
-            this.optionsRelation = res.data;
-            this.manageService.getColummnByTableName(tableCode).subscribe({
-              next: (res) => {
-                for(let i = 0; i < res.data.length; i++) {
-                  if(res.data[i].keyName ==column.relateColumn) {
-                    this.columnRelation = res.data[i].keyName;
-                    break;
+        if(tableCode != '') {
+          let request = {
+            "pageNumber": 0,
+            "pageSize": 0,
+            "common": "",
+            "filter": {},
+            "sortOrder": "DESC",
+            "sortProperty": "index",
+            "searchOptions": []
+          }
+          this.manageService.getDataDynamicTable(tableCode, request).subscribe({
+            next: (res) => {
+              this.optionsRelation = res.data;
+              this.manageService.getColummnByTableName(tableCode).subscribe({
+                next: (res) => {
+                  for(let i = 0; i < res.data.length; i++) {
+                    if(res.data[i].keyName == column.relateColumn) {
+                      this.columnRelation = res.data[i].keyName;
+                      break;
+                    }
+                  }
+
+                  for(let i = 0; i < this.optionsRelation.length; i++) {
+                    this.optionsRelation[i]['compareBy'] = this.optionsRelation[i].id + this.optionsRelation[i][`${this.columnRelation}`];
                   }
                 }
-              }
-            })
-          }, error: (err) => {
-            this.toast.error(err.error.result.message);
-          }
-        })
+              })
+            }, error: (err) => {
+              this.toast.error(err.error.result.message);
+            }
+          })
+        }
       }
     }
   }
 
+  /**
+   * Hàm lấy ra tất cả bảng trong database
+   */
   getAllEntity() {
     this.listEntityByRelation = [];
     this.configService.getAllCategory().subscribe({
@@ -578,18 +653,35 @@ export class InfoMachinePopupComponent {
    */
   async formatNumberInUpdate(inforComponent: any) {
     for(const property in inforComponent) {
-      if(property != 'id' && (typeof inforComponent[property] == 'number')) {
+      if(property != 'id' && property != 'index' && (typeof inforComponent[property] == 'number')) {
         inforComponent[property] = inforComponent[property].toLocaleString('en-US', { useGrouping: true });
       }
     }
+    // for(let i = 0; i < this.columns.length; i++) {
+    //   if(this.columns[i].dataType == this.dataType.RELATION) {
+    //     inforComponent[this.columns[i].keyName] = Number.parseInt(inforComponent[this.columns[i].keyName]);
+    //   }
+    // }
+    this.inforMachine = inforComponent;
     for(let i = 0; i < this.columns.length; i++) {
       if(this.columns[i].dataType == this.dataType.RELATION) {
-        inforComponent[this.columns[i].keyName] = Number.parseInt(inforComponent[this.columns[i].keyName]);
+        this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
       }
     }
-    this.inforMachine = inforComponent;
     this.getAllEntity();
     this.getImageByName();
+  }
+
+  /**
+   * Hàm so sánh giá trị của select box
+   * @param object1 
+   * @param object2 
+   * @returns 
+   */
+  compareFn = (object1: any, object2: any): boolean => {
+    // console.log(object1);
+    // console.log(object2);
+    return object1 && object2 ? object1.compareBy === object2.compareBy : object1 === object2;
   }
 
   /**

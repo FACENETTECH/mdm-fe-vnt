@@ -72,6 +72,19 @@ export class ManageComponentService {
   }
 
   /**
+   * Lấy ra danh sách cột theo tên bảng
+   * @param tableName : Tên bảng cần lấy ra danh sách cột
+   * @returns 
+   */
+  async getColummnByTableNameOnInit(tableName: string): Promise<any> {
+    return this.httpClient.get(`${this.url}/api/columns/${tableName}`, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    }).toPromise();
+  }
+
+  /**
    * Lấy ra danh sách các bản ghi theo bảng động
    * @param tableName : Tên bảng cần lấy ra danh sách bản ghi
    * @param request : Điều kiện tìm kiếm
@@ -83,6 +96,20 @@ export class ManageComponentService {
         'Accept-Language': this.accpetLanguage,
       }),
     });
+  }
+
+  /**
+   * Lấy ra danh sách các bản ghi theo bảng động
+   * @param tableName : Tên bảng cần lấy ra danh sách bản ghi
+   * @param request : Điều kiện tìm kiếm
+   * @returns 
+   */
+  async getDataDynamicTableOnInit(tableName: string, request: any): Promise<any> {
+    return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}/search`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    }).toPromise();
   }
 
   /**
