@@ -1,7 +1,7 @@
 <header class="color-header">
-  <div class="logo-block" (click)="backToHomePage()">
+  <div class="logo-block">
     <ng-container *ngIf="logoBusiness; else notLogo">
-      <img src="{{ logoBusiness }}" alt="{{ nameBusiness }}" />
+      <img src="{{ logoBusiness }}" alt="{{ nameBusiness }}" (click)="backToHomePage()"/>
     </ng-container>
     <ng-template #notLogo>
       <svg
@@ -19,7 +19,27 @@
       </svg>
     </ng-template>
 
-    <div class="block-name">
+    <div>
+      <button id="logout" class="back-to-home-page" (click)="redirectToHomePage()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="9"
+          height="16"
+          viewBox="0 0 9 16"
+          fill="none"
+        >
+          <path
+            d="M8 15L1 8L8 1"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div class="block-name" (click)="backToHomePage()">
       <b style="font-size: 24px; margin: 0px; font-weight: 500;">{{ nameBusiness }}</b>
     </div>
   </div>
