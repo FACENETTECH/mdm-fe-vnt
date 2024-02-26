@@ -1,5 +1,6 @@
 FROM node:16-alpine AS build
 WORKDIR /app
+ARG profile
 COPY package.json package-lock.json ./
 RUN npm install --force
 COPY . .
