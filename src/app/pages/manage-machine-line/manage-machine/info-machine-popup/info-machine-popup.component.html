@@ -67,7 +67,7 @@
                     [(ngModel)]="inforMachine[col.keyName]"
                     (ngModelChange)="checkValid()"
                     (ngModelChange)="checkAction = true"
-                    style="width: 100%"
+                    style="width: 100%; text-align: right"
                     disabled
                   />
                   <!-- <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
@@ -235,7 +235,11 @@
                   ></label
                 >
                 <br />
-                <nz-input-number
+                <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
+                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true" disabled
+                />
+                <!-- <nz-input-number
                   [nzMin]="0"
                   [nzStep]="1"
                   [nzParser]="parser"
@@ -244,12 +248,7 @@
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
-                  style="width: 100%;"
-                  disabled
-                />
-                <!-- <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
-                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
-                  (ngModelChange)="checkAction = true"
+                  style="width: 100%; text-align: right"
                   disabled
                 /> -->
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
@@ -413,18 +412,19 @@
                   ></label
                 >
                 <nz-select
+                  [compareWith]="compareFn"
                   style="width: 100%"
                   nzMode="default"
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
-                  (nzOpenChange)="handleOpenChangeRelation($event, col)"
+                  (nzOpenChange)="handleOpenChangeRelation($event, col, false)"
                   nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
                     col.keyTitle | translate
                   }} ----"
                   (ngModelChange)="checkAction = true"
                   disabled
                 >
-                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item.id" [nzLabel]="item[columnRelation!]"></nz-option>
+                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
                 </nz-select>
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]

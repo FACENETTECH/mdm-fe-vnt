@@ -231,7 +231,11 @@
                   ></label
                 >
                 <br />
-                <nz-input-number
+                <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
+                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true"
+                />
+                <!-- <nz-input-number
                   [nzMin]="0"
                   [nzStep]="1"
                   [nzParser]="parser"
@@ -240,11 +244,7 @@
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
-                  style="width: 100%"
-                />
-                <!-- <input style="text-align: right; width:100%" nz-input ngxNumberFormat="###,###,###,###,###" nz-input
-                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
-                  (ngModelChange)="checkAction = true"
+                  style="width: 100%; text-align: right;"
                 /> -->
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
@@ -407,7 +407,7 @@
                   nzMode="default"
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
-                  (nzOpenChange)="handleOpenChangeRelation($event, col)"
+                  (nzOpenChange)="handleOpenChangeRelation($event, col, false)"
                   nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
                     col.keyTitle | translate
                   }} ----"
