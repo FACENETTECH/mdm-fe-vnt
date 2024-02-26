@@ -160,10 +160,6 @@ export class HeaderComponent {
     window.location.href = environment.domain_name_mdm;
   }
 
-  redirectToHomePage() {
-    window.location.href = environment.url_home_page;
-  }
-
   openFullscreen() {
     if (this.elem.requestFullscreen) {
       this.elem.requestFullscreen();
