@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install --force
 COPY . .
-RUN npm run build
+RUN npm run build:$profile
 
 FROM nginx:1.23.2-alpine
 COPY ./nginx.conf /etc/nginx/nginx.conf
