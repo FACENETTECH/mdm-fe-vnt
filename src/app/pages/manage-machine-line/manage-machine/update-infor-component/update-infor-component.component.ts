@@ -31,7 +31,7 @@ export class UpdateInforComponentComponent {
     private configService: ConfigService
   ) {}
   @Input() isvisible: boolean = true;
-  @Input() inforComponent: any = '';
+  @Input() inforComponent: any;
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() isvisibleUpdate: EventEmitter<boolean> = new EventEmitter();
 
@@ -76,13 +76,17 @@ export class UpdateInforComponentComponent {
    * Hàm xử lý API để lấy ra thông tin bản ghi
    */
   getInforRecord() {
-    this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
-      next: (res) => {
-        this.formatNumberInUpdate(res.data);
-      }, error: (err) => {
-        this.toast.error(err.error.result.message);
-      }
-    })
+    if(this.inforComponent != null) {
+      this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
+        next: (res) => {
+          this.formatNumberInUpdate(res.data);
+        }, error: (err) => {
+          this.toast.error(err.error.result.message);
+        }
+      })
+    } else {
+      this.toast.error('Không tồn tại thông tin bản ghi');
+    }
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -666,7 +670,9 @@ export class UpdateInforComponentComponent {
     this.inforMachine = inforComponent;
     for(let i = 0; i < this.columns.length; i++) {
       if(this.columns[i].dataType == this.dataType.RELATION) {
-        this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+        if(this.inforMachine[this.columns[i].keyName] != null) {
+          this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+        }
       }
     }
     this.getAllEntity();
