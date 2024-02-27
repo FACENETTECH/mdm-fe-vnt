@@ -76,7 +76,6 @@ export class InfoMachinePopupComponent {
   getInforRecord() {
     this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
       next: (res) => {
-        console.log(res);
         this.formatNumberInUpdate(res.data);
       }, error: (err) => {
         this.toast.error(err.error.result.message);
@@ -665,7 +664,9 @@ export class InfoMachinePopupComponent {
     this.inforMachine = inforComponent;
     for(let i = 0; i < this.columns.length; i++) {
       if(this.columns[i].dataType == this.dataType.RELATION) {
-        this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+        if(this.inforMachine[this.columns[i].keyName] != null) {
+          this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+        }
       }
     }
     this.getAllEntity();
@@ -679,8 +680,6 @@ export class InfoMachinePopupComponent {
    * @returns 
    */
   compareFn = (object1: any, object2: any): boolean => {
-    // console.log(object1);
-    // console.log(object2);
     return object1 && object2 ? object1.compareBy === object2.compareBy : object1 === object2;
   }
 

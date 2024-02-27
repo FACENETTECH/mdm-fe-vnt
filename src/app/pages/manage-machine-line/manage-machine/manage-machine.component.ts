@@ -424,7 +424,6 @@ export class ManageMachineComponent implements OnInit {
     this.manageComponentService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
         this.columns = res.data;
-        console.log(this.columns);
         for(let i = 0; i < this.columns.length; i++) {
           this.columns[i].localCheck = true;
         }

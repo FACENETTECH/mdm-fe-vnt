@@ -1,3 +1,7 @@
 .fn-footer-center {
     text-align: center;
 }
+
+::ng-deep .ant-modal-body {
+    font-size: 12px;
+  }

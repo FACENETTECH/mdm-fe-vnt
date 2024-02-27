@@ -31,7 +31,7 @@ export class UpdateInforComponentComponent {
     private configService: ConfigService
   ) {}
   @Input() isvisible: boolean = true;
-  @Input() inforComponent: any = '';
+  @Input() inforComponent: any;
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() isvisibleUpdate: EventEmitter<boolean> = new EventEmitter();
 
@@ -76,14 +76,17 @@ export class UpdateInforComponentComponent {
    * Hàm xử lý API để lấy ra thông tin bản ghi
    */
   getInforRecord() {
-    this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.formatNumberInUpdate(res.data);
-      }, error: (err) => {
-        this.toast.error(err.error.result.message);
-      }
-    })
+    if(this.inforComponent != null) {
+      this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
+        next: (res) => {
+          this.formatNumberInUpdate(res.data);
+        }, error: (err) => {
+          this.toast.error(err.error.result.message);
+        }
+      })
+    } else {
+      this.toast.error('Không tồn tại thông tin bản ghi');
+    }
   }
 
   parser = (value: any) => value.replace(/\$\s?|(,*)/g, '');
@@ -636,15 +639,14 @@ export class UpdateInforComponentComponent {
     // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
     value = value.replace(/[^0-9.]/g, '');
   
-    // Kiểm tra nếu quá 3 kí tự sau dấu .
-    if (value.indexOf('.') != -1 && value.indexOf('.') < value.length - 4) {
-      value = value.slice(0, -1);
-    }
     // Convert string thành number 
     const numberValue = Number.parseFloat(value);
     if (value[value.length - 1]!='.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
-      const formattedValue = numberValue.toLocaleString('en-US', { useGrouping: true });
+      const formattedValue = numberValue.toLocaleString('en-US', { 
+        useGrouping: true,
+        maximumSignificantDigits: 20
+       });
       // Gán giá trị đã được định dạng lại vào input
       input.value = formattedValue;
     }
@@ -667,7 +669,9 @@ export class UpdateInforComponentComponent {
     this.inforMachine = inforComponent;
     for(let i = 0; i < this.columns.length; i++) {
       if(this.columns[i].dataType == this.dataType.RELATION) {
-        this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+        if(this.inforMachine[this.columns[i].keyName] != null) {
+          this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+        }
       }
     }
     this.getAllEntity();
@@ -681,8 +685,6 @@ export class UpdateInforComponentComponent {
    * @returns 
    */
   compareFn = (object1: any, object2: any): boolean => {
-    // console.log(object1);
-    // console.log(object2);
     return object1 && object2 ? object1.compareBy === object2.compareBy : object1 === object2;
   }
 
