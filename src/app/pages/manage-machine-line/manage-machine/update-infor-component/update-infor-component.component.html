@@ -4,7 +4,7 @@
   [nzContent]="modalContent"
   [nzFooter]="modalFooter"
   (nzOnCancel)="handleCancel()"
-  [nzWidth]="1160"
+  [nzWidth]="1000"
 >
   <ng-template #modalTitle>
     <div
@@ -376,13 +376,13 @@
                   style="margin-top: 6px; display: flex; justify-content: space-between;"
                 >
                   <label
-                    style="width: 50%; margin: 0;"
+                    style="width: 50%; margin: 0; font-size: 12px;"
                     nz-radio
                     [nzValue]="true"
                     >{{ "Có" | translate }}</label
                   >
                   <label
-                    style="width: 45%; margin: 0;"
+                    style="width: 45%; margin: 0; font-size: 12px;"
                     nz-radio
                     [nzValue]="false"
                     >{{ "Không" | translate }}</label
@@ -429,7 +429,7 @@
             <div id="QR" style="text-align: center">
                 <nz-qrcode [nzValue]="strQr"></nz-qrcode>
             </div>
-            <span style="text-align: center;">{{ 'Mã QR' | translate }}</span>
+            <span style="text-align: center; font-size: 12px;">{{ 'Mã QR' | translate }}</span>
         </div>
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'">

@@ -76,7 +76,6 @@ export class InfoMachinePopupComponent {
   getInforRecord() {
     this.manageService.getInforRecordById(this.tableCode, this.inforComponent.id).subscribe({
       next: (res) => {
-        console.log(res);
         this.formatNumberInUpdate(res.data);
       }, error: (err) => {
         this.toast.error(err.error.result.message);
@@ -679,8 +678,6 @@ export class InfoMachinePopupComponent {
    * @returns 
    */
   compareFn = (object1: any, object2: any): boolean => {
-    // console.log(object1);
-    // console.log(object2);
     return object1 && object2 ? object1.compareBy === object2.compareBy : object1 === object2;
   }
 

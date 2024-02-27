@@ -60,3 +60,12 @@
 .block-item-unit-right {
   width: 35%;
 }
+
+
+::ng-deep .ant-input {
+  font-size: 12px;
+}
+
+::ng-deep .ant-select {
+  font-size: 12px;
+}

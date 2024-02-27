@@ -51,9 +51,6 @@ export class AppComponent {
     private configService: ConfigService
   ) {
     let arr = window.location.href.split('/');
-    console.log('arr: ', arr);
-    console.log('arr stt 1: ', arr[arr.length - 1]);
-    console.log('arr stt 2: ', arr[arr.length - 2]);
     if(arr[arr.length - 1] == 'list-config') {
       this.navigateToConfigTable('/manage-config/config-table/list-config');
     } else {
@@ -168,7 +165,6 @@ export class AppComponent {
 
   async getName() {
     let res = await this.keycloak.loadUserProfile();
-    console.log(res);
     this.name = res.firstName + ' ' + res.lastName;
   }
 
@@ -313,7 +309,6 @@ export class AppComponent {
     let sider: any;
     this.manageComponentService.getInforTables(data).subscribe({
       next: (res) => {
-        console.log(res);
         sider = res.data;
         // Nếu chức năng cha có chức năng con sẽ thêm các thông tin về router với baseUrl là tên của chức năng cha
         if(sider.children.length > 0) {
@@ -326,6 +321,9 @@ export class AppComponent {
               requiredRoles: ['admin_business'],
               children: []
             })
+          }
+          if(this.siderList.length > 0) {
+            this.siderList.sort((a: any, b: any) => a.index - b.index)
           }
           this.isVisableLayout = true;
           if(check) {
@@ -351,7 +349,7 @@ export class AppComponent {
           }
         }
       }, error: (err) => {
-        console.log(err);
+        this.toast.error(err.error.result.message);
       }
     })
 
@@ -381,7 +379,6 @@ export class AppComponent {
     // Xử lý thông tin phân hệ nhận được từ state trong router và gọi API để lấy ra danh sách chức năng
     this.configService.getAllFunction().subscribe({
       next: (res) => {
-        console.log(res);
         this.lstFunction = res.data;
       }, error: (err) => {
         this.toast.error(err.error.message);

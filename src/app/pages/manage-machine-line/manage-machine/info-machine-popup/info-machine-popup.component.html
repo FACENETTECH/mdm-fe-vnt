@@ -4,7 +4,7 @@
   [nzContent]="modalContent"
   [nzFooter]="modalFooter"
   (nzOnCancel)="handleCancel()"
-  [nzWidth]="1160"
+  [nzWidth]="1000"
 >
   <ng-template #modalTitle>
     <div
@@ -386,13 +386,13 @@
                   disabled
                 >
                   <label
-                    style="width: 50%; margin: 0;"
+                    style="width: 50%; margin: 0; font-size: 12px;"
                     nz-radio
                     [nzValue]="true"
                     >{{ "Có" | translate }}</label
                   >
                   <label
-                    style="width: 45%; margin: 0;"
+                    style="width: 45%; margin: 0; font-size: 12px;"
                     nz-radio
                     [nzValue]="false"
                     >{{ "Không" | translate }}</label

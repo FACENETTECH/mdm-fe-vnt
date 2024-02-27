@@ -364,7 +364,6 @@ export class AddNewMachinePopupComponent {
           }
         }
       }
-      console.log(this.inforMachine);
       this.manageService.addNewRecord(this.tableCode, this.inforMachine).subscribe({
         next: (res) => {
           let isImage = false;
@@ -377,14 +376,13 @@ export class AddNewMachinePopupComponent {
           if(isImage && this.checkActionImage) {
             this.manageService.uploadImageInComponents(this.tableCode, Number(res.data), this.formUpload).subscribe({
               next: (data) => {
-                console.log(data);
                 this.toast.success(res.result.message);
                 this.isvisible = false;
                 this.isvisibleChange.emit(false);
                 this.isvisibleAdd.emit(true);
                 this.loader.stop();
               }, error: (err) => {
-                console.log(err);
+                this.toast.error(err.error.result.message);
                 this.loader.stop();
               }
             })
@@ -440,7 +438,6 @@ export class AddNewMachinePopupComponent {
     if(data) {
       this.manageService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
         next: (res) => {
-          console.log(res);
           this.valueSelectBox = res.data;
         }, error: (err) => {
           this.toast.error(err.error.result.message);
@@ -457,7 +454,6 @@ export class AddNewMachinePopupComponent {
       if(column.note != '' && column.note != null) {
         this.manageService.getParamsByCode(column.note).subscribe({
           next: (res) => {
-            console.log("Unit data: ", res);
             this.valueTypeParam = res.data;
           }, error: (err) => {
             this.toast.error(err.error.result.message);
@@ -481,7 +477,6 @@ export class AddNewMachinePopupComponent {
           tableCode = this.listEntityByRelation[i].name;
         }
       }
-      console.log(tableCode);
       if(tableCode != '') {
         let request = {
           "pageNumber": 0,
@@ -543,7 +538,6 @@ export class AddNewMachinePopupComponent {
    */
   formUpload= new FormData();
   handleChange(item: any, column: any) {
-    console.log(item.target.files['0']);
     this.formUpload.append(column.keyName, item.target.files['0']);
     this.inforMachine[column.keyName] = item.target.files['0'].name;
     if (item.target.files && item.target.files[0]) {
@@ -577,10 +571,8 @@ export class AddNewMachinePopupComponent {
     if (value.indexOf('.') != -1 && value.indexOf('.') < value.length - 4) {
       value = value.slice(0, -1);
     }
-    console.log("value", value);
     // Convert string thành number 
     const numberValue = Number.parseFloat(value);
-    console.log("num value", numberValue);
     if (value[value.length - 1] != '.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
       const formattedValue = numberValue.toLocaleString('en-US', { useGrouping: true });
@@ -595,7 +587,6 @@ export class AddNewMachinePopupComponent {
    */
    @HostListener('document:keydown.Escape', ['$event'])
    handleUpdate(event: any) {
-     console.log(event);
      this.handleCancel();
    }
 
