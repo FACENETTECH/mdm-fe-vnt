@@ -664,7 +664,9 @@ export class InfoMachinePopupComponent {
     this.inforMachine = inforComponent;
     for(let i = 0; i < this.columns.length; i++) {
       if(this.columns[i].dataType == this.dataType.RELATION) {
-        this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+        if(this.inforMachine[this.columns[i].keyName] != null) {
+          this.inforMachine[this.columns[i].keyName].compareBy = this.inforMachine[this.columns[i].keyName].id + this.inforMachine[this.columns[i].keyName][this.columns[i].relateColumn];
+        }
       }
     }
     this.getAllEntity();

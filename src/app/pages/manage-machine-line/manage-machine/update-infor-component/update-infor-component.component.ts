@@ -639,15 +639,14 @@ export class UpdateInforComponentComponent {
     // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
     value = value.replace(/[^0-9.]/g, '');
   
-    // Kiểm tra nếu quá 3 kí tự sau dấu .
-    if (value.indexOf('.') != -1 && value.indexOf('.') < value.length - 4) {
-      value = value.slice(0, -1);
-    }
     // Convert string thành number 
     const numberValue = Number.parseFloat(value);
     if (value[value.length - 1]!='.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
-      const formattedValue = numberValue.toLocaleString('en-US', { useGrouping: true });
+      const formattedValue = numberValue.toLocaleString('en-US', { 
+        useGrouping: true,
+        maximumSignificantDigits: 20
+       });
       // Gán giá trị đã được định dạng lại vào input
       input.value = formattedValue;
     }

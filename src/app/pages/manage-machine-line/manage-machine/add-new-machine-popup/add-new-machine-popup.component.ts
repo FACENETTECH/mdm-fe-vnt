@@ -354,7 +354,7 @@ export class AddNewMachinePopupComponent {
       for(let i = 0; i < this.columns.length; i++) {
         if(this.columns[i].dataType == this.dataType.NUMBER && this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
           this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
-          this.inforMachine[this.columns[i].keyName] = Number.parseFloat(this.inforMachine[this.columns[i].keyName]);
+          this.inforMachine[this.columns[i].keyName] = Number.parseFloat(this.inforMachine[this.columns[i].keyName]).toFixed(2);
         }
       }
       for(let i = 0; i < this.columns.length; i++) {
@@ -566,16 +566,15 @@ export class AddNewMachinePopupComponent {
   
     // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
     value = value.replace(/[^0-9.]/g, '');
-  
-    // Kiểm tra nếu quá 3 kí tự sau dấu .
-    if (value.indexOf('.') != -1 && value.indexOf('.') < value.length - 4) {
-      value = value.slice(0, -1);
-    }
+
     // Convert string thành number 
     const numberValue = Number.parseFloat(value);
     if (value[value.length - 1] != '.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
-      const formattedValue = numberValue.toLocaleString('en-US', { useGrouping: true });
+      const formattedValue = numberValue.toLocaleString('en-US', { 
+        useGrouping: true,
+        maximumSignificantDigits: 20
+       });
       // Gán giá trị đã được định dạng lại vào input
       input.value = formattedValue;
     }
