@@ -455,7 +455,7 @@
                       <td
                       class="table-cell-ellipsis fn-text-al-right"
                       [ngStyle]="{'max-width': column.width}"
-                      [nz-tooltip]="infor[column.keyName]"
+                      [nz-tooltip]="infor[column.keyName] | date: 'dd/MM/yyyy'"
                       (dblclick)="onDblClickOnRowTable(infor)"
                       >
                         {{ infor[column.keyName] | date: 'dd/MM/yyyy' }}

@@ -24,7 +24,7 @@ td:not(.numeric-value) {
 .ant-table-tbody > tr > td {
   height: 20px;
   padding: 0 8px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .ant-table-tbody > tr:nth-child(2) > td {
