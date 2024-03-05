@@ -444,22 +444,16 @@
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'">
             <div style="width: 100%; margin-bottom: 20px;" class="fn-df fn-df-justify-center">
-              <div class="fn-pd-8 fn-df-column">
+              <div class="fn-pd-8 fn-df-column fn-css-image">
+                <span class="overlay" (click)="handleImageClick(inforImage[col.keyName], inforMachine[col.keyName])">
+                  <span nz-icon nzType="download" nzTheme="outline" style="position: absolute; top: 40%; left: 43%; font-size: 30px; color: #00AEEE"></span>
+                </span>
                 <label [for]="'fileInput' + col.keyName" class="fn-text-align-center">
-                    <img class="fn-css-img-form-add" [src]="'data:image/png;base64, ' + inforImage[col.keyName]" alt="No image" (click)="handleImageClick()"><br>
-                    <span style="color: #01aba8">{{ inforMachine[col.keyName] }}</span>
+                    <img class="fn-css-img-form-add" [src]="'data:image/png;base64, ' + inforImage[col.keyName]" alt="No image"><br>
                   </label>
                   <label class="fn-label"
                     >{{ col.keyTitle | translate }}</label
                   >
-                  <input 
-                    disabled
-                    [id]="'fileInput' + col.keyName"
-                    (change)="checkAction = true"
-                    type="file" 
-                    (change)="handleChange($event, col)"
-                    style="display: none"
-                    accept=".png,.jpg,.jpeg"/>
               </div>
             </div>
           </ng-container>
