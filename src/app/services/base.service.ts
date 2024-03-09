@@ -13,7 +13,7 @@ export class BaseService {
   accpetLanguage: string = 'vi_VN';
   constructor(
     private http: HttpClient,
-    private keyCloack: KeycloakService,
+    private keyCloak: KeycloakService,
     private toast: ToastrService
   ) {
     this.path = environment.api_end_point;
@@ -216,7 +216,14 @@ export class BaseService {
       return true;
     }
     return listRole.some((role: string) => {
-      return this.keyCloack.isUserInRole(role);
+      return this.keyCloak.isUserInRole(role);
     });
+  }
+
+  isAuthorized(role: string): boolean {
+    if (this.keyCloak.getUserRoles().includes(role)) {
+      return true;
+    }
+    return false;
   }
 }

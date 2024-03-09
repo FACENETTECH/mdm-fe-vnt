@@ -53,6 +53,8 @@ export class AppComponent {
     let arr = window.location.href.split('/');
     if(arr[arr.length - 1] == 'list-config') {
       this.navigateToConfigTable('/manage-config/config-table/list-config');
+    } else if(arr[arr.length - 1] == 'list-account') {
+      this.navigateToConfigTable('/manage-account/list-account');
     } else {
       if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm' || arr[arr.length - 1] == 'mdm-v2') {
         this.isVisableLayout = false;
@@ -368,8 +370,24 @@ export class AppComponent {
    * Param: item là biến chứa thông tin của phân hệ di chuyển đến
   */
   directProduct(item: any) {
-    this.isVisableLayout = true;
-    this.getListFunctionByName(item.name, false);
+    if(this.isCheckRoles(item.name)) {
+      this.isVisableLayout = true;
+      this.getListFunctionByName(item.name, false);
+    }
+  }
+
+  /**
+   * Hàm kiểm tra tài khoản có quyền để thực hiện action hay không
+   * @param role 
+   * @returns 
+   */
+   isCheckRoles(tableCode: string) {
+    let tenant = '';
+    if(this.keycloak.getKeycloakInstance().idTokenParsed != null && this.keycloak.getKeycloakInstance().idTokenParsed != undefined) {
+      tenant = this.keycloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+    }
+    let role = tenant + '_mdm_' + tableCode;
+    return this.baseService.isAuthorized(role);
   }
 
   /**
