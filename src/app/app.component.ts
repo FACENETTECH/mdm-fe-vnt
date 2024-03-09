@@ -373,6 +373,8 @@ export class AppComponent {
     if(this.isCheckRoles(item.name)) {
       this.isVisableLayout = true;
       this.getListFunctionByName(item.name, false);
+    } else {
+      this.toast.warning('Tài khoản không có quyền thực hiện chức năng này!');
     }
   }
 
