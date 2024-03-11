@@ -366,8 +366,8 @@ export class AppComponent {
   }
 
   /** 
-   * Đây làm hàm link tới các phân hệ trong hệ thống
-   * Param: item là biến chứa thông tin của phân hệ di chuyển đến
+   * Đây là hàm link tới các phân hệ trong hệ thống
+   * @param item là biến chứa thông tin của phân hệ di chuyển đến
   */
   directProduct(item: any) {
     if(this.isCheckRoles(item.name)) {
@@ -375,6 +375,18 @@ export class AppComponent {
       this.getListFunctionByName(item.name, false);
     } else {
       this.toast.warning('Tài khoản không có quyền thực hiện chức năng này!');
+    }
+  }
+
+  /** 
+   * Đây là hàm xử lý quyền của tài khoản để trả về giá className phù hợp
+   * @param item là biến chứa thông tin của phân hệ di chuyển đến
+  */
+   getClassByRole(item: any): string {
+    if(this.isCheckRoles(item.name)) {
+      return 'container-item';
+    } else {
+      return 'un-active';
     }
   }
 

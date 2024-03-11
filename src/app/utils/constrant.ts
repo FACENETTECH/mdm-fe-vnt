@@ -14,3 +14,13 @@ export const DATA_TYPE = {
   TABLE: 8,
   PARAM: 9
 }
+
+export const ROLE_NAME = {
+  CREATE: 'create',
+  COPY: 'copy',
+  DELETE_BATCH: 'delete-batch',
+  VIEW_DETAIL: 'view-detail',
+  UPDATE: 'update',
+  DELETE: 'delete',
+  CREATE_PARAM: 'create-param'
+}

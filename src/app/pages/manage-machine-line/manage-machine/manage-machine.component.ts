@@ -12,7 +12,7 @@ import { ActivatedRoute, Router, NavigationEnd, Event } from '@angular/router';
 import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DATA_TYPE } from 'src/app/utils/constrant';
+import { DATA_TYPE, ROLE_NAME } from 'src/app/utils/constrant';
 import { InforColumnComponent } from 'src/app/shared/components/infor-column/infor-column.component';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { BaseService } from 'src/app/services/base.service';
@@ -955,4 +955,5 @@ export class ManageMachineComponent implements OnInit {
   }
 
   protected readonly dataType = DATA_TYPE;
+  protected readonly roleName = ROLE_NAME;
 }

@@ -85,7 +85,7 @@
                     <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                   </nz-select>
                   <ng-template #renderTemplate>
-                    <div class="container">
+                    <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
                       <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
@@ -139,7 +139,7 @@
                     <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                   </nz-select>
                   <ng-template #renderTemplate>
-                    <div class="container">
+                    <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
                       <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
@@ -197,7 +197,7 @@
                     <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                   </nz-select>
                   <ng-template #renderTemplate>
-                    <div class="container">
+                    <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
                       <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
@@ -255,7 +255,7 @@
                     <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                   </nz-select>
                   <ng-template #renderTemplate>
-                    <div class="container">
+                    <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
                       <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
@@ -385,7 +385,7 @@
                   <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
                 </nz-select>
                 <ng-template #renderTemplate>
-                  <div class="container">
+                  <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
                     <a class="add-item" (click)="addItem(true, col)">
                       <span nz-icon nzType="plus"></span>
                       {{ "add.btn" | translate }}

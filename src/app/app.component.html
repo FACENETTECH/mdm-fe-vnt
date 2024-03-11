@@ -160,7 +160,7 @@
       <ng-container *ngFor="let item of lstFunction">
           <ng-container *ngIf="item.parent == null">
               <div class="items" (click)="directProduct(item)">
-                  <div class="container-item">
+                  <div class="container-item" [className]="getClassByRole(item)">
                     <div class="top-item">
                       <div class="item-block">
                         <img class="item-icons" [src]="item.icon" alt="" />

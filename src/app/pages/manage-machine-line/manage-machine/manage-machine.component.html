@@ -83,7 +83,7 @@
       <div style="display: flex;">
         <div nz-col style="display: flex; align-items: center">
           <button
-            *ngIf="isCheckRoles('create')"
+            *ngIf="isCheckRoles(roleName.CREATE)"
             style="color: #01aba8"
             nz-button
             nzType="text"
@@ -97,7 +97,7 @@
         </div>
         <div nz-col>
           <button
-            *ngIf="isCheckRoles('copy')"
+            *ngIf="isCheckRoles(roleName.COPY)"
             style="color: #01aba8"
             nz-button
             nzType="text"
@@ -111,7 +111,7 @@
         </div>
         <div nz-col>
           <button
-            *ngIf="isCheckRoles('delete-batch')"
+            *ngIf="isCheckRoles(roleName.DELETE_BATCH)"
             style="color: #01aba8"
             nz-button
             nzType="text"
@@ -481,7 +481,7 @@
             <td nzAlign="center" [nzRight]="true">
               <div class="fn-css-action-grid">
                 <button
-                  *ngIf="isCheckRoles('view-detail')"
+                  *ngIf="isCheckRoles(roleName.VIEW_DETAIL)"
                   nz-button
                   nzType="link"
                   (click)="inforComponent(infor)"
@@ -490,7 +490,7 @@
                   <img src="./assets/icons/Eye.svg">
                 </button>
                 <button
-                  *ngIf="isCheckRoles('update')"
+                  *ngIf="isCheckRoles(roleName.UPDATE)"
                   nz-button
                   nzType="link"
                   (click)="editMachine(infor)"
@@ -499,7 +499,7 @@
                   <img src="./assets/icons/Edit-VNT.svg">
                 </button>
                 <button
-                  *ngIf="isCheckRoles('delete')"
+                  *ngIf="isCheckRoles(roleName.DELETE)"
                   nz-button
                   nzType="link"
                   (click)="deleteMachine(infor)"
