@@ -52,32 +52,32 @@
     <div nz-row [nzGutter]="[100, 16]">
       <div nz-col nzSpan="12">
         <label class="fn-label"
-          >Mã nhóm người dùng<span style="color: red">*</span></label
+          >Tên nhóm quyền<span style="color: red">*</span></label
+        >
+        <input
+          nz-input
+          [(ngModel)]="groupName"
+          (input)="checkValid(); generateGroupCode()"
+          type="text"
+          placeholder="Nhập tên nhóm quyền"
+        />
+        <span style="color: red" *ngIf="checkGroupName">{{
+          checkGroupName
+        }}</span>
+      </div>
+      <div nz-col nzSpan="12">
+        <label class="fn-label"
+          >Mã nhóm quyền<span style="color: red">*</span></label
         >
         <input
           nz-input
           [(ngModel)]="groupCode"
           (input)="checkValid()"
           type="text"
-          placeholder="Nhập mã Nhóm người dùng"
+          placeholder="Nhập mã nhóm quyền"
         />
         <span style="color: red" *ngIf="checkGroupCode">{{
           checkGroupCode
-        }}</span>
-      </div>
-      <div nz-col nzSpan="12">
-        <label class="fn-label"
-          >Tên nhóm người dùng<span style="color: red">*</span></label
-        >
-        <input
-          nz-input
-          [(ngModel)]="groupName"
-          (input)="checkValid()"
-          type="text"
-          placeholder="Nhập tên nhóm người dùng"
-        />
-        <span style="color: red" *ngIf="checkGroupName">{{
-          checkGroupName
         }}</span>
       </div>
     </div>
@@ -97,8 +97,7 @@
               <nz-option
                 [nzValue]="{
                   roleCode: role.name,
-                  roleName: role.description,
-                  isActive: true
+                  roleName: role.description
                 }"
                 [nzLabel]="role.description"
               ></nz-option>
@@ -110,10 +109,10 @@
         }}</span>
       </div>
     </div>
-    <h2 style="margin-top: 20px">Thêm mới thông tin nhóm người dùng</h2>
+    <!-- <h2 style="margin-top: 20px">Thêm mới thông tin nhóm người dùng</h2>
 
     <div nz-row [nzGutter]="[100, 16]">
-      <!-- <div nz-col nzSpan="12">
+      <div nz-col nzSpan="12">
         <label class="fn-label">Tên </label>
         <input
           nz-input
@@ -122,7 +121,7 @@
           type="text"
           placeholder="Nhập groupCode"
         />
-      </div> -->
+      </div>
       <div nz-col nzSpan="12">
         <label class="fn-label">Mô tả </label>
         <input
@@ -133,7 +132,7 @@
           placeholder="Nhập description"
         />
       </div>
-    </div>
+    </div> -->
   </ng-template>
 
   <ng-template #modalFooter>
