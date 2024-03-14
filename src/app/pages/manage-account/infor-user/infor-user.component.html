@@ -76,8 +76,8 @@
         >
           <ng-container *ngFor="let group of listGroups">
             <nz-option
-              [nzValue]="group.groupCode"
-              [nzLabel]="group.groupName"
+              [nzValue]="group.name"
+              [nzLabel]="group.description"
             ></nz-option>
           </ng-container>
         </nz-select>

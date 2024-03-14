@@ -28,7 +28,7 @@ export class UserService {
   }
 
   async deleteGroup(groupCode: string) {
-    return await this.baseService.deleteData(`api/user/groups/${groupCode}`);
+    return await this.baseService.deleteData(`api/registration/group-roles/${groupCode}`);
   }
 
   async getRole() {
@@ -55,7 +55,7 @@ export class UserService {
   }
 
   async getListGroupsbyUserId(userId: string) {
-    return await this.baseService.getData(`api/user/${userId}/groups`);
+    return await this.baseService.getData(`api/roles/groups/${userId}`);
   }
 
   async getListGroups(request: any) {

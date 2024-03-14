@@ -94,8 +94,8 @@
           <ng-container *ngFor="let group of listGroups">
             <ng-container *ngIf="group.groupName != 'admin_fcim'">
               <nz-option
-                [nzValue]="group.groupCode"
-                [nzLabel]="group.groupName"
+                [nzValue]="group.name"
+                [nzLabel]="group.description"
               ></nz-option>
             </ng-container>
           </ng-container>

@@ -87,7 +87,7 @@ export class InforUserComponent {
     let res = await this.userService.getListGroupsbyUserId(this.user.id);
     if (res.result.ok) {
       // this.listGroupsAssign = list group code from res
-      this.listGroupsAssign = res.data.map((item: any) => item.groupCode);
+      this.listGroupsAssign = res.data.map((o: any) => o.name);
       console.log('this.listGroupsAssign', this.listGroupsAssign);
     } else {
       this.toast.error(res.result.message);
@@ -103,7 +103,7 @@ export class InforUserComponent {
       this.authorities = res.data.assignedRole;
       this.listavailableRole = [...this.listavailableRole, ...this.authorities];
 
-      console.log('this.authorities', this.authorities);
+      // console.log('this.authorities', this.authorities);
       // console.log('this.listavailableRole', this.listavailableRole);
     } else {
       this.toast.error(res.result.message);
