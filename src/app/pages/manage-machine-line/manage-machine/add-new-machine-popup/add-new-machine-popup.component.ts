@@ -590,12 +590,16 @@ export class AddNewMachinePopupComponent {
    * @returns 
    */
    isCheckRoles(action: string) {
-    let tenant = '';
-    if(this.keyCloak.getKeycloakInstance().idTokenParsed != null && this.keyCloak.getKeycloakInstance().idTokenParsed != undefined) {
-      tenant = this.keyCloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+    if(this.baseService.isAuthorized('admin_business')) {
+      return true;
+    } else {
+      let tenant = '';
+      if(this.keyCloak.getKeycloakInstance().idTokenParsed != null && this.keyCloak.getKeycloakInstance().idTokenParsed != undefined) {
+        tenant = this.keyCloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+      }
+      let role = tenant + '_mdm_' + this.tableCode + '_' + action;
+      return this.baseService.isAuthorized(role);
     }
-    let role = tenant + '_mdm_' + this.tableCode + '_' + action;
-    return this.baseService.isAuthorized(role);
   }
 
   /**

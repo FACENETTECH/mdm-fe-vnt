@@ -396,12 +396,16 @@ export class AppComponent {
    * @returns 
    */
    isCheckRoles(tableCode: string) {
-    let tenant = '';
-    if(this.keycloak.getKeycloakInstance().idTokenParsed != null && this.keycloak.getKeycloakInstance().idTokenParsed != undefined) {
-      tenant = this.keycloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+    if(this.baseService.isAuthorized('admin_business')) {
+      return true;
+    } else {
+      let tenant = '';
+      if(this.keycloak.getKeycloakInstance().idTokenParsed != null && this.keycloak.getKeycloakInstance().idTokenParsed != undefined) {
+        tenant = this.keycloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+      }
+      let role = tenant + '_mdm_' + tableCode;
+      return this.baseService.isAuthorized(role);
     }
-    let role = tenant + '_mdm_' + tableCode;
-    return this.baseService.isAuthorized(role);
   }
 
   /**
