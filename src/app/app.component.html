@@ -159,7 +159,8 @@
     <div class="container-homepage">
       <ng-container *ngFor="let item of lstFunction">
           <ng-container *ngIf="item.parent == null">
-              <div class="items" (click)="directProduct(item)">
+              <ng-container *ngIf="item.isVisible == true || item.isVisible == null">
+                <div class="items" (click)="directProduct(item)">
                   <div class="container-item" [className]="getClassByRole(item)">
                     <div class="top-item">
                       <div class="item-block">
@@ -171,7 +172,8 @@
                       <p>{{ item.displayName }}</p>
                     </div>
                   </div>
-              </div>
+                </div>
+              </ng-container>
           </ng-container>
       </ng-container>
     </div>
