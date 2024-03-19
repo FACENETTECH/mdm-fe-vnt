@@ -268,9 +268,9 @@ export class ListAccountComponent {
   }
 
   async deleteGroupConfirm() {
-    let res = await this.userService.deleteGroup(this.currentGroup.groupCode);
+    let res = await this.userService.deleteGroup(this.currentGroup.name);
     if (res.result.ok) {
-      this.toast.success(`Xóa nhóm ${this.currentGroup.groupName} thành công`);
+      this.toast.success(`Xóa nhóm ${this.currentGroup.description} thành công`);
       this.getListGroups({ page: this.pageNumber, size: this.pageSize });
       this.isvisibleDeleteGroup = false;
     } else {

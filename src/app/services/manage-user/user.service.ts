@@ -28,7 +28,7 @@ export class UserService {
   }
 
   async deleteGroup(groupCode: string) {
-    return await this.baseService.deleteData(`api/user/groups/${groupCode}`);
+    return await this.baseService.deleteData(`api/registration/group-roles/${groupCode}`);
   }
 
   async getRole() {
@@ -36,31 +36,31 @@ export class UserService {
   }
 
   async getGroups() {
-    return await this.baseService.getData(`api/user/groups`);
+    return await this.baseService.getData(`api/registration/group-roles`);
   }
 
   async getGroup(groupCode: string) {
-    return await this.baseService.getData(`api/user/groups/${groupCode}`);
+    return await this.baseService.getData(`api/registration/group-roles/${groupCode}`);
   }
 
   async createGroup(request: any) {
-    return await this.baseService.postData(`api/user/groups`, request);
+    return await this.baseService.postData(`api/registration/group-roles`, request);
   }
 
-  async updateGroup(request: any, groupCode: string) {
-    return await this.baseService.postData(
-      `api/user/groups/${groupCode}`,
+  async updateGroup(request: any) {
+    return await this.baseService.putData(
+      `api/registration/group-roles`,
       request
     );
   }
 
   async getListGroupsbyUserId(userId: string) {
-    return await this.baseService.getData(`api/user/${userId}/groups`);
+    return await this.baseService.getData(`api/roles/groups/${userId}`);
   }
 
   async getListGroups(request: any) {
     return await this.baseService.postData(
-      `api/user/groups/get-list-groups`,
+      `api/registration/group-roles/search`,
       request
     );
   }

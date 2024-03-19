@@ -11,8 +11,10 @@ export class AddGroupComponent {
   constructor(private userService: UserService, private toast: ToastrService) {}
   groupName: string = '';
   groupCode: string = '';
-  description: string = '';
-  authorities: any[] = [];
+  authorities: {
+    roleCode: string,
+    roleName: string
+  }[] = [];
   listRole: any[] = [];
   listGroups: any[] = [];
 
@@ -31,6 +33,10 @@ export class AddGroupComponent {
   ngOnInit() {
     this.getRole();
     this.getGroups();
+  }
+
+  generateGroupCode() {
+    this.groupCode = this.groupName.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, '').replace("đ", "d").replaceAll(" ", "-").trim();
   }
 
   checkValid() {
@@ -87,13 +93,9 @@ export class AddGroupComponent {
     } else if (this.checkAuthorities) {
       this.toast.warning(this.checkAuthorities);
     } else {
-      this.requestGroups['groupName'] = this.groupName;
-      this.requestGroups['groupCode'] = this.groupCode;
-      this.requestGroups['description'] = this.description;
-      this.requestGroups['roleDetailDtoList'] = this.authorities;
-      this.requestGroups['status'] = 1;
-      this.requestGroups['isActived'] = true;
-      // console.log(this.requestGroups);
+      this.requestGroups['description'] = this.groupName;
+      this.requestGroups['name'] = this.groupCode;
+      this.requestGroups['roles'] = this.authorities.map(o => o.roleCode);
 
       let res = await this.userService.createGroup(this.requestGroups);
       if (res.result.ok) {

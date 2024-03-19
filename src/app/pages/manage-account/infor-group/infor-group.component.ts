@@ -9,10 +9,16 @@ import { UserService } from 'src/app/services/manage-user/user.service';
 })
 export class InforGroupComponent {
   constructor(private userService: UserService, private toast: ToastrService) {}
+  
+  @Input() isvisible: boolean = false;
+  @Input() group: any;
+  
   groupName: string = '';
   groupCode: string = '';
-  description: string = '';
-  authorities: any[] = [];
+  authorities: {
+    roleCode: string,
+    roleName: string
+  }[] = [];
   assignedRoles: any[] = [];
   listRole: any[] = [];
   listGroups: any[] = [];
@@ -24,16 +30,15 @@ export class InforGroupComponent {
   checkGroupCode: string = '';
   checkAuthorities: string = '';
 
-  @Input() isvisible: boolean = false;
-  @Input() group: any;
-
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
 
   isvisibleUpdateGroup: boolean = false;
 
   ngOnInit() {
+    this.groupCode = this.group.name;
+    this.groupName = this.group.description;
     this.getRole();
-    this.getGroup(this.group.groupCode);
+    this.getGroup(this.groupCode);
   }
 
   checkValid() {
@@ -80,10 +85,14 @@ export class InforGroupComponent {
   async getGroup(groupCode: string) {
     let res = await this.userService.getGroup(groupCode);
     if (res.result.ok) {
-      this.groupName = res.data.groupName;
-      this.groupCode = res.data.groupCode;
-      this.description = res.data.description;
-      this.authorities = res.data.roleDetailDtoList;
+      // this.authorities = res.data.map((o: any) => o.description);
+      this.authorities = res.data.map((o: any) => {
+        return {
+          roleCode: o.name,
+          roleName: o.description
+        }
+      })
+      console.log(this.authorities);
     } else {
       this.toast.error(res.result.message);
     }
@@ -102,17 +111,12 @@ export class InforGroupComponent {
     } else if (this.checkAuthorities) {
       this.toast.warning(this.checkAuthorities);
     } else {
-      this.requestGroups['groupName'] = this.groupName;
-      this.requestGroups['groupCode'] = this.groupCode;
-      this.requestGroups['description'] = this.description;
-      this.requestGroups['roleDetailDtoList'] = this.authorities;
-      this.requestGroups['status'] = 1;
-      this.requestGroups['isActived'] = true;
-      // console.log(this.requestGroups);
+      this.requestGroups['description'] = this.groupName;
+      this.requestGroups['name'] = this.groupCode;
+      this.requestGroups['roles'] = this.authorities.map(o => o.roleCode);
 
       let res = await this.userService.updateGroup(
-        this.requestGroups,
-        this.groupCode
+        this.requestGroups
       );
       if (res.result.ok) {
         this.toast.success(res.result.message);

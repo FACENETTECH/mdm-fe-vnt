@@ -492,9 +492,8 @@
     >
       <thead>
         <tr>
-          <th [nzAlign]="'center'">Nhóm quyền</th>
-          <th [nzAlign]="'center'">Mô tả</th>
-          <th [nzAlign]="'center'">Danh sách quyền</th>
+          <th [nzAlign]="'center'">Tên nhóm quyền</th>
+          <th [nzAlign]="'center'">Mã nhóm quyền</th>
           <th [nzAlign]="'center'" nzWidth="100px">Thao tác</th>
         </tr>
       </thead>
@@ -540,37 +539,11 @@
               />
             </nz-input-group>
           </td>
-          <td>
-            <nz-input-group [nzPrefix]="machineCodePrefix">
-              <ng-template #machineCodePrefix
-                ><span
-                  nz-icon
-                  nzType="search"
-                  nzTheme="outline"
-                  style="color: #d8c6bf"
-                ></span
-              ></ng-template>
-              <input
-                type="text"
-                nz-input
-                (keyup)="search($event)"
-                nz-popover
-                nzPopoverTrigger="hover"
-                #popover="nzPopover"
-              />
-            </nz-input-group>
-          </td>
           <td></td>
         </tr>
         <tr *ngFor="let row of listGroup; let i = index">
-          <td>{{ row.groupCode }}</td>
-          <td>{{ row.groupName }}</td>
           <td>{{ row.description }}</td>
-          <!-- <td [nzAlign]="'center'">
-            <img src="./assets/icons/edit.svg" alt="" />
-            <img src="./assets/icons/userCheck.svg" alt="" />
-            <img src="./assets/icons/delete.svg" alt="" />
-          </td> -->
+          <td>{{ row.name }}</td>
           <td [nzAlign]="'center'" [nzRight]="true">
             <button
               style="color: #012169"
