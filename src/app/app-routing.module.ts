@@ -37,6 +37,13 @@ const routes: Routes = [
     // },
   },
   {
+    path: 'manage-account',
+    loadChildren: () =>
+      import('./pages/manage-account/manage-account.module').then(
+        (m) => m.ManageAccountModule
+      ),
+  },
+  {
     path: 'exception',
     loadChildren: () =>
       import('./shared/exception/exception.module').then(

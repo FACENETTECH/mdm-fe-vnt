@@ -1,0 +1,730 @@
+<nz-card
+  class="color-border"
+  style="height: 100%; border-radius: 4px; padding-top: 20px"
+>
+  <h3 style="font-weight: 600">
+    {{ "Danh sách tài khoản người dùng" | translate }}
+  </h3>
+  <div class="search color-border" style="padding: 20px; border-radius: 4px">
+    <h4>{{ "generalSearch" | translate }}</h4>
+    <nz-input-group [nzPrefix]="searchPrefix" style="width: 35%; height: 40px">
+      <ng-template #searchPrefix
+        ><span
+          nz-icon
+          nzType="search"
+          nzTheme="outline"
+          style="color: #d8c6bf"
+        ></span
+      ></ng-template>
+
+      <input
+        nz-input
+        [nzAutocomplete]="auto"
+        (input)="searchAutoComplete('')"
+        placeholder="{{ 'search.common.placeholder' | translate }}"
+        [(ngModel)]="common"
+        (keyup)="search($event)"
+      />
+
+      <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+        <nz-auto-option
+          *ngFor="let option of optionsComplete"
+          [nzValue]="option"
+          >{{ option }}</nz-auto-option
+        >
+      </nz-autocomplete>
+    </nz-input-group>
+  </div>
+  <br />
+  <div class="fn-row fn-start">
+    <button
+      [class]="accListMode ? 'fn-button-solid' : 'fn-button'"
+      style="border-radius: 100px; font-size: 13px;"
+      (click)="accList()"
+    >
+      {{ "user.account-list" | translate }}
+    </button>
+    <button
+      [class]="!accListMode ? 'fn-button-solid' : 'fn-button'"
+      style="border-radius: 100px; font-size: 13px;"
+      (click)="permissionList()"
+    >
+      {{ "user.permission-group-list" | translate }}
+    </button>
+  </div>
+  <ng-container *ngIf="accListMode">
+    <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="end" class="mt-16">
+      <div nz-col>
+        <button
+          style="color: #012169"
+          nz-button
+          nzType="text"
+          (click)="addUser()"
+          class="mb-16"
+        >
+          <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+          {{ "add.btn" | translate }}
+        </button>
+      </div>
+    </div>
+    <nz-table
+      nzShowPagination="false"
+      [nzData]="listUser"
+      nzBordered=""
+      [nzScroll]="{ x: 'auto' }"
+      [nzSize]="'small'"
+    >
+      <thead>
+        <tr>
+          <ng-container *ngFor="let col of header; let i = index">
+            <th
+              nz-resizable
+              [nzMinWidth]="60"
+              [nzWidth]="col.width"
+              (nzResize)="onResize($event, i)"
+              [nzAlign]="'center'"
+            >
+              {{ col.name | translate }}
+              <nz-resize-handle nzDirection="right">
+                <div class="resize-trigger"></div>
+              </nz-resize-handle>
+            </th>
+          </ng-container>
+
+          <th nzAlign="center" [nzRight]="true" [nzWidth]="'120px'">
+            {{ "action" | translate }}
+          </th>
+        </tr>
+      </thead>
+      <tbody class="striped-tr">
+        <tr>
+          <td>
+            <nz-input-group [nzPrefix]="machineCodePrefix">
+              <ng-template #machineCodePrefix
+                ><span
+                  nz-icon
+                  nzType="search"
+                  nzTheme="outline"
+                  style="color: #d8c6bf"
+                ></span
+              ></ng-template>
+              <input
+                [nzAutocomplete]="auto"
+                type="text"
+                nz-input
+                [(ngModel)]="username"
+                (input)="searchAutoComplete('username')"
+                (keyup)="search($event)"
+                nz-popover
+                nzPopoverTrigger="hover"
+                [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+                #popover="nzPopover"
+              />
+              <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                <nz-auto-option
+                  *ngFor="let option of optionsComplete"
+                  [nzValue]="option"
+                  >{{ option | translate }}</nz-auto-option
+                >
+              </nz-autocomplete>
+            </nz-input-group>
+            <ng-template #contentTemplate>
+              <td>
+                <button nz-button nzType="link" (click)="addUser()">
+                  + Thêm mới
+                </button>
+              </td>
+            </ng-template>
+          </td>
+          <td>
+            <nz-input-group [nzPrefix]="machineCodePrefix">
+              <ng-template #machineCodePrefix
+                ><span
+                  nz-icon
+                  nzType="search"
+                  nzTheme="outline"
+                  style="color: #d8c6bf"
+                ></span
+              ></ng-template>
+              <input
+                [nzAutocomplete]="auto"
+                type="text"
+                nz-input
+                [(ngModel)]="email"
+                (input)="searchAutoComplete('email')"
+                (keyup)="search($event)"
+                nz-popover
+                nzPopoverTrigger="hover"
+                [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+                #popover="nzPopover"
+              />
+              <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                <nz-auto-option
+                  *ngFor="let option of optionsComplete"
+                  [nzValue]="option"
+                  >{{ option | translate }}</nz-auto-option
+                >
+              </nz-autocomplete>
+            </nz-input-group>
+            <ng-template #contentTemplate>
+              <td>
+                <button nz-button nzType="link" (click)="addUser()">
+                  + Thêm mới
+                </button>
+              </td>
+            </ng-template>
+          </td>
+          <td>
+            <nz-input-group [nzPrefix]="machineCodePrefix">
+              <ng-template #machineCodePrefix
+                ><span
+                  nz-icon
+                  nzType="search"
+                  nzTheme="outline"
+                  style="color: #d8c6bf"
+                ></span
+              ></ng-template>
+              <input
+                [nzAutocomplete]="auto"
+                type="text"
+                nz-input
+                [(ngModel)]="firstName"
+                (input)="searchAutoComplete('firstName')"
+                (keyup)="search($event)"
+                nz-popover
+                nzPopoverTrigger="hover"
+                [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+                #popover="nzPopover"
+              />
+              <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                <nz-auto-option
+                  *ngFor="let option of optionsComplete"
+                  [nzValue]="option"
+                  >{{ option | translate }}</nz-auto-option
+                >
+              </nz-autocomplete>
+            </nz-input-group>
+            <ng-template #contentTemplate>
+              <td>
+                <button nz-button nzType="link" (click)="addUser()">
+                  + Thêm mới
+                </button>
+              </td>
+            </ng-template>
+          </td>
+          <td>
+            <nz-input-group [nzPrefix]="machineCodePrefix">
+              <ng-template #machineCodePrefix
+                ><span
+                  nz-icon
+                  nzType="search"
+                  nzTheme="outline"
+                  style="color: #d8c6bf"
+                ></span
+              ></ng-template>
+              <input
+                [nzAutocomplete]="auto"
+                type="text"
+                nz-input
+                [(ngModel)]="lastName"
+                (input)="searchAutoComplete('lastName')"
+                (keyup)="search($event)"
+                nz-popover
+                nzPopoverTrigger="hover"
+                [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+                #popover="nzPopover"
+              />
+              <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                <nz-auto-option
+                  *ngFor="let option of optionsComplete"
+                  [nzValue]="option"
+                  >{{ option | translate }}</nz-auto-option
+                >
+              </nz-autocomplete>
+            </nz-input-group>
+            <ng-template #contentTemplate>
+              <td>
+                <button nz-button nzType="link" (click)="addUser()">
+                  + Thêm mới
+                </button>
+              </td>
+            </ng-template>
+          </td>
+          <td [nzRight]="true"></td>
+        </tr>
+
+        <ng-container *ngFor="let user of listUser">
+          <tr>
+            <td>
+              {{ user.username }}
+            </td>
+            <td>
+              {{ user.email }}
+            </td>
+            <td>
+              {{ user.lastName }}
+            </td>
+            <td>
+              {{ user.firstName }}
+            </td>
+
+            <td [nzAlign]="'center'" [nzRight]="true">
+              <ng-template
+                *ngIf="user.username.includes('admin'); else elseblock"
+              >
+                <button
+                  style="color: #012169"
+                  nz-button
+                  nzType="link"
+                  nz-tooltip="{{ 'btn.edit' | translate }}"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    style="margin-right: 10px"
+                  >
+                    <g clip-path="url(#clip0_699_11358)">
+                      <path
+                        d="M7.33301 2.66675H2.66634C2.31272 2.66675 1.97358 2.80722 1.72353 3.05727C1.47348 3.30732 1.33301 3.64646 1.33301 4.00008V13.3334C1.33301 13.687 1.47348 14.0262 1.72353 14.2762C1.97358 14.5263 2.31272 14.6667 2.66634 14.6667H11.9997C12.3533 14.6667 12.6924 14.5263 12.9425 14.2762C13.1925 14.0262 13.333 13.687 13.333 13.3334V8.66675"
+                        stroke="#6b6c6c"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M12.333 1.66665C12.5982 1.40144 12.9579 1.25244 13.333 1.25244C13.7081 1.25244 14.0678 1.40144 14.333 1.66665C14.5982 1.93187 14.7472 2.29158 14.7472 2.66665C14.7472 3.04173 14.5982 3.40144 14.333 3.66665L7.99967 9.99999L5.33301 10.6667L5.99967 7.99999L12.333 1.66665Z"
+                        stroke="#6b6c6c"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_699_11358">
+                        <rect width="16" height="16" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </button>
+                <button
+                  style="color: #012169"
+                  nz-button
+                  nzType="link"
+                  (click)="deleteUser(user)"
+                  nz-tooltip="{{ 'btn.delete' | translate }}"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                  >
+                    <path
+                      d="M2.25 4.5H3.75H15.75"
+                      stroke="#2A3884"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M14.25 4.5V15C14.25 15.3978 14.092 15.7794 13.8107 16.0607C13.5294 16.342 13.1478 16.5 12.75 16.5H5.25C4.85218 16.5 4.47064 16.342 4.18934 16.0607C3.90804 15.7794 3.75 15.3978 3.75 15V4.5M6 4.5V3C6 2.60218 6.15804 2.22064 6.43934 1.93934C6.72064 1.65804 7.10218 1.5 7.5 1.5H10.5C10.8978 1.5 11.2794 1.65804 11.5607 1.93934C11.842 2.22064 12 2.60218 12 3V4.5"
+                      stroke="#6b6c6c"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M7.5 8.25V12.75"
+                      stroke="#6b6c6c"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M10.5 8.25V12.75"
+                      stroke="#6b6c6c"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </ng-template>
+              <ng-template #elseblock>
+                <button
+                  style="color: #012169"
+                  nz-button
+                  nzType="link"
+                  nz-tooltip="{{ 'btn.edit' | translate }}"
+                  (click)="updateUser(user)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    style="margin-right: 10px"
+                  >
+                    <g clip-path="url(#clip0_699_11358)">
+                      <path
+                        d="M7.33301 2.66675H2.66634C2.31272 2.66675 1.97358 2.80722 1.72353 3.05727C1.47348 3.30732 1.33301 3.64646 1.33301 4.00008V13.3334C1.33301 13.687 1.47348 14.0262 1.72353 14.2762C1.97358 14.5263 2.31272 14.6667 2.66634 14.6667H11.9997C12.3533 14.6667 12.6924 14.5263 12.9425 14.2762C13.1925 14.0262 13.333 13.687 13.333 13.3334V8.66675"
+                        stroke="#2A3884"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M12.333 1.66665C12.5982 1.40144 12.9579 1.25244 13.333 1.25244C13.7081 1.25244 14.0678 1.40144 14.333 1.66665C14.5982 1.93187 14.7472 2.29158 14.7472 2.66665C14.7472 3.04173 14.5982 3.40144 14.333 3.66665L7.99967 9.99999L5.33301 10.6667L5.99967 7.99999L12.333 1.66665Z"
+                        stroke="#2A3884"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_699_11358">
+                        <rect width="16" height="16" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </button>
+                <button
+                  style="color: #012169"
+                  nz-button
+                  nzType="link"
+                  (click)="deleteUser(user)"
+                  nz-tooltip="{{ 'btn.delete' | translate }}"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                  >
+                    <path
+                      d="M2.25 4.5H3.75H15.75"
+                      stroke="#2A3884"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M14.25 4.5V15C14.25 15.3978 14.092 15.7794 13.8107 16.0607C13.5294 16.342 13.1478 16.5 12.75 16.5H5.25C4.85218 16.5 4.47064 16.342 4.18934 16.0607C3.90804 15.7794 3.75 15.3978 3.75 15V4.5M6 4.5V3C6 2.60218 6.15804 2.22064 6.43934 1.93934C6.72064 1.65804 7.10218 1.5 7.5 1.5H10.5C10.8978 1.5 11.2794 1.65804 11.5607 1.93934C11.842 2.22064 12 2.60218 12 3V4.5"
+                      stroke="#2A3884"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M7.5 8.25V12.75"
+                      stroke="#2A3884"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M10.5 8.25V12.75"
+                      stroke="#2A3884"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </ng-template>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </nz-table>
+
+    <app-pagination
+      *ngIf="total"
+      [currentPage]="pageNumber"
+      [currentSize]="pageSize"
+      [total]="total"
+      (emitPage)="getUser($event)"
+    >
+    </app-pagination>
+
+    <app-add-user
+      *ngIf="isvisibleAdd"
+      [(isvisible)]="isvisibleAdd"
+      (isvisibleChange)="childOut()"
+    ></app-add-user>
+
+    <app-infor-user
+      *ngIf="isvisibleUpdate"
+      [user]="currentUser"
+      [(isvisible)]="isvisibleUpdate"
+      (isvisibleChange)="childOut()"
+    ></app-infor-user>
+
+
+  </ng-container>
+  <ng-container *ngIf="!accListMode">
+    <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="end" class="mt-16">
+      <div nz-col>
+        <button
+          style="color: #012169"
+          nz-button
+          nzType="text"
+          (click)="addGroups()"
+          class="mb-24"
+        >
+          <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+          {{ "add.btn" | translate }}
+        </button>
+      </div>
+    </div>
+    <nz-table
+      nzShowPagination="false"
+      [nzData]="listGroup"
+      nzBordered=""
+      [nzScroll]="{ x: 'auto', y: '400px' }"
+      [nzSize]="'small'"
+    >
+      <thead>
+        <tr>
+          <th [nzAlign]="'center'">Tên nhóm quyền</th>
+          <th [nzAlign]="'center'">Mã nhóm quyền</th>
+          <th [nzAlign]="'center'" nzWidth="100px">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <nz-input-group [nzPrefix]="machineCodePrefix">
+              <ng-template #machineCodePrefix
+                ><span
+                  nz-icon
+                  nzType="search"
+                  nzTheme="outline"
+                  style="color: #d8c6bf"
+                ></span
+              ></ng-template>
+              <input
+                type="text"
+                nz-input
+                (keyup)="search($event)"
+                nz-popover
+                nzPopoverTrigger="hover"
+                #popover="nzPopover"
+              />
+            </nz-input-group>
+          </td>
+          <td>
+            <nz-input-group [nzPrefix]="machineCodePrefix">
+              <ng-template #machineCodePrefix
+                ><span
+                  nz-icon
+                  nzType="search"
+                  nzTheme="outline"
+                  style="color: #d8c6bf"
+                ></span
+              ></ng-template>
+              <input
+                type="text"
+                nz-input
+                (keyup)="search($event)"
+                nz-popover
+                nzPopoverTrigger="hover"
+                #popover="nzPopover"
+              />
+            </nz-input-group>
+          </td>
+          <td></td>
+        </tr>
+        <tr *ngFor="let row of listGroup; let i = index">
+          <td>{{ row.description }}</td>
+          <td>{{ row.name }}</td>
+          <td [nzAlign]="'center'" [nzRight]="true">
+            <button
+              style="color: #012169"
+              nz-button
+              nzType="link"
+              nz-tooltip="{{ 'btn.edit' | translate }}"
+              (click)="updateGroup(row)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                style="margin-right: 10px"
+              >
+                <g clip-path="url(#clip0_699_11358)">
+                  <path
+                    d="M7.33301 2.66675H2.66634C2.31272 2.66675 1.97358 2.80722 1.72353 3.05727C1.47348 3.30732 1.33301 3.64646 1.33301 4.00008V13.3334C1.33301 13.687 1.47348 14.0262 1.72353 14.2762C1.97358 14.5263 2.31272 14.6667 2.66634 14.6667H11.9997C12.3533 14.6667 12.6924 14.5263 12.9425 14.2762C13.1925 14.0262 13.333 13.687 13.333 13.3334V8.66675"
+                    stroke="#2A3884"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12.333 1.66665C12.5982 1.40144 12.9579 1.25244 13.333 1.25244C13.7081 1.25244 14.0678 1.40144 14.333 1.66665C14.5982 1.93187 14.7472 2.29158 14.7472 2.66665C14.7472 3.04173 14.5982 3.40144 14.333 3.66665L7.99967 9.99999L5.33301 10.6667L5.99967 7.99999L12.333 1.66665Z"
+                    stroke="#2A3884"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_699_11358">
+                    <rect width="16" height="16" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </button>
+            <button
+              style="color: #012169"
+              nz-button
+              nzType="link"
+              (click)="deleteGroup(row)"
+              nz-tooltip="{{ 'btn.delete' | translate }}"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+              >
+                <path
+                  d="M2.25 4.5H3.75H15.75"
+                  stroke="#2A3884"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M14.25 4.5V15C14.25 15.3978 14.092 15.7794 13.8107 16.0607C13.5294 16.342 13.1478 16.5 12.75 16.5H5.25C4.85218 16.5 4.47064 16.342 4.18934 16.0607C3.90804 15.7794 3.75 15.3978 3.75 15V4.5M6 4.5V3C6 2.60218 6.15804 2.22064 6.43934 1.93934C6.72064 1.65804 7.10218 1.5 7.5 1.5H10.5C10.8978 1.5 11.2794 1.65804 11.5607 1.93934C11.842 2.22064 12 2.60218 12 3V4.5"
+                  stroke="#2A3884"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M7.5 8.25V12.75"
+                  stroke="#2A3884"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M10.5 8.25V12.75"
+                  stroke="#2A3884"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <app-pagination
+      *ngIf="total"
+      [currentPage]="pageNumberGroups"
+      [currentSize]="pageSizeGroups"
+      [total]="total"
+      (emitPage)="getListGroups($event)"
+    >
+    </app-pagination>
+
+    <app-add-group
+      *ngIf="isvisibleAddGroups"
+      [(isvisible)]="isvisibleAddGroups"
+      (isvisibleChange)="childOutGroups()"
+    ></app-add-group>
+
+    <app-infor-group
+      *ngIf="isvisibleUpdateGroup"
+      [group]="currentGroup"
+      [(isvisible)]="isvisibleUpdateGroup"
+      (isvisibleChange)="childOutGroups()"
+    ></app-infor-group>
+
+    <app-popup-delete
+      *ngIf="isvisibleDeleteGroup"
+      (delete)="deleteGroupConfirm()"
+      [(isvisible)]="isvisibleDeleteGroup"
+    ></app-popup-delete>
+  </ng-container>
+</nz-card>
+
+<nz-modal
+  [(nzVisible)]="isvisibleDelete"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="closeDelete()"
+  [nzWidth]="600"
+>
+  <ng-template #modalTitle>
+    <h2 style="text-align: center; color: #ec0000; padding: 12px">
+      {{ "xác nhận xóa" | translate }}
+    </h2>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <p>
+      {{ "Bạn có chắc muốn xóa tài khoản" | translate }}
+      <span style="font-weight: 600">{{ currentUser.username }}</span>
+      ?
+    </p>
+    <div
+      style="
+        width: 100%;
+        background-color: #fcd9dc;
+        padding: 12px;
+        border-left: 4px solid #ec0000;
+        border-radius: 3px;
+      "
+    >
+      <h3 style="color: black">
+        <span nz-icon nzType="warning" nzTheme="outline"></span>
+        {{ "popup.attention" | translate }}
+      </h3>
+      <p>
+        {{ "Nêu bạn xóa tài khoản " | translate }}
+        <span style="font-weight: 600">{{ currentUser.username }}</span>
+        {{
+          " thì các dữ liệu liên quan đến tài khoản này sẽ bị mất." | translate
+        }}
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <app-button
+      (click)="closeDelete()"
+      style="
+        margin-right: 30px;
+        background-color: #e5e5e5;
+        display: inline-block;
+        border-radius: 4px;
+      "
+      [buttonType]="'text'"
+      title="{{ 'btn.cancel' | translate }}"
+    ></app-button>
+    <app-button
+      (click)="deleteConfirm()"
+      title="{{ 'btn.delete' | translate }}"
+      style="
+        background-color: #ec0000;
+        display: inline-block;
+        border-radius: 4px;
+      "
+      #saveBtn
+    ></app-button>
+  </ng-template>
+</nz-modal>

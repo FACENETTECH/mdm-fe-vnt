@@ -13,6 +13,8 @@ import { ManageComponentService } from 'src/app/services/manage-component/manage
 import { ConfigService } from 'src/app/services/manage-config/config.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
 import { DATA_TYPE } from 'src/app/utils/constrant';
+import { saveAs } from 'file-saver';
+import * as FileSaver from 'file-saver';
 @Component({
   selector: 'app-info-machine-popup',
   templateUrl: './info-machine-popup.component.html',
@@ -529,8 +531,16 @@ export class InfoMachinePopupComponent {
    /**
     * Hàm xử lý click vào form upload file
     */
-   handleImageClick() {
-     // document.getElementById('fileInput')?.click();
+   handleImageClick(base64: any, fileName: string) {
+      // console.log(base64);
+      // const blob = new Blob([base64], {type: 'image/png'});
+      // FileSaver.saveAs(blob, 'image');
+      console.log(base64);
+
+      const downloadLink = document.createElement('a');
+      downloadLink.href = 'data:image/png;base64, ' + base64;
+      downloadLink.download = fileName;
+      downloadLink.click();
    }
 
    /**

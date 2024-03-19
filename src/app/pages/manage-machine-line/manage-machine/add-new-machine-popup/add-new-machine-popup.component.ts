@@ -6,13 +6,15 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
+import { KeycloakService } from 'keycloak-angular';
 import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { BaseService } from 'src/app/services/base.service';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { ConfigService } from 'src/app/services/manage-config/config.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
-import { DATA_TYPE } from 'src/app/utils/constrant';
+import { DATA_TYPE, ROLE_NAME } from 'src/app/utils/constrant';
 @Component({
   selector: 'app-add-new-machine-popup',
   templateUrl: './add-new-machine-popup.component.html',
@@ -26,7 +28,9 @@ export class AddNewMachinePopupComponent {
     private i18n: NzI18nService,
     private manageService: ManageComponentService,
     private loader: NgxUiLoaderService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private keyCloak: KeycloakService,
+    private baseService: BaseService,
   ) {}
   @Input() isvisible: boolean = true;
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
@@ -581,6 +585,24 @@ export class AddNewMachinePopupComponent {
   }
 
   /**
+   * Hàm kiểm tra tài khoản có quyền để thực hiện action hay không
+   * @param role 
+   * @returns 
+   */
+   isCheckRoles(action: string) {
+    if(this.baseService.isAuthorized('admin_business')) {
+      return true;
+    } else {
+      let tenant = '';
+      if(this.keyCloak.getKeycloakInstance().idTokenParsed != null && this.keyCloak.getKeycloakInstance().idTokenParsed != undefined) {
+        tenant = this.keyCloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+      }
+      let role = tenant + '_mdm_' + this.tableCode + '_' + action;
+      return this.baseService.isAuthorized(role);
+    }
+  }
+
+  /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
    * @param event 
    */
@@ -594,4 +616,5 @@ export class AddNewMachinePopupComponent {
   total: number = 0;
   @Input() machinee: any = '';
   protected readonly dataType = DATA_TYPE;
+  protected readonly roleName = ROLE_NAME;
 }

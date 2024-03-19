@@ -1,0 +1,164 @@
+<nz-modal
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="1000"
+  [nzMaskClosable]="false"
+>
+  <ng-template #modalTitle>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        background-color: #ccdbeb;
+        padding: 5px 0px 10px 16px;
+      "
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+      >
+        <g clip-path="url(#clip0_563_6391)">
+          <path
+            d="M21.6 0.5H2.4C1.08 0.5 0 1.58 0 2.9V24.5L4.8 19.7H21.6C22.92 19.7 24 18.62 24 17.3V2.9C24 1.58 22.92 0.5 21.6 0.5ZM12 11.3C11.34 11.3 10.8 10.76 10.8 10.1V5.3C10.8 4.64 11.34 4.1 12 4.1C12.66 4.1 13.2 4.64 13.2 5.3V10.1C13.2 10.76 12.66 11.3 12 11.3ZM13.2 16.1H10.8V13.7H13.2V16.1Z"
+            fill="#004C98"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_563_6391">
+            <rect
+              width="24"
+              height="24"
+              fill="white"
+              transform="translate(0 0.5)"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+      <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+        Thông tin nhóm người dùng
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <!-- <h2>Thêm mới thông tin tài khoản</h2> -->
+
+    <div nz-row [nzGutter]="[100, 16]">
+      <div nz-col nzSpan="12">
+        <label class="fn-label"
+          >Tên nhóm quyền<span style="color: red">*</span></label
+        >
+        <input
+          nz-input
+          [(ngModel)]="groupName"
+          (input)="checkValid()"
+          type="text"
+          placeholder="Nhập tên nhóm quyền"
+        />
+        <span style="color: red" *ngIf="checkGroupName">{{
+          checkGroupName
+        }}</span>
+      </div>
+      <div nz-col nzSpan="12">
+        <label class="fn-label"
+          >Mã nhóm quyền<span style="color: red">*</span></label
+        >
+        <input
+          nz-input
+          [(ngModel)]="groupCode"
+          [disabled]="true"
+          (input)="checkValid()"
+          type="text"
+          placeholder="Nhập mã nhóm quyền"
+        />
+        <span style="color: red" *ngIf="checkGroupCode">{{
+          checkGroupCode
+        }}</span>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="[100, 16]">
+      <div nz-col nzSpan="12">
+        <label class="fn-label"
+          >Phân quyền<span style="color: red">*</span></label
+        >
+        <nz-select
+          style="width: 100%"
+          [nzMode]="'multiple'"
+          [(ngModel)]="authorities"
+          (ngModelChange)="checkValid()"
+          [compareWith]="compareFn"
+        >
+          <ng-container *ngFor="let role of listRole">
+            <ng-container *ngIf="role.name != 'admin_fcim'">
+              <nz-option
+                [nzValue]="{
+                  roleCode: role.name,
+                  roleName: role.description
+                }"
+                [nzLabel]="role.description"
+              ></nz-option>
+            </ng-container>
+          </ng-container>
+        </nz-select>
+        <span style="color: red" *ngIf="checkAuthorities">{{
+          checkAuthorities
+        }}</span>
+      </div>
+    </div>
+    <!-- <h2 style="margin-top: 20px">Thông tin nhóm người dùng</h2> -->
+
+    <!-- <div nz-row [nzGutter]="[100, 16]">
+      <div nz-col nzSpan="12">
+        <label class="fn-label">Tên </label>
+        <input
+          nz-input
+          [(ngModel)]="groupCode"
+          (input)="checkValid()"
+          type="text"
+          placeholder="Nhập groupCode"
+        />
+      </div>
+      <div nz-col nzSpan="12">
+        <label class="fn-label">Mô tả </label>
+        <input
+          nz-input
+          [(ngModel)]="description"
+          (input)="checkValid()"
+          type="text"
+          placeholder="Nhập description"
+        />
+      </div>
+    </div> -->
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <app-button
+      (click)="handleCancel()"
+      style="
+        margin-right: 30px;
+        background-color: #e5e5e5;
+        display: inline-block;
+        border-radius: 4px;
+      "
+      [buttonType]="'text'"
+      title="Hủy bỏ"
+    ></app-button>
+    <app-button
+      (click)="submitDemo()"
+      title="Cập nhật"
+      class="btn btn-save"
+      #saveBtn
+    ></app-button>
+  </ng-template>
+
+  <app-popup-update
+    [(isvisible)]="isvisibleUpdateGroup"
+    (update)="submit()"
+  ></app-popup-update>
+</nz-modal>

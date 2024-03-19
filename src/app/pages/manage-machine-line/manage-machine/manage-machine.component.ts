@@ -12,9 +12,11 @@ import { ActivatedRoute, Router, NavigationEnd, Event } from '@angular/router';
 import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DATA_TYPE } from 'src/app/utils/constrant';
+import { DATA_TYPE, ROLE_NAME } from 'src/app/utils/constrant';
 import { InforColumnComponent } from 'src/app/shared/components/infor-column/infor-column.component';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
+import { BaseService } from 'src/app/services/base.service';
+import { KeycloakService } from 'keycloak-angular';
 @Component({
   selector: 'app-manage-machine',
   templateUrl: './manage-machine.component.html',
@@ -36,6 +38,8 @@ export class ManageMachineComponent implements OnInit {
     private i18n: NzI18nService,
     private manageComponentService: ManageComponentService,
     private router: Router,
+    private baseService: BaseService,
+    private keyCloak: KeycloakService,
   ) {
     this.router.events.subscribe((e: Event) => {
       if (e instanceof NavigationEnd) {
@@ -768,7 +772,9 @@ export class ManageMachineComponent implements OnInit {
    * Xử lý sự kiện double click trên dòng trong table
    */
   onDblClickOnRowTable(infor: any) {
-    this.editMachine(infor);
+    if(this.isCheckRoles('view-detail')) {
+      this.editMachine(infor);
+    }
   }
 
 
@@ -934,5 +940,25 @@ export class ManageMachineComponent implements OnInit {
     });
   }
 
+  /**
+   * Hàm kiểm tra tài khoản có quyền để thực hiện action hay không
+   * @param role 
+   * @returns 
+   */
+  isCheckRoles(action: string) {
+    if(this.baseService.isAuthorized('admin_business')) {
+      return true;
+    } else {
+      let tenant = '';
+      if(this.keyCloak.getKeycloakInstance().idTokenParsed != null && this.keyCloak.getKeycloakInstance().idTokenParsed != undefined) {
+        tenant = this.keyCloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+      }
+      let role = tenant + '_mdm_' + this.tableCode + '_' + action;
+      return this.baseService.isAuthorized(role);
+    }
+
+  }
+
   protected readonly dataType = DATA_TYPE;
+  protected readonly roleName = ROLE_NAME;
 }
