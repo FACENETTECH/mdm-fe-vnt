@@ -53,13 +53,15 @@
         <label class="fn-label"
           >Tên tài khoản<span style="color: red">*</span></label
         >
-        <input
-          nz-input
-          [(ngModel)]="userName"
-          (input)="checkValid()"
-          type="text"
-          placeholder="Nhập username"
-        />
+        <nz-input-group [nzSuffix]="usernameSuffix">
+          <input
+            nz-input
+            [(ngModel)]="userName"
+            (input)="checkValid()"
+            type="text"
+            placeholder="Nhập tên tài khoản"
+          />
+        </nz-input-group>
         <span style="color: red" *ngIf="checkUserName">{{
           checkUserName
         }}</span>
@@ -73,7 +75,7 @@
           [(ngModel)]="password"
           (input)="checkValid()"
           type="password"
-          placeholder="Nhập username"
+          placeholder="Nhập mật khẩu"
         />
         <span style="color: red" *ngIf="checkPassword">{{
           checkPassword
@@ -90,6 +92,7 @@
           [nzMode]="'multiple'"
           [(ngModel)]="listGroupsAssign"
           (ngModelChange)="checkValid()"
+          placeholder="Chọn phân quyền"
         >
           <ng-container *ngFor="let group of listGroups">
             <ng-container *ngIf="group.groupName != 'admin_fcim'">
@@ -107,15 +110,104 @@
 
     <div nz-row [nzGutter]="[100, 16]">
       <div nz-col nzSpan="12">
+        <label class="fn-label">Nhân viên </label>
+        <nz-input-group
+          (click)="toggleEmployeePopover()"
+        >
+          <input
+            placeholder="Chọn nhân viên"
+            [(ngModel)]="selectedEmployee.employee_name"
+            type="text"
+            nz-input
+          />
+          <span
+            nz-popover
+            nzPopoverTitle="Nhân viên"
+            nzPopoverTrigger="click"
+            nzPopoverPlacement="right"
+            [nzPopoverContent]="tableContent"
+            [nzPopoverVisible]="employeePopoverVisible"
+          >
+          </span>
+          <ng-template #tableContent>
+            <div style="overflow: scroll; height: 400px;">
+              <nz-table [nzData]="employees">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <nz-input-group [nzPrefix]="searchPrefix">
+                        <ng-template #searchPrefix
+                          ><span
+                            nz-icon
+                            nzType="search"
+                            nzTheme="outline"
+                            style="color: #d8c6bf"
+                          ></span
+                        ></ng-template>
+                        <input
+                          type="text"
+                          nz-input
+                          [(ngModel)]="employeeSearchName"
+                          (ngModelChange)="searchEmployees()"
+                          nz-popover
+                          nzPopoverTrigger="hover"
+                          #popover="nzPopover"
+                        />
+                      </nz-input-group>
+                    </td>
+                    <td>
+                      <nz-input-group [nzPrefix]="searchPrefix">
+                        <ng-template #searchPrefix
+                          ><span
+                            nz-icon
+                            nzType="search"
+                            nzTheme="outline"
+                            style="color: #d8c6bf"
+                          ></span
+                        ></ng-template>
+                        <input
+                          type="text"
+                          nz-input
+                          [(ngModel)]="employeeSearchCode"
+                          (ngModelChange)="searchEmployees()"
+                          nz-popover
+                          nzPopoverTrigger="hover"
+                          #popover="nzPopover"
+                        />
+                      </nz-input-group>
+                    </td>
+                  </tr>
+                  <ng-container  *ngFor="let item of employees">
+                    <tr (click)="handleEmployeeChanged(item)">
+                      <td>{{ item.employee_name }}</td>
+                      <td>{{ item.employee_code }}</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </nz-table>
+            </div>
+          </ng-template>
+        </nz-input-group>
+      </div>
+      <div nz-col nzSpan="12">
         <label class="fn-label">Tên </label>
         <input
           nz-input
           [(ngModel)]="firstName"
           (input)="checkValid()"
           type="text"
-          placeholder="Nhập first name"
+          placeholder="Nhập tên"
         />
       </div>
+    </div>
+
+    <div nz-row [nzGutter]="[100, 16]">
       <div nz-col nzSpan="12">
         <label class="fn-label">Họ </label>
         <input
@@ -123,20 +215,17 @@
           [(ngModel)]="lastName"
           (input)="checkValid()"
           type="text"
-          placeholder="Nhập username"
+          placeholder="Nhập họ"
         />
       </div>
-    </div>
-
-    <div nz-row [nzGutter]="[100, 16]">
       <div nz-col nzSpan="12">
-        <label class="fn-label">Email<span style="color: red">*</span></label>
+        <label class="fn-label">Email </label>
         <input
           nz-input
           [(ngModel)]="email"
           (input)="checkValid()"
           type="text"
-          placeholder="Nhập first name"
+          placeholder="Nhập email"
         />
         <span style="color: red" *ngIf="checkEmail">{{ checkEmail }}</span>
       </div>
