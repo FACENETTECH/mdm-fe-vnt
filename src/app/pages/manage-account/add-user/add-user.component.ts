@@ -171,6 +171,7 @@ export class AddUserComponent {
       let request = {
         username: this.userName + this.usernameSuffix,
         firstName: this.firstName,
+        employeeCode: this.selectedEmployee.employee_code,
         lastName: this.lastName,
         email: this.email,
         password: this.password,
