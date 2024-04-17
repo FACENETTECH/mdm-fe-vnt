@@ -370,9 +370,15 @@ export class AppComponent {
    * @param item là biến chứa thông tin của phân hệ di chuyển đến
   */
   directProduct(item: any) {
+    console.log(item);
     if(this.isCheckRoles(item.name)) {
-      this.isVisableLayout = true;
-      this.getListFunctionByName(item.name, false);
+      if(item.name == 'manage_account') {
+        this.isVisableLayout = true;
+        this._router.navigate(['/manage-account/list-account'])
+      } else {
+        this.isVisableLayout = true;
+        this.getListFunctionByName(item.name, false);
+      }
     } else {
       this.toast.warning('Tài khoản không có quyền thực hiện chức năng này!');
     }
@@ -416,6 +422,21 @@ export class AppComponent {
     this.configService.getAllFunction().subscribe({
       next: (res) => {
         this.lstFunction = res.data;
+        this.lstFunction.push({
+          "id": 64,
+          "name": "manage_account",
+          "displayName": "Quản lý tài khoản",
+          "label": "quản lý tài khoản",
+          "index": 31,
+          "isEntity": true,
+          "note": null,
+          "icon": "./assets/icons/Appstore.svg",
+          "color": null,
+          "link": "http://dev.fcim.facenet.vn/mdm-v2",
+          "parent": null,
+          "isVisible": true,
+          "children": []
+      })
       }, error: (err) => {
         this.toast.error(err.error.message);
       }
