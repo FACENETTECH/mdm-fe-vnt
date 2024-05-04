@@ -70,6 +70,27 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "vietnhattan": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environment/environment.ts",
+                  "with": "src/environment/environment.vnt.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -82,6 +103,9 @@
             },
             "development": {
               "browserTarget": "project-base:build:development"
+            },
+            "vietnhattan": {
+              "browserTarget": "project-base:build:vietnhattan"
             }
           },
           "options": { "port": 4300 },
