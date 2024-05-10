@@ -1,0 +1,55 @@
+<nz-modal
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="1000"
+>
+  <ng-template #modalTitle>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        background-color: #ccebfb;
+        padding: 5px 0px 10px 16px;
+      "
+    >
+    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21.6 0.5H2.4C1.08 0.5 0 1.58 0 2.9V24.5L4.8 19.7H21.6C22.92 19.7 24 18.62 24 17.3V2.9C24 1.58 22.92 0.5 21.6 0.5ZM12 11.3C11.34 11.3 10.8 10.76 10.8 10.1V5.3C10.8 4.64 11.34 4.1 12 4.1C12.66 4.1 13.2 4.64 13.2 5.3V10.1C13.2 10.76 12.66 11.3 12 11.3ZM13.2 16.1H10.8V13.7H13.2V16.1Z" fill="#00AEEE"/>
+    </svg>
+        
+    <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+    {{ "Xem biểu mẫu" | translate }}
+    </p>
+    </div>
+  </ng-template>
+  <ng-template #modalContent>
+    <div style="display: flex; justify-content: end;">
+      <div style="height: 32px;text-align: right;color: #00AEEE; margin-right: 16px;">
+        <span nz-icon nzType="download" nzTheme="outline"></span>
+        <a style="color: #00AEEE; margin-left: 6px;" [href]="urlDownload">Tải xuống</a>
+      </div>
+      <div style="height: 32px;text-align: right;color: #00AEEE;">
+          <label for="editPdfInput" style="cursor: pointer;">
+            <span nz-icon nzType="edit" class="fn-icon-style" nzTheme="outline"></span> 
+            Thay đổi biểu mẫu
+          </label>
+          <input id="editPdfInput" type="file" (change)="handleChange($event)" hidden>
+      </div>
+    </div>
+    <div style="width: 100%; height: 550px;">
+      <iframe [src]="url" width="100%" height="100%"></iframe>
+    </div>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button
+        nz-button
+        class="fn-bg-default"
+        style="border-radius: 4px;width: 86px; text-align: center; margin-right: 6px;"
+        (click)="submit()"
+      >
+        <span>{{ 'Lưu' | translate }}</span>
+    </button>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,543 @@
+<div class="parent-container">
+    <div [class]="classList.content" class="color-border">
+      <app-breadcrumb nz-row [listBreadCrumb]="breadcrumbs"></app-breadcrumb>
+      <h3 style="font-weight: 500; margin-bottom: 0; text-align: center;">{{ 'template.title' | translate }}</h3>
+      <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="space-between" class="mt-6">
+        <div style="padding-left: 14px;padding-bottom: 6px; width: 35%;">
+          <!-- <h4>{{ "generalSearch" | translate }}</h4> -->
+          <nz-input-group
+            [nzPrefix]="searchPrefix"
+            [nzSuffix]="searchSuffix"
+            style="height: 32px"
+          >
+            <ng-template #searchPrefix
+              ><span
+                nz-icon
+                nzType="search"
+                nzTheme="outline"
+                style="color: #d8c6bf"
+              ></span
+            ></ng-template>
+            <ng-template #searchSuffix
+              ><span
+                *ngIf="common"
+                (click)="common = ''"
+                nz-icon
+                nzType="close-circle"
+                nzTheme="fill"
+                style="font-size: 12px; cursor: pointer; color: rgb(172, 170, 170)"
+              ></span
+            ></ng-template>
+  
+            <input
+              nz-input
+              [nzAutocomplete]="auto"
+              placeholder="{{ 'placeHolderSearch' | translate }}"
+              [(ngModel)]="common"
+              (keyup)="search($event)"
+              (input)="commonAutoComplete(common)"
+              (focus)="onInputFocus()"
+              (blur)="onInputBlur()"
+            />
+  
+            <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+              <nz-auto-option
+                *ngFor="let option of optionsComplete"
+                [nzValue]="option"
+                >{{ option }}</nz-auto-option
+              >
+            </nz-autocomplete>
+          </nz-input-group>
+        </div>
+        <div style="display: flex;">
+          <div nz-col style="display: flex; align-items: center">
+            <button
+              *ngIf="isCheckRoles(roleName.CREATE)"
+              style="color: #01aba8"
+              nz-button
+              nzType="text"
+              (click)="addTemplateForm()"
+              class="mb-6"
+              nz-tooltip="{{ 'Thêm mới (Shift + N)' | translate }}"
+            >
+              <span nz-icon nzType="plus-circle" nzTheme="outline" class="fn-icon-style"></span>
+              {{ "add.btn" | translate }}
+            </button>
+          </div>
+          <div nz-col>
+            <button
+              *ngIf="isCheckRoles(roleName.COPY)"
+              style="color: #01aba8"
+              nz-button
+              nzType="text"
+              (click)="openPopupCopy()"
+              class="mb-6"
+              nz-tooltip="{{ 'Sao chép (Shift + C)' | translate }}"
+            >
+              <span nz-icon nzType="copy" nzTheme="outline" class="fn-icon-style"></span>
+              {{ "btn.copy" | translate }}
+            </button>
+          </div>
+          <div nz-col>
+            <button
+              *ngIf="isCheckRoles(roleName.DELETE_BATCH)"
+              style="color: #01aba8"
+              nz-button
+              nzType="text"
+              (click)="openPopupDeleteList()"
+              class="mb-6"
+              nz-tooltip="{{ 'Xoá (Delete)' | translate }}"
+            >
+              <span nz-icon nzType="delete" nzTheme="outline" class="fn-icon-style"></span>
+              {{ "btn.delete" | translate }}
+            </button>
+          </div>
+      
+          <div nz-col>
+            <nz-row nzJustify="end">
+              <button
+                class="mb-6"
+                style="color: #01aba8"
+                nz-button
+                nzType="text"
+                nz-tooltip="{{ 'btn.choose' | translate }}"
+                nz-dropdown
+                nzTrigger="click"
+                [nzDropdownMenu]="configColumns"
+              >
+                <img src="./assets/icons/Block.svg">
+              </button>
+      
+              <nz-dropdown-menu #configColumns="nzDropdownMenu">
+                <ul nz-menu>
+                  <ng-container *ngFor="let column of columns">
+                    <li nz-menu-item>
+                      <label
+                        nz-checkbox
+                        [(ngModel)]="column.localCheck"
+                        (ngModelChange)="changeColumn()"
+                        >{{ column.keyTitle | translate }}</label
+                      >
+                    </li>
+                  </ng-container>
+                </ul>
+              </nz-dropdown-menu>
+            </nz-row>
+          </div>
+        </div>
+      </div>
+  
+      <nz-table
+        nzBordered
+        nzShowPagination="false"
+        [nzScroll]="{ x: 'auto' }"
+        [nzData]="listTemplate"
+        #MachineTable
+        [nzSize]="'small'"
+      >
+        <thead class="color-header-row">
+          <tr>
+            <th></th>
+            <th
+                [(nzChecked)]="checked"
+                [nzIndeterminate]="indeterminate"
+                (nzCheckedChange)="onAllChecked($event)"
+            ></th>
+            <ng-container *ngFor="let column of columns; let i = index">
+              <ng-container *ngIf="column.localCheck">
+                <th
+                  [nzLeft]="column.isFixed == 1 ? true: false"
+                  nz-resizable
+                  [nzWidth]="column.width"
+                  (nzResize)="onResize($event, i)"
+                  [nzAlign]="'center'"
+                  (nzSortOrderChange)="customSortFunction($event, column.keyName)"
+                >
+                  <div class="editable-cell">
+                    {{ column.keyTitle | translate}}
+                    <nz-resize-handle nzDirection="right">
+                      <div class="resize-trigger"></div>
+                    </nz-resize-handle>
+                  </div>
+                  <span
+                    *ngIf="orderSort == 'DESC'"
+                    style="
+                      float: right;
+                      position: absolute;
+                      bottom: 12px;
+                      right: 10px;
+                      cursor: pointer;
+                    "
+                    nz-tooltip="{{ 'btn.asc' | translate }}"
+                    (click)="customSortFunction($event, column.keyName)"
+                    nz-icon
+                    nzType="sort-ascending"
+                    nzTheme="outline"
+                  ></span>
+                  <span
+                    *ngIf="orderSort == 'ASC'"
+                    style="
+                      float: right;
+                      position: absolute;
+                      bottom: 12px;
+                      right: 10px;
+                      cursor: pointer;
+                    "
+                    nz-tooltip="{{ 'btn.dsc' | translate }}"
+                    (click)="customSortFunction($event, column.keyName)"
+                    nz-icon
+                    nzType="sort-descending"
+                    nzTheme="outline"
+                  ></span>
+                </th>
+              </ng-container>
+            </ng-container>
+            <th nzWidth="100px" nzAlign="center" [nzRight]="true">
+              {{ "Thao tác" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="striped-tr" cdkDropList (cdkDropListDropped)="drop($event)">
+          <tr>
+            <td></td>
+            <td></td>
+            <ng-container *ngFor="let column of columns">
+              <ng-container
+                  *ngIf="
+                    column.localCheck &&
+                    column.keyName != 'status' &&
+                    column.dataType != dataType.DATE_TIME &&
+                    column.dataType != dataType.PARAM
+                  "
+                >
+                  <td [nzLeft]="column.isFixed == 1 ? true : false">
+                    <nz-input-group
+                      [nzPrefix]="machineCodePrefix"
+                      [nzSuffix]="machineSuffix"
+                    >
+                      <ng-template #machineCodePrefix
+                        ><span
+                          nz-icon
+                          nzType="search"
+                          nzTheme="outline"
+                          style="color: #d8c6bf"
+                        ></span
+                      ></ng-template>
+                      <ng-template #machineSuffix
+                        ><span
+                          *ngIf="inforTemplateForm[column.keyName]"
+                          (click)="clearInput(column.keyName)"
+                          nz-icon
+                          nzType="close-circle"
+                          nzTheme="fill"
+                          style="
+                            font-size: 12px;
+                            cursor: pointer;
+                            color: rgb(172, 170, 170);
+                          "
+                        ></span
+                      ></ng-template>
+                      <input
+                        [nzAutocomplete]="auto"
+                        type="text"
+                        nz-input
+                        [(ngModel)]="inforTemplateForm[column.keyName]"
+                        (keyup)="search($event)"
+                        nz-popover
+                        nzPopoverTrigger="hover"
+                        [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+                        #popover="nzPopover"
+                      />
+                      <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                        <nz-auto-option
+                          *ngFor="let option of optionsComplete"
+                          [nzValue]="option"
+                          >{{ option | translate }}</nz-auto-option
+                        >
+                      </nz-autocomplete>
+                    </nz-input-group>
+                    <ng-template #contentTemplate>
+                      <td>
+                        <button nz-button nzType="link" (click)="addTemplateForm()">
+                          + {{ "Thêm mới" | translate }}
+                        </button>
+                      </td>
+                    </ng-template>
+                  </td>
+              </ng-container>
+              <ng-container
+                  *ngIf="
+                    column.localCheck &&
+                    column.keyName == 'status'
+                  "
+                >
+                  <td [nzLeft]="column.isFixed == 1 ? true : false">
+                    <i
+                      style="
+                        position: absolute;
+                        z-index: 1;
+                        top: 17px;
+                        left: 20px;
+                        color: #d8c6bf;
+                      "
+                      nz-icon
+                      nzType="search"
+                      nzTheme="outline"
+                    ></i>
+  
+                    <nz-select
+                      class="select-search"
+                      style="width: 100%"
+                      nzAllowClear
+                      [(ngModel)]="inforTemplateForm[column.keyName]"
+                      (ngModelChange)="searchSelectBox(column.keyName)"
+                    >
+                      <nz-option
+                        [nzValue]="1"
+                        nzLabel="{{ 'Hoạt động' | translate }}"
+                      ></nz-option>
+                      <nz-option
+                        [nzValue]="0"
+                        nzLabel="{{ 'Ngừng hoạt động' | translate }}"
+                      ></nz-option>
+                    </nz-select>
+                  </td>
+              </ng-container>
+              <ng-container *ngIf="
+                  column.localCheck &&
+                  column.keyName != 'status' &&
+                  column.dataType == dataType.PARAM
+                ">
+                  <td [nzLeft]="column.isFixed == 1 ? true : false">
+                    <i
+                      style="
+                        position: absolute;
+                        z-index: 1;
+                        top: 17px;
+                        left: 20px;
+                        color: #d8c6bf;
+                      "
+                      nz-icon
+                      nzType="search"
+                      nzTheme="outline"
+                    ></i>
+                    <nz-select
+                      style="width: 100%"
+                      nzMode="default"
+                      [(ngModel)]="inforTemplateForm[column.keyName]"
+                      (ngModelChange)="searchSelectBox($event)"
+                      (nzOpenChange)="handleOpenChangeDataTypeParam($event, column)"
+                    >
+                      <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    </nz-select>
+                  </td>
+              </ng-container>
+              <ng-container *ngIf="column.localCheck && column.dataType == dataType.DATE_TIME">
+                  <td [nzLeft]="column.isFixed == 1 ? true : false">
+                    <i
+                      style="
+                        position: absolute;
+                        z-index: 1;
+                        top: 17px;
+                        left: 20px;
+                        color: #d8c6bf;
+                      "
+                      nz-icon
+                      nzType="search"
+                      nzTheme="outline"
+                    ></i>
+  
+                    <nz-date-picker
+                      class="select-search"
+                      [nzPlaceHolder]="''"
+                      style="width: 100%"
+                      type="text"
+                      nz-input
+                      [(ngModel)]="inforTemplateForm[column.keyName]"
+                      (ngModelChange)="searchSelectBox(column.keyName)"
+                      nz-popover
+                      nzPopoverTrigger="hover"
+                      [nzPopoverContent]="noDataFound ? contentTemplate : undefined"
+                      #popover="nzPopover"
+                    >
+                    </nz-date-picker>
+                    <ng-template #contentTemplate>
+                      <td>
+                        <button nz-button nzType="link" (click)="addTemplateForm()">
+                          + {{ "add.btn" | translate }}
+                        </button>
+                      </td>
+                    </ng-template>
+                  </td>
+              </ng-container>
+            </ng-container>
+            <td [nzRight]="true"></td>
+          </tr>
+          <ng-container *ngFor="let infor of listTemplate; let i = index">
+            <tr cdkDrag cdkDragLockAxis="y">
+              <td cdkDragHandle>
+                <img src="./assets/icons/changePositionRow.svg">
+              </td>
+              <td [nzChecked]="setOfCheckedId.has(infor.id)" (nzCheckedChange)="onItemChecked(infor.id, $event)"></td>
+              <ng-container *ngFor="let column of columns">
+                <ng-container *ngIf="column.localCheck">
+                  <ng-container [ngSwitch]="column.keyName">
+                    <ng-container *ngSwitchCase="'status'">
+                      <td (dblclick)="onDblClickOnRowTable(infor)" [nzLeft]="column.isFixed == 1 ? true: false">
+                        <div [ngSwitch]="infor[column.keyName]" nzAlign="center">
+                          <div
+                            class="border-element bordered-element__status_1"
+                            *ngSwitchCase="'1'"
+                          >
+                            {{ "Hoạt động" | translate }}
+                          </div>
+                          <div
+                            class="border-element bordered-element__status_2"
+                            *ngSwitchCase="'0'"
+                          >
+                            {{ "Ngừng hoạt động" | translate }}
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
+                        <td
+                        [nzLeft]="column.isFixed == 1 ? true: false"
+                        class="table-cell-ellipsis"
+                        [ngStyle]="{'max-width': column.width}"
+                        [nz-tooltip]="infor[column.keyName]"
+                        (dblclick)="onDblClickOnRowTable(infor)"
+                        >
+                          {{ infor[column.keyName] }}
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="column.dataType == dataType.NUMBER">
+                        <td
+                        [nzLeft]="column.isFixed == 1 ? true: false"
+                        class="table-cell-ellipsis fn-text-al-right"
+                        [ngStyle]="{'max-width': column.width}"
+                        [nz-tooltip]="infor[column.keyName] | number : '1.0-2'"
+                        (dblclick)="onDblClickOnRowTable(infor)"
+                        >
+                            {{ infor[column.keyName] | number : "1.0-2" }}
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
+                        <td
+                        [nzLeft]="column.isFixed == 1 ? true: false"
+                        class="table-cell-ellipsis fn-text-al-right"
+                        [ngStyle]="{'max-width': column.width}"
+                        [nz-tooltip]="infor[column.keyName] | date: 'dd/MM/yyyy'"
+                        (dblclick)="onDblClickOnRowTable(infor)"
+                        >
+                          {{ infor[column.keyName] | date: 'dd/MM/yyyy' }}
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
+                        <td
+                        [nzLeft]="column.isFixed == 1 ? true: false"
+                        class="table-cell-ellipsis fn-text-al-center"
+                        [ngStyle]="{'max-width': column.width}"
+                        [nz-tooltip]="infor[column.keyName]"
+                        (dblclick)="onDblClickOnRowTable(infor)"
+                        >
+                          <label nz-checkbox [(ngModel)]="infor[column.keyName]"></label>
+                        </td>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              <td nzAlign="center" [nzRight]="true">
+                <div class="fn-css-action-grid">
+                  <button
+                    *ngIf="isCheckRoles(roleName.VIEW_DETAIL)"
+                    nz-button
+                    nzType="link"
+                    (click)="viewInforComponent(infor)"
+                    nz-tooltip="{{ 'btn.viewDetail' | translate }}"
+                  >
+                    <img src="./assets/icons/Eye.svg">
+                  </button>
+                  <button
+                    *ngIf="isCheckRoles(roleName.UPDATE)"
+                    nz-button
+                    nzType="link"
+                    (click)="editMachine(infor)"
+                    nz-tooltip="{{ 'btn.edit' | translate }}"
+                  >
+                    <img src="./assets/icons/Edit-VNT.svg">
+                  </button>
+                  <button
+                    *ngIf="isCheckRoles(roleName.DELETE)"
+                    nz-button
+                    nzType="link"
+                    (click)="deleteMachine(infor)"
+                    nz-tooltip="{{ 'btn.delete' | translate }}"
+                  >
+                  <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </nz-table>
+  
+      <app-pagination
+        *ngIf="total"
+        [currentPage]="pageNumber"
+        [currentSize]="pageSize"
+        [total]="total"
+        (emitPage)="getData($event)"
+      >
+      </app-pagination>
+    </div>
+</div>
+<app-add-template 
+  *ngIf="isvisibleAdd" 
+  [(isvisible)]="isvisibleAdd"
+  (isvisibleAdd)="addColumnConfirm($event)">
+</app-add-template>
+
+<app-update-template 
+  *ngIf="isvisibleUpdate" 
+  [(isvisible)]="isvisibleUpdate" 
+  [inforComponent]="currentTemplate"
+  (isvisibleUpdate)="addColumnConfirm($event)"
+></app-update-template>
+
+<app-popup-delete
+  *ngIf="isvisibleDelete"
+  (delete)="deleteConfirm($event)"
+  [title]="'Xoá Biểu mẫu'"
+  [tableName]="'Biểu mẫu'"
+  [code]="currentTemplate[columnKey]"
+  [(isvisible)]="isvisibleDelete"
+>
+</app-popup-delete>
+
+<app-preview-template
+  *ngIf="ivisibleInfor"
+  [(isvisible)]="ivisibleInfor"
+  [inforTemplate]="currentTemplate"
+  (preview)="addColumnConfirm($event)"
+>
+</app-preview-template>
+
+<app-popup-delete-list-recodrd
+  *ngIf="isvisibleDeleteList"
+  (delete)="deleteListConfirm($event)"
+  [title]="'Xoá ' + 'Biểu mẫu'"
+  [deleteType]="'xoá các bản ghi này'"
+  [(isvisible)]="isvisibleDeleteList"
+>
+</app-popup-delete-list-recodrd>
+
+<app-popup-copy
+  *ngIf="isvisibleCopy"
+  (copy)="submitCopy()"
+  [(isvisible)]="isvisibleCopy"
+>
+</app-popup-copy>
