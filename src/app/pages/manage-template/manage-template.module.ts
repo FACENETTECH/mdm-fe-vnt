@@ -1,9 +1,10 @@
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {SharedModule} from 'src/app/shared/components/components.module';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import {ManageMachineLineRoutingModule} from './manage-machine-line-routing.module';
-
+import { ManageTemplateRoutingModule } from './manage-template-routing.module';
+import { ListTemplateComponent } from './list-template/list-template.component';
+import { SharedModule } from 'src/app/shared/components/components.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Import module ant design
 import {NzAffixModule} from 'ng-zorro-antd/affix';
@@ -78,114 +79,106 @@ import {NzResizableModule} from 'ng-zorro-antd/resizable';
 import {NzPipesModule} from 'ng-zorro-antd/pipes';
 import {NzQRCodeModule} from 'ng-zorro-antd/qr-code';
 import {NzWaterMarkModule} from 'ng-zorro-antd/water-mark';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {TourMatMenuModule} from 'ngx-ui-tour-md-menu';
-import {ManageMachineComponent} from './manage-machine/manage-machine.component';
-import {AddNewMachinePopupComponent} from './manage-machine/add-new-machine-popup/add-new-machine-popup.component';
-import {InfoMachinePopupComponent} from './manage-machine/info-machine-popup/info-machine-popup.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { UpdateInforComponentComponent } from './manage-machine/update-infor-component/update-infor-component.component';
-import { PopupDeleteListRecodrdComponent } from './manage-machine/popup-delete-list-recodrd/popup-delete-list-recodrd.component';
-import { PopupManageParamComponent } from './manage-machine/popup-manage-param/popup-manage-param.component';
+import { AddTemplateComponent } from './add-template/add-template.component';
+import { UpdateTemplateComponent } from './update-template/update-template.component';
+import { PreviewTemplateComponent } from './preview-template/preview-template.component';
+import { ManageMachineLineModule } from '../manage-machine-line/manage-machine-line.module';
 
 
 @NgModule({
-    declarations: [
-        ManageMachineComponent,
-        AddNewMachinePopupComponent,
-        InfoMachinePopupComponent,
-        UpdateInforComponentComponent,
-        PopupDeleteListRecodrdComponent,
-        PopupManageParamComponent
-    ],
-    imports: [
-        CommonModule,
-        ManageMachineLineRoutingModule,
-        SharedModule,
-        FormsModule,
-        ReactiveFormsModule,
+  declarations: [
+    ListTemplateComponent,
+    AddTemplateComponent,
+    UpdateTemplateComponent,
+    PreviewTemplateComponent
+  ],
+  imports: [
+    CommonModule,
+    ManageTemplateRoutingModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ManageMachineLineModule,
 
-        // Import module ant design
-        NzAffixModule,
-        NzAlertModule,
-        NzAnchorModule,
-        NzAutocompleteModule,
-        NzAvatarModule,
-        NzBackTopModule,
-        NzBadgeModule,
-        NzButtonModule,
-        NzBreadCrumbModule,
-        NzCalendarModule,
-        NzCardModule,
-        NzCarouselModule,
-        NzCascaderModule,
-        NzCheckboxModule,
-        NzCollapseModule,
-        NzCommentModule,
-        NzDatePickerModule,
-        NzDescriptionsModule,
-        NzDividerModule,
-        NzDrawerModule,
-        NzDropDownModule,
-        NzEmptyModule,
-        NzFormModule,
-        NzGridModule,
-        NzI18nModule,
-        NzIconModule,
-        NzImageModule,
-        NzInputModule,
-        NzInputNumberModule,
-        NzLayoutModule,
-        NzListModule,
-        NzMentionModule,
-        NzMenuModule,
-        NzMessageModule,
-        NzModalModule,
-        NzNoAnimationModule,
-        NzNotificationModule,
-        NzPageHeaderModule,
-        NzPaginationModule,
-        NzPopconfirmModule,
-        NzPopoverModule,
-        NzProgressModule,
-        NzRadioModule,
-        NzRateModule,
-        NzResultModule,
-        NzSegmentedModule,
-        NzSelectModule,
-        NzSkeletonModule,
-        NzSliderModule,
-        NzSpaceModule,
-        NzSpinModule,
-        NzStatisticModule,
-        NzStepsModule,
-        NzSwitchModule,
-        NzTableModule,
-        NzTabsModule,
-        NzTagModule,
-        NzTimePickerModule,
-        NzTimelineModule,
-        NzToolTipModule,
-        NzTransButtonModule,
-        NzTransferModule,
-        NzTreeModule,
-        NzTreeViewModule,
-        NzTreeSelectModule,
-        NzTypographyModule,
-        NzUploadModule,
-        NzWaveModule,
-        NzResizableModule,
-        NzPipesModule,
-        NzQRCodeModule,
-        NzWaterMarkModule,
-        TranslateModule.forChild(),
-        TourMatMenuModule,
-        DragDropModule,
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-    exports: [
-        PopupDeleteListRecodrdComponent
-    ]
+    // Import module ant design
+    NzAffixModule,
+    NzAlertModule,
+    NzAnchorModule,
+    NzAutocompleteModule,
+    NzAvatarModule,
+    NzBackTopModule,
+    NzBadgeModule,
+    NzButtonModule,
+    NzBreadCrumbModule,
+    NzCalendarModule,
+    NzCardModule,
+    NzCarouselModule,
+    NzCascaderModule,
+    NzCheckboxModule,
+    NzCollapseModule,
+    NzCommentModule,
+    NzDatePickerModule,
+    NzDescriptionsModule,
+    NzDividerModule,
+    NzDrawerModule,
+    NzDropDownModule,
+    NzEmptyModule,
+    NzFormModule,
+    NzGridModule,
+    NzI18nModule,
+    NzIconModule,
+    NzImageModule,
+    NzInputModule,
+    NzInputNumberModule,
+    NzLayoutModule,
+    NzListModule,
+    NzMentionModule,
+    NzMenuModule,
+    NzMessageModule,
+    NzModalModule,
+    NzNoAnimationModule,
+    NzNotificationModule,
+    NzPageHeaderModule,
+    NzPaginationModule,
+    NzPopconfirmModule,
+    NzPopoverModule,
+    NzProgressModule,
+    NzRadioModule,
+    NzRateModule,
+    NzResultModule,
+    NzSegmentedModule,
+    NzSelectModule,
+    NzSkeletonModule,
+    NzSliderModule,
+    NzSpaceModule,
+    NzSpinModule,
+    NzStatisticModule,
+    NzStepsModule,
+    NzSwitchModule,
+    NzTableModule,
+    NzTabsModule,
+    NzTagModule,
+    NzTimePickerModule,
+    NzTimelineModule,
+    NzToolTipModule,
+    NzTransButtonModule,
+    NzTransferModule,
+    NzTreeModule,
+    NzTreeViewModule,
+    NzTreeSelectModule,
+    NzTypographyModule,
+    NzUploadModule,
+    NzWaveModule,
+    NzResizableModule,
+    NzPipesModule,
+    NzQRCodeModule,
+    NzWaterMarkModule,
+    TranslateModule.forChild(),
+    TourMatMenuModule,
+    DragDropModule
+  ]
 })
-export class ManageMachineLineModule {}
+export class ManageTemplateModule { }

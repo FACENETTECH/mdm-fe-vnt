@@ -55,6 +55,8 @@ export class AppComponent {
       this.navigateToConfigTable('/manage-config/config-table/list-config');
     } else if(arr[arr.length - 1] == 'list-account') {
       this.navigateToConfigTable('/manage-account/list-account');
+    } else if(arr[arr.length - 1] == 'list-template') {
+      this.navigateToConfigTable('/manage-template/list-template');
     } else {
       if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm' || arr[arr.length - 1] == 'mdm-v2') {
         this.isVisableLayout = false;
@@ -375,7 +377,18 @@ export class AppComponent {
       if(item.name == 'manage_account') {
         this.isVisableLayout = true;
         this._router.navigate(['/manage-account/list-account'])
-      } else {
+      } else if(item.name == 'template_form') {
+        this.isVisableLayout = true;
+        localStorage.setItem('baseUrl', JSON.stringify(item));
+        this.siderList.push({
+          ...item,
+          open: false,
+          path: '/manage-template/list-template',
+          requiredRoles: ['admin_business'],
+        })
+        this._router.navigate(['/manage-template/list-template'])
+      }
+      else {
         this.isVisableLayout = true;
         this.getListFunctionByName(item.name, false);
       }

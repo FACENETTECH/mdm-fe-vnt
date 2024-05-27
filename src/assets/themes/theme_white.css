@@ -18,6 +18,13 @@
 .color-border {
   border: 1px solid #e3e3e3 !important;
 }
+.fn-bg-header-default {
+  background: #eeeeee;
+}
+.fn-bg-default {
+  background: #eeeeee;
+  color: #cccccc;
+}
 
 /* Color header của table */
 .color-header-row {

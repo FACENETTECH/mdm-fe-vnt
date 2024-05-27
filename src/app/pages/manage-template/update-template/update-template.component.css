@@ -1,0 +1,70 @@
+.add-icon {
+    font-size: 24px; /* Replace 24px with your desired font-size */
+  }
+  
+  /* Optionally, adjust the color of the icon */
+  .add-icon ::ng-deep svg {
+    fill: #012169; /* Replace #012169 with your desired color */
+  }
+  
+  /* Optionally, adjust the color of the icon on hover */
+  .add-icon:hover ::ng-deep svg {
+    fill: #ff0000; /* Replace #ff0000 with your desired hover color */
+  }
+
+  .form-group {
+    display: flex;
+  }
+
+  .fn-df {
+    display: flex;
+  }
+
+  .fn-df-justify-center {
+    justify-content: center;
+  }
+
+  .fn-df-center {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .fn-df-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .fn-pd-8 {
+    padding: 8px;
+  }
+
+  .fn-css-img-form-add {
+    width: 202px;
+    height: 170px;
+  }
+
+  .fn-text-align-center {
+    text-align: center;
+  }
+
+  .block-item-unit {
+    width: 45%;
+    margin-bottom: 16px;
+  }
+
+  .block-item-unit-left {
+    width: 60%;
+  }
+
+  .block-item-unit-right {
+    width: 35%;
+  }
+
+  ::ng-deep .ant-input {
+    font-size: 13px;
+  }
+
+  ::ng-deep .ant-select {
+    font-size: 13px;
+  }

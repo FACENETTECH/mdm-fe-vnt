@@ -44,6 +44,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'manage-template',
+    loadChildren: () =>
+      import('./pages/manage-template/manage-template.module').then(
+        (m) => m.ManageTemplateModule
+      ),
+  },
+  {
     path: 'exception',
     loadChildren: () =>
       import('./shared/exception/exception.module').then(

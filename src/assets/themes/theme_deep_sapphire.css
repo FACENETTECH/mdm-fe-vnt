@@ -19,6 +19,15 @@
   border: 1px solid rgba(44, 115, 235, 0.5) !important;
 }
 
+.fn-bg-header-default {
+  background: #B8E3F3;
+}
+
+.fn-bg-default {
+  background: #00AEEE;
+  color: #ffffff;
+}
+
 /* Color header của table */
 .color-header-row {
   background-color: #808fe4 !important;

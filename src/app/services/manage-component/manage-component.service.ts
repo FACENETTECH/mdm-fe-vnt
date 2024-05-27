@@ -278,4 +278,27 @@ export class ManageComponentService {
       }),
     });
   }
+
+  /**
+   * API upload biểu mẫu
+   * @param id bản ghi cần upload biểu mẫu
+   * @param form file biểu mẫu
+   * @returns 
+   */
+  uploadFileTemplate(id: number, form: any): Observable<any> {
+    return this.httpClient.post(`${this.url}/api/template-form/template_form/${id}`, form, {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin': '*'
+      })
+    })
+  }
+
+  /**
+   * API lấy ra file biểu mẫu
+   * @param id bản ghi cần lấy ra biểu mẫu
+   * @returns 
+   */
+  getFileTemplate(id: number): Observable<any> {
+    return this.httpClient.get(`${this.url}/api/template-form/template_form/${id}/url`)
+  }
 }

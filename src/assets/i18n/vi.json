@@ -416,5 +416,8 @@
       "visible": "Hiển thị",
       "invisible": "Không hiển thị"
     }
+  },
+  "template": {
+    "title": "DANH SÁCH BIỂU MẪU"
   }
 }
