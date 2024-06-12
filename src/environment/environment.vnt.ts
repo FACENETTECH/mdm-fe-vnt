@@ -12,7 +12,7 @@ export const environment = {
   auth_api: '/api/auth/',
   keycloak: {
     // issuer: 'https://ssoproduction.xfactory.vn/auth/',
-    issuer: 'https://sso.xfactory.vn/auth/',
+    issuer: 'https://ssovnt.xfactory.vn/auth/',
     // Realm
     realm: 'fcim_cloud',
     clientId: 'fcim_cloud',
