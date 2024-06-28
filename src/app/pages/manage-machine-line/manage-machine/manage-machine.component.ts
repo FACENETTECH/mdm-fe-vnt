@@ -427,10 +427,7 @@ export class ManageMachineComponent implements OnInit {
   getHeaders() {
     this.manageComponentService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
-        this.columns = res.data;
-        for(let i = 0; i < this.columns.length; i++) {
-          this.columns[i].localCheck = true;
-        }
+        this.columns = res.data; 
         for(let i = 0; i < this.columns.length; i++) {
           if(this.columns[i].isCode) {
             this.columnKey = this.columns[i].keyName;
