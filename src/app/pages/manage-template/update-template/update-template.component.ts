@@ -347,40 +347,49 @@ export class UpdateTemplateComponent {
           }
         }
       }
-      this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
+      this.manageService.uploadTemplate(this.formTemplate).subscribe({
         next: (res) => {
-          let isImage = false;
-          for(let i = 0; i < this.columns.length; i++) {
-            if(this.columns[i].dataType == this.dataType.IMAGE) {
-              isImage = true;
-              break;
-            }
-          }
-          if(isImage && this.checkActionImage) {
-            this.manageService.uploadImageInComponents(this.tableCode, this.inforMachine['id'], this.formUpload).subscribe({
-              next: (data) => {
+          console.log(res.result.message);
+          this.inforMachine['file_id'] = res.data;
+          this.manageService.updateInforRecordById(this.tableCode, this.inforMachine['id'], this.inforMachine).subscribe({
+            next: (res) => {
+              let isImage = false;
+              for(let i = 0; i < this.columns.length; i++) {
+                if(this.columns[i].dataType == this.dataType.IMAGE) {
+                  isImage = true;
+                  break;
+                }
+              }
+              if(isImage && this.checkActionImage) {
+                this.manageService.uploadImageInComponents(this.tableCode, this.inforMachine['id'], this.formUpload).subscribe({
+                  next: (data) => {
+                    this.toast.success(res.result.message);
+                    this.isvisible = false;
+                    this.isvisibleChange.emit(false);
+                    this.isvisibleUpdate.emit(true);
+                    this.loader.stop();
+                  }, error: (err) => {
+                    this.toast.error(err.error.result.message);
+                    this.loader.stop();
+                  }
+                })
+              } else {
                 this.toast.success(res.result.message);
                 this.isvisible = false;
                 this.isvisibleChange.emit(false);
                 this.isvisibleUpdate.emit(true);
                 this.loader.stop();
-              }, error: (err) => {
-                this.toast.error(err.error.result.message);
-                this.loader.stop();
               }
-            })
-          } else {
-            this.toast.success(res.result.message);
-            this.isvisible = false;
-            this.isvisibleChange.emit(false);
-            this.isvisibleUpdate.emit(true);
-            this.loader.stop();
-          }
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-          this.loader.stop();
+            }, error: (err) => {
+              this.toast.error(err.error.result.message);
+              this.loader.stop();
+            }
+          })
+        },error: (err) => {
+          console.log(err.result.message);
         }
       })
+      
     } else {
       this.toast.warning("Vui lòng nhập đầy đủ thông tin yêu cầu bắt buộc!");
       this.loader.stop();
@@ -523,6 +532,7 @@ export class UpdateTemplateComponent {
     if(item.type == 'progress') {
       this.fileNameTemplate = item.file.name;
       this.formTemplate.append('file', item.file.originFileObj);
+      this.inforMachine['template_form_name'] = this.fileNameTemplate.replace('.docx', '');
     }
   };
 
