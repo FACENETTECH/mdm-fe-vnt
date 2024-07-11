@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class ManageComponentService {
   url: string = environment.api_end_point;
+  template_url: string = environment.template_api_end_point;
   accpetLanguage: string = 'vi_VN';
   constructor(private baseService: BaseService, private httpClient: HttpClient,) {
     let language = localStorage.getItem('language');
@@ -300,5 +301,27 @@ export class ManageComponentService {
    */
   getFileTemplate(id: number): Observable<any> {
     return this.httpClient.get(`${this.url}/api/template-form/template_form/${id}/url`)
+  }
+
+  /**
+   * API upload biểu mẫu
+   * @param form file biểu mẫu
+   * @returns 
+   */
+  uploadTemplate(form: any): Observable<any> {
+    return this.httpClient.post(this.template_url, form,{
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin': '*'
+      })
+    })
+  }
+
+  /**
+   * Hàm lấy ra url template
+   * @param file_id 
+   * @returns 
+   */
+  getTemplateUrl(file_id: string): string {
+    return this.template_url + file_id;
   }
 }

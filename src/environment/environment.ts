@@ -8,6 +8,7 @@ export const environment = {
     'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
   api_end_point: 'http://dev.apifcim.facenet.vn/mdm-v2',
   domain_name_mdm: 'http://dev.fcim.facenet.vn/mdm-v2',
+  template_api_end_point: 'http://api.vietnhattan.xfactory.vn/template/template/',
   // api_end_point: 'http://localhost:10320',
   auth_api: '/api/auth/',
   keycloak: {

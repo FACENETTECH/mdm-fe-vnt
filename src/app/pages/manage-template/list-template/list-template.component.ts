@@ -79,9 +79,6 @@ export class ListTemplateComponent {
       next: (res) => {
         this.columns = res.data;
         for(let i = 0; i < this.columns.length; i++) {
-          this.columns[i].localCheck = true;
-        }
-        for(let i = 0; i < this.columns.length; i++) {
           if(this.columns[i].isCode) {
             this.columnKey = this.columns[i].keyName;
             break;

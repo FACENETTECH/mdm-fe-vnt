@@ -37,15 +37,18 @@ export class PreviewTemplateComponent {
    */
   getInforTemplate() {
     if(this.inforTemplate != null && this.inforTemplate != undefined) {
-      this.manageService.getFileTemplate(this.inforTemplate.id).subscribe({
-        next: (res) => {
-          console.log(res);
-          this.urlDownload = res.data;
-          this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://view.officeapps.live.com/op/embed.aspx?src=' + res.data)
-        }, error: (err) => {
-          this.toastr.error(err.error.result.message);
-        }
-      })
+      this.urlDownload = this.manageService.getTemplateUrl(this.inforTemplate.file_id);
+      this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://view.officeapps.live.com/op/embed.aspx?src=' + this.urlDownload);
+      // this.manageService.getFileTemplate(this.inforTemplate.id).subscribe({
+      //   next: (res) => {
+      //     console.log(res);
+      //     this.urlDownload = res.data;
+      //     console.log(this.urlDownload);
+      //     this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://view.officeapps.live.com/op/embed.aspx?src=' + res.data)
+      //   }, error: (err) => {
+      //     this.toastr.error(err.error.result.message);
+      //   }
+      // })
     }
   }
 
