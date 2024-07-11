@@ -51,6 +51,25 @@ export class PreviewTemplateComponent {
       // })
     }
   }
+  
+  async downloadBlobFile() {
+    console.log(this.inforTemplate);
+    
+    const response = await fetch(this.manageService.getTemplateUrl(this.inforTemplate.file_id));
+    const blobData = await response.blob();
+
+    const blobUrl = URL.createObjectURL(blobData);
+
+    const downloadLink = document.createElement('a');
+    downloadLink.href = blobUrl;
+    downloadLink.download = this.inforTemplate.template_form_name + ".docx";
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(blobUrl);
+  }
 
   /**
    * Hàm chuyển đổi base64 thành blod
