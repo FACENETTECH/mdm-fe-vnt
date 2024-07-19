@@ -684,36 +684,34 @@ export class ManageMachineComponent implements OnInit {
         break;
       }
     }
-    if(code !== '') {
-      this.setOfCheckedId.forEach((item) => {
-        for(let i = 0; i < this.listMachine.length; i++) {
-          if(item == this.listMachine[i].id) {
-            request.push(this.listMachine[i]);
-            break;
-          }
+    this.setOfCheckedId.forEach((item) => {
+      for(let i = 0; i < this.listMachine.length; i++) {
+        if(item == this.listMachine[i].id) {
+          request.push(this.listMachine[i]);
+          break;
         }
-      })
-      if(request.length > 0) {
+      }
+    })
+    if(request.length > 0) {
+      if(code !== '') {
         for(let i = 0; i < request.length; i++) {
           request[i][code] = request[i][code] + "-" + this.makeid(4);
         }
-        this.manageComponentService.addListRecord(this.tableCode, request).subscribe({
-          next: (res) => {
-            this.toast.success(res.result.message);
-            this.setOfCheckedId = new Set<number>();
-            this.refreshCheckedStatus();
-            this.getData({ page: this.pageNumber, size: this.pageSize });
-            this.loader.stop();
-          }, error: (err) => {
-            this.toast.error(err.error.result.message);
-            this.setOfCheckedId = new Set<number>();
-            this.refreshCheckedStatus();
-            this.loader.stop();
-          }
-        })
-      } else {
-        this.loader.stop();
       }
+      this.manageComponentService.addListRecord(this.tableCode, request).subscribe({
+        next: (res) => {
+          this.toast.success(res.result.message);
+          this.setOfCheckedId = new Set<number>();
+          this.refreshCheckedStatus();
+          this.getData({ page: this.pageNumber, size: this.pageSize });
+          this.loader.stop();
+        }, error: (err) => {
+          this.toast.error(err.error.result.message);
+          this.setOfCheckedId = new Set<number>();
+          this.refreshCheckedStatus();
+          this.loader.stop();
+        }
+      })
     } else {
       this.loader.stop();
     }
