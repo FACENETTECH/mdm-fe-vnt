@@ -5,10 +5,10 @@
 export const environment = {
   production: false,
   url_home_page:
-    'http://aq.avison.vn/home-page/#/auth/business-acc-setting/home-page',
-  api_end_point: 'http://api.aq.avison.vn/mdm-v2',
-  domain_name_mdm: 'http://aq.avison.vn/mdm-v2',
-  // api_end_point: 'http://localhost:10320',
+    'https://aq.avison.vn/home-page/#/auth/business-acc-setting/home-page',
+  api_end_point: 'https://api.aq.avison.vn/mdm-v2',
+  domain_name_mdm: 'https://aq.avison.vn/mdm-v2',
+  // api_end_point: 'https://localhost:10320',
   auth_api: '/api/auth/',
   keycloak: {
     // issuer: 'https://ssoproduction.xfactory.vn/auth/',
@@ -18,19 +18,19 @@ export const environment = {
     clientId: 'fcim_cloud',
   },
   BASE_API_URI: {
-    BASE_SERVICE_API: 'http://localhost:8088/',
-    CLIENT_ADDRESS: 'http://localhost:8082',
+    BASE_SERVICE_API: 'https://localhost:8088/',
+    CLIENT_ADDRESS: 'https://localhost:8082',
   },
-  // API_URL: 'http://dev.apifcim.facenet.vn/all',
-  API_URL: 'http://api.aq.avison.vn/all',
+  // API_URL: 'https://dev.apifcim.facenet.vn/all',
+  API_URL: 'https://api.aq.avison.vn/all',
 };
 
 // export const environment = {
 //   production: false,
-//   api_end_point: 'http://222.252.25.37:8312',
+//   api_end_point: 'https://222.252.25.37:8312',
 //   auth_api: '/api/auth/',
 //   keycloak: {
-//     issuer: 'http://sso.xfactory.vn/auth/',
+//     issuer: 'https://sso.xfactory.vn/auth/',
 //     // Realm
 //     realm: 'Facenet',
 //     clientId: 'mrp_backend',
@@ -43,8 +43,8 @@ export const environment = {
 //   // },
 
 //   BASE_API_URI: {
-//     BASE_SERVICE_API: 'http://localhost:8088/',
-//     CLIENT_ADDRESS: 'http://localhost:8082',
+//     BASE_SERVICE_API: 'https://localhost:8088/',
+//     CLIENT_ADDRESS: 'https://localhost:8082',
 //   },
 // };
 /*
