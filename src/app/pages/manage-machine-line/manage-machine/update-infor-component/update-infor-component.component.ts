@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener, ViewChild, ElementRef } from '@angular/core';
 import {
   FormBuilder,
   UntypedFormBuilder,
@@ -621,10 +621,38 @@ export class UpdateInforComponentComponent {
    */
   strQr: string = '';
   getRowDataAsString(inforData: any) {
+    let objQr: any = {};
     for(let i = 0; i < this.columns.length; i++) {
-      if(this.columns[i].isCode) {
-        this.strQr = inforData[this.columns[i].keyName];
+      if(this.columns[i].isQRCode) {
+        // this.strQr = inforData[this.columns[i].keyName];
+        objQr[this.columns[i].keyName] = inforData[this.columns[i].keyName]
       }
+    }
+    if(JSON.stringify(objQr) === '{}') {
+      for(let i = 0; i < this.columns.length; i++) {
+        if(this.columns[i].isCode) {
+          this.strQr = inforData[this.columns[i].keyName];
+        }
+      }
+    } else {
+      this.strQr = JSON.stringify(objQr);
+    }
+  }
+
+  @ViewChild('download', { static: false }) download!: ElementRef;
+  downloadImg(): void {
+    let nameQrDownload = '';
+    this.columns.forEach((column) => {
+      if(column.isCode) {
+        nameQrDownload = this.inforComponent[column.keyName];
+      }
+    })
+    const canvas = document.getElementById('QR')?.querySelector<HTMLCanvasElement>('canvas');
+    if (canvas) {
+      this.download.nativeElement.href = canvas.toDataURL('image/png');
+      this.download.nativeElement.download = nameQrDownload != '' ? nameQrDownload : 'qrcode';
+      const event = new MouseEvent('click');
+      this.download.nativeElement.dispatchEvent(event);
     }
   }
 
