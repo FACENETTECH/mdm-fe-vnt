@@ -12,7 +12,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { ConfigService } from 'src/app/services/manage-config/config.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
-import { DATA_TYPE } from 'src/app/utils/constrant';
+import { DATA_TYPE, QR_TYPE } from 'src/app/utils/constrant';
 import { saveAs } from 'file-saver';
 import * as FileSaver from 'file-saver';
 @Component({
@@ -639,6 +639,17 @@ export class InfoMachinePopupComponent {
         }
       }
     } else {
+      switch(this.tableCode) {
+        case 'employee': 
+        objQr['qr_type'] = this.qrType.employee_qr;
+        break;
+        case 'machine': 
+        objQr['qr_type'] = this.qrType.machine_qr;
+        break;
+        case 'mold_detail': 
+        objQr['qr_type'] = this.qrType.shape_qr;
+        break;
+      }
       this.strQr = JSON.stringify(objQr);
     }
   }
@@ -735,4 +746,5 @@ export class InfoMachinePopupComponent {
   total: number = 0;
   @Input() machinee: any = '';
   protected readonly dataType = DATA_TYPE;
+  protected readonly qrType = QR_TYPE;
 }
