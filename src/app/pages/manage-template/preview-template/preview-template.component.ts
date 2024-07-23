@@ -62,7 +62,7 @@ export class PreviewTemplateComponent {
 
     const downloadLink = document.createElement('a');
     downloadLink.href = blobUrl;
-    downloadLink.download = this.inforTemplate.template_form_name + ".docx";
+    downloadLink.download = this.inforTemplate.template_form_name + this.inforTemplate.file_type;
 
     document.body.appendChild(downloadLink);
     downloadLink.click();
