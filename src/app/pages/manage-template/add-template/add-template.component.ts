@@ -568,7 +568,8 @@ export class AddTemplateComponent {
     if(item.type == 'progress') {
       this.fileNameTemplate = item.file.name;
       this.formTemplate.append('file', item.file.originFileObj);
-      this.inforMachine['template_form_name'] = this.fileNameTemplate.replace('.docx', '')
+      this.inforMachine['template_form_name'] = this.fileNameTemplate.substring(0, this.fileNameTemplate.lastIndexOf('.'));
+      this.inforMachine['file_type'] = this.fileNameTemplate.substring(this.fileNameTemplate.lastIndexOf('.'));
     }
   };
 
