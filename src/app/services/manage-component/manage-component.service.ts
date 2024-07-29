@@ -324,4 +324,20 @@ export class ManageComponentService {
   getTemplateUrl(file_id: string): string {
     return this.template_url + file_id;
   }
+
+  /**
+   * API tạo phiếu sản xuất
+   * @param fileId
+   * @param request
+   * @returns
+   */
+  generateTemplateByFileId(fileId: string, request: any) {
+    return this.httpClient.post(
+      `${this.template_url}/render/${fileId}`,
+      request,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
 }
