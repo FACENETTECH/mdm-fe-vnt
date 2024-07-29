@@ -343,7 +343,7 @@ export class ManageComponentService {
    */
   generateTemplateByFileId(fileId: string, request: any) {
     return this.httpClient.post(
-      `${this.template_url}/render/${fileId}`,
+      `${this.template_url}render/${fileId}`,
       request,
       {
         responseType: 'blob',
