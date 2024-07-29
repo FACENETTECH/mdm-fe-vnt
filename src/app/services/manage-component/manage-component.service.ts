@@ -309,7 +309,7 @@ export class ManageComponentService {
    * @returns 
    */
   uploadTemplate(form: any): Observable<any> {
-    return this.httpClient.post(this.template_url, form,{
+    return this.httpClient.post(`${this.template_url}template/`, form,{
       headers: new HttpHeaders({
         'Access-Control-Allow-Origin': '*'
       })
@@ -322,7 +322,7 @@ export class ManageComponentService {
    * @returns 
    */
   getTemplateUrl(file_id: string): string {
-    return this.template_url + file_id;
+    return `${this.template_url}template/${file_id}`;
   }
 
   /**
