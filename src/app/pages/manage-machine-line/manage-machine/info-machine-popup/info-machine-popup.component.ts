@@ -673,6 +673,13 @@ export class InfoMachinePopupComponent {
               request[property] = '';
             }
           }
+          this.columns.forEach((col) => {
+            if(col.dataType == this.dataType.RELATION) {
+              if(request[col.keyName]) {
+                request[col.keyName] = request[col.keyName][col.relateColumn];
+              }
+            }
+          })
           this.loader.start();
           this.manageService
             .generateTemplateByFileId(res.data.file_id, request)
