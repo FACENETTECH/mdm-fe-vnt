@@ -15,6 +15,7 @@ import { InfoMachineService } from 'src/app/services/manage-machine-line/info-ma
 import { DATA_TYPE, QR_TYPE } from 'src/app/utils/constrant';
 import { saveAs } from 'file-saver';
 import * as FileSaver from 'file-saver';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-info-machine-popup',
   templateUrl: './info-machine-popup.component.html',
@@ -28,7 +29,8 @@ export class InfoMachinePopupComponent {
     private i18n: NzI18nService,
     private manageService: ManageComponentService,
     private loader: NgxUiLoaderService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private sanitizer: DomSanitizer
   ) {}
   @Input() isvisible: boolean = true;
   @Input() inforComponent: any = '';
@@ -621,7 +623,7 @@ export class InfoMachinePopupComponent {
   }
 
   /**
-   * Hàm xử lý để sinh mã QR cho từng bản ghi
+   * Hàm xuất file PDF theo mã 
    */
   strQr: string = '';
   getRowDataAsString(inforData: any) {
@@ -654,21 +656,55 @@ export class InfoMachinePopupComponent {
     }
   }
 
-  @ViewChild('download', { static: false }) download!: ElementRef;
+  isvisiblePrint: boolean = false;
+  filePdfPrint?: Blob;
+  pdfPrintSrc?: any;
   downloadImg(): void {
-    let nameQrDownload = '';
-    this.columns.forEach((column) => {
-      if(column.isCode) {
-        nameQrDownload = this.inforComponent[column.keyName];
-      }
-    })
-    const canvas = document.getElementById('QR')?.querySelector<HTMLCanvasElement>('canvas');
-    if (canvas) {
-      this.download.nativeElement.href = canvas.toDataURL('image/png');
-      this.download.nativeElement.download = nameQrDownload != '' ? nameQrDownload : 'qrcode';
-      const event = new MouseEvent('click');
-      this.download.nativeElement.dispatchEvent(event);
-    }
+    this.manageService
+      .getInforRecordByCode('template_form', this.tableCode)
+      .subscribe({
+        next: (res) => {
+          let request: any = {
+            ...this.inforMachine,
+            infor: this.strQr,
+          };
+          for (let property in request) {
+            if (request[property] == null) {
+              request[property] = '';
+            }
+          }
+          this.loader.start();
+          this.manageService
+            .generateTemplateByFileId(res.data.file_id, request)
+            .subscribe({
+              next: (data: any) => {
+                this.loader.stop();
+                this.filePdfPrint = data;
+                const blobUrl = window.URL.createObjectURL(data);
+                this.pdfPrintSrc =
+                  this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+                this.isvisiblePrint = true;
+              },
+              error: async (error) => {
+                this.loader.stop();
+                if (error.error instanceof Blob) {
+                  const errorText = await error.error.text();
+                  try {
+                    const errorJson = JSON.parse(errorText);
+                    // Bây giờ bạn có thể xử lý JSON chứa thông tin lỗi
+                    this.toast.error(errorJson.result.message);
+                  } catch (e) {
+                    // Nếu không phải JSON, xử lý như văn bản thông thường
+                    console.error('Error Text:', errorText);
+                  }
+                }
+              },
+            });
+        },
+        error: (err) => {
+          this.toast.error(err.result.message);
+        },
+      });
   }
 
   /**

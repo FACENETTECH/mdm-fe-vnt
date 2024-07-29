@@ -436,7 +436,7 @@
       </div>
       <div style="width: 30%;">
         <div style="display: flex; flex-direction: column;">
-          <div id="QR" style="text-align: center" (click)="downloadImg()">
+          <div id="QR" style="text-align: center">
               <nz-qrcode [nzValue]="strQr"></nz-qrcode>
               <a #download></a>
           </div>
@@ -477,6 +477,7 @@
     <button
       nz-button
       class="fn-bg-default"
+      (click)="downloadImg()"
       style="border-radius: 4px;width: 86px; text-align: center; margin-left: 30px;"
     >
       <span>{{ 'In QR' | translate }}</span>
@@ -496,3 +497,11 @@
     (add)="submit()"
   ></app-popup-add>
 </nz-modal>
+
+<app-popup-preview-pdf
+  *ngIf="isvisiblePrint"
+  [(isvisible)]="isvisiblePrint"
+  [pdfBlPrntSrc]="pdfPrintSrc"
+  [titlePopup]="'Thông tin PDF'"
+>
+</app-popup-preview-pdf>

@@ -326,6 +326,16 @@ export class ManageComponentService {
   }
 
   /**
+   * API lấy ra thông tin bản ghi bên MDM
+   * @param request
+   */
+  getInforRecordByCode(tableCode: string, code: string): Observable<any> {
+    return this.httpClient.get(
+      `${this.url}/api/dynamic-tables/${tableCode}/code/${code}`
+    );
+  }
+
+  /**
    * API tạo phiếu sản xuất
    * @param fileId
    * @param request

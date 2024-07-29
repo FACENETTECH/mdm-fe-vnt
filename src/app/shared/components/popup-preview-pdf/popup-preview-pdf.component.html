@@ -1,0 +1,118 @@
+<nz-modal
+  [(nzVisible)]="isvisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="680"
+>
+  <ng-template #modalTitle>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        background-color: #ccebfb;
+        padding: 5px 0px 10px 16px;
+      "
+    >
+      <svg
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M21.6 0.5H2.4C1.08 0.5 0 1.58 0 2.9V24.5L4.8 19.7H21.6C22.92 19.7 24 18.62 24 17.3V2.9C24 1.58 22.92 0.5 21.6 0.5ZM12 11.3C11.34 11.3 10.8 10.76 10.8 10.1V5.3C10.8 4.64 11.34 4.1 12 4.1C12.66 4.1 13.2 4.64 13.2 5.3V10.1C13.2 10.76 12.66 11.3 12 11.3ZM13.2 16.1H10.8V13.7H13.2V16.1Z"
+          fill="#00AEEE"
+        />
+      </svg>
+
+      <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+        {{ titlePopup | translate }}
+      </p>
+    </div>
+  </ng-template>
+  <ng-template #modalContent>
+    <div
+      *ngIf="editPDF"
+      style="width: 100%; height: 32px; text-align: right; color: #00aeee"
+    >
+      <label for="editPdfInput" style="cursor: pointer">
+        <span
+          nz-icon
+          nzType="edit"
+          class="fn-icon-style"
+          nzTheme="outline"
+        ></span>
+        Thay đổi bản vẽ
+      </label>
+      <input
+        id="editPdfInput"
+        type="file"
+        (change)="handleChange($event)"
+        hidden
+      />
+    </div>
+    <div
+      *ngIf="isShowCheckboxPrint"
+      style="width: 100%; height: 32px; text-align: right; color: #00aeee"
+    >
+      <label
+        nz-checkbox
+        [ngModel]="true"
+        style="cursor: pointer; color: #00aeee"
+        (ngModelChange)="handleChangeValueCheckbox($event)"
+        >Đính kèm bản vẽ</label
+      >
+    </div>
+    <div
+      *ngIf="isShowDropdown"
+      style="width: 100%; height: 32px; color: #00aeee; margin-bottom: 8px"
+    >
+      <ng-container *ngIf="typeDropdown == 1">
+        <nz-select
+          style="width: 108px"
+          [(ngModel)]="customer_code"
+          (ngModelChange)="handleChangeValueDropdown($event)"
+        >
+          <nz-option [nzValue]="''" nzLabel="Chung"></nz-option>
+          <nz-option [nzValue]="'GES'" nzLabel="GES"></nz-option>
+          <nz-option [nzValue]="'MBC'" nzLabel="MBC"></nz-option>
+          <nz-option [nzValue]="'YVL'" nzLabel="YVL"></nz-option>
+          <nz-option [nzValue]="'JVC'" nzLabel="JVC"></nz-option>
+          <nz-option [nzValue]="'INVOICE'" nzLabel="INVOICE"></nz-option>
+        </nz-select>
+      </ng-container>
+      <ng-container *ngIf="typeDropdown == 2">
+        <nz-select
+          style="width: 108px"
+          [(ngModel)]="customer_code"
+          (ngModelChange)="handleChangeValueDropdown($event)"
+        >
+          <nz-option [nzValue]="''" nzLabel="Chung"></nz-option>
+          <nz-option [nzValue]="'GES'" nzLabel="GES"></nz-option>
+          <nz-option [nzValue]="'MBC'" nzLabel="MBC"></nz-option>
+        </nz-select>
+      </ng-container>
+    </div>
+    <div style="width: 100%; height: 550px">
+      <iframe [src]="pdfBlPrntSrc" width="100%" height="100%"></iframe>
+    </div>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      class="fn-bg-default"
+      style="
+        border-radius: 4px;
+        width: 86px;
+        text-align: center;
+        margin-right: 6px;
+      "
+      (click)="submit()"
+    >
+      <span>{{ "OK" | translate }}</span>
+    </button>
+  </ng-template>
+</nz-modal>
