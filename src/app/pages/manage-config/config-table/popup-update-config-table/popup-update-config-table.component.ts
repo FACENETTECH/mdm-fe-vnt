@@ -293,10 +293,8 @@ export class PopupUpdateConfigTableComponent {
   }
 
   async submit() {
-    console.log("Infor table: ", this.inforMachine);
-    console.log("Infor column: ", this.listColumnInFunction);
     this.loader.start();
-    console.log(this.inforMachine)
+    this.inforMachine['icon_upload'] = undefined;
     this.checkValid();
     let check = true;
     this.columns.map((x: any) => {
@@ -313,7 +311,6 @@ export class PopupUpdateConfigTableComponent {
       }
       this.configService.updateInforTable(this.tableName, request).subscribe({
         next: (res: any) => {
-          console.log(res);
           this.toast.success(res.result.message);
           this.isvisible = false;
           this.isvisibleChange.emit(false);
@@ -504,6 +501,21 @@ export class PopupUpdateConfigTableComponent {
     this.listColumnInFunction.splice(index, 1);
   }
 
+  handleChangeValueImage(event: any) {
+    let form = new FormData();
+    form.append('file', event.target.files[0]);
+    this.loader.start();
+    this.manageService.uploadIcon(form).subscribe({
+      next: (res) => {
+        this.loader.stop();
+        this.inforMachine['icon'] = res.data;
+      }, error: (err) => {
+        this.loader.stop();
+        this.inforMachine['icon'] = err.error.text;
+      }
+    })
+  }
+
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
    * @param event 
@@ -587,22 +599,6 @@ const dummyColumns = [
     "isCode": false
   },
   {
-    "id": 5,
-    "index": 1,
-    "tableName": "operation",
-    "keyName": "link",
-    "keyTitle": "Url",
-    "isRequired": true,
-    "dataType": 2,
-    "hasUnit": false,
-    "relateTable": null,
-    "relateColumn": null,
-    "note": null,
-    "addition": null,
-    "width": "200px",
-    "isCode": false
-  },
-  {
     "id": 6,
     "index": 1,
     "tableName": "operation",
@@ -633,7 +629,39 @@ const dummyColumns = [
     "addition": null,
     "width": "200px",
     "isCode": false
-  }
+  },
+  {
+    "id": 5,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "icon",
+    "keyTitle": "Link Icon",
+    "isRequired": false,
+    "dataType": 2,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  },
+  {
+    "id": 5,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "icon_upload",
+    "keyTitle": "Icon upload",
+    "isRequired": false,
+    "dataType": 6,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  },
 ]
 
 const columnsTable = [

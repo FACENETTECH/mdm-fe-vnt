@@ -4,17 +4,22 @@
 
 export const environment = {
   production: false,
-  url_home_page:
-    'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
-  api_end_point: 'http://dev.apifcim.facenet.vn/mdm-v2',
-  domain_name_mdm: 'http://dev.fcim.facenet.vn/mdm-v2',
-  template_api_end_point: 'http://api.vietnhattan.xfactory.vn/template/template/',
-  // api_end_point: 'http://localhost:10320',
+  // url_home_page:
+  //   'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
+  // api_end_point: 'http://dev.apifcim.facenet.vn/mdm-v2',
+  // domain_name_mdm: 'http://dev.fcim.facenet.vn/mdm-v2',
+  // template_api_end_point: 'http://api.vietnhattan.xfactory.vn/template/template/',
+  // api_end_point_s3: 'https://api.aq.avison.vn/s3/',
+
+  url_home_page: 'https://aq.avison.vn/home-page/#/auth/business-acc-setting/home-page',
+  api_end_point: 'https://api.aq.avison.vn/mdm-v2',
+  domain_name_mdm: 'https://aq.avison.vn/mdm-v2',
+  template_api_end_point: 'https://api.aq.avison.vn/template/',
+  api_end_point_s3: 'https://api.aq.avison.vn/s3/',
+
   auth_api: '/api/auth/',
   keycloak: {
-    // issuer: 'https://ssoproduction.xfactory.vn/auth/',
-    issuer: 'https://sso.xfactory.vn/auth/',
-    // Realm
+    issuer: 'https://sso.avison.vn/auth/',
     realm: 'fcim_cloud',
     clientId: 'fcim_cloud',
   },
@@ -22,8 +27,8 @@ export const environment = {
     BASE_SERVICE_API: 'http://localhost:8088/',
     CLIENT_ADDRESS: 'http://localhost:8082',
   },
-  // API_URL: 'http://dev.apifcim.facenet.vn/all',
-  API_URL: 'http://222.252.25.37:10302',
+  // API_URL: 'http://222.252.25.37:10302',
+  API_URL: 'https://api.aq.avison.vn/all',
 };
 
 // export const environment = {

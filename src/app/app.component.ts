@@ -443,7 +443,7 @@ export class AppComponent {
           "index": 31,
           "isEntity": true,
           "note": null,
-          "icon": "./assets/icons/Appstore.svg",
+          "icon": "https://sin1.contabostorage.com/cf2afab5ee3b4f658b343e49ae70391c:fcimcloud/devnew/mdm/category/icons/fcim_cloud_(13).png",
           "color": null,
           "link": "http://dev.fcim.facenet.vn/mdm-v2",
           "parent": null,
@@ -454,6 +454,14 @@ export class AppComponent {
         this.toast.error(err.error.message);
       }
     })
+  }
+
+  async convertUrlS3 (url: string) {
+    const response = await fetch(url);
+    const blobData = await response.blob();
+
+    const blobUrl = URL.createObjectURL(blobData);
+    return blobUrl;
   }
 
   /**

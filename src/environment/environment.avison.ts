@@ -9,6 +9,7 @@ export const environment = {
   api_end_point: 'https://api.aq.avison.vn/mdm-v2',
   domain_name_mdm: 'https://aq.avison.vn/mdm-v2',
   template_api_end_point: 'https://api.aq.avison.vn/template/',
+  api_end_point_s3: 'https://api.aq.avison.vn/s3/',
   // api_end_point: 'https://localhost:10320',
   auth_api: '/api/auth/',
   keycloak: {

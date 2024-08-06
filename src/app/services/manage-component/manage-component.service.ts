@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class ManageComponentService {
   url: string = environment.api_end_point;
+  urlS3: string = environment.api_end_point_s3;
   template_url: string = environment.template_api_end_point;
   accpetLanguage: string = 'vi_VN';
   constructor(private baseService: BaseService, private httpClient: HttpClient,) {
@@ -349,5 +350,18 @@ export class ManageComponentService {
         responseType: 'blob',
       }
     );
+  }
+
+  /**
+   * API upload icon
+   * @param form file icon
+   * @returns 
+   */
+  uploadIcon(form: any): Observable<any> {
+    return this.httpClient.post(`${this.urlS3}api/storage/uploadFile/mdm/category/icons/url`, form, {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin': '*'
+      })
+    })
   }
 }

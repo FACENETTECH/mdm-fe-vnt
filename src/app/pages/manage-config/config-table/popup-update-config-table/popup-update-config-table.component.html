@@ -384,6 +384,21 @@
                 }}</span>
               </div>
             </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.IMAGE">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <br />
+                <input type="file" accept="image/png, image/jpeg, .svg" id="file-input" (change)="handleChangeValueImage($event)">
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
           </ng-container>
         </ng-container>
       </div>
