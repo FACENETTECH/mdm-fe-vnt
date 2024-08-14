@@ -90,11 +90,10 @@
               </ng-container>
               <ng-container *ngIf="col.dataType == dataType.PARAM">
                 <td>
-                  <nz-select style="width: 100%;" nzMode="tags" [(ngModel)]="data[col.keyName]" nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                  <nz-select style="width: 100%;" nzMode="multiple" [(ngModel)]="data['assignedValue']" nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
                         col.keyTitle | translate
                       }} ----">
-                    <nz-option *ngFor="let option of data[col.keyName]" [nzLabel]="option"
-                      [nzValue]="option"></nz-option>
+                    <nz-option *ngFor="let option of data['value']" [nzLabel]="option" [nzValue]="option"></nz-option>
                   </nz-select>
                 </td>
               </ng-container>

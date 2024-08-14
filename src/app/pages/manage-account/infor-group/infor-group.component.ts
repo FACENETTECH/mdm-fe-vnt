@@ -126,6 +126,7 @@ export class InforGroupComponent {
       this.requestGroups['description'] = this.groupName;
       this.requestGroups['name'] = this.groupCode;
       this.requestGroups['roles'] = this.authorities.map((o) => o.roleCode);
+      this.requestGroups['listDataAuthority'] = this.listDataAuthorities;
 
       let res = await this.userService.updateGroup(this.requestGroups);
       if (res.result.ok) {
@@ -134,13 +135,6 @@ export class InforGroupComponent {
       } else {
         this.toast.error(res.result.message);
       }
-
-      this.userService
-        .updateListDataAuthorities(this.groupCode, this.listDataAuthorities)
-        .then(() => {})
-        .catch((err) => {
-          this.toast.error(err.error.result.message);
-        });
     }
   }
 
