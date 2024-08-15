@@ -51,6 +51,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'manage-bom',
+    loadChildren: () =>
+      import('./pages/manage-bom/manage-bom.module').then(
+        (m) => m.ManageBomModule
+      ),
+  },
+  {
     path: 'exception',
     loadChildren: () =>
       import('./shared/exception/exception.module').then(

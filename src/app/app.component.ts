@@ -57,6 +57,8 @@ export class AppComponent {
       this.navigateToConfigTable('/manage-account/list-account');
     } else if(arr[arr.length - 1] == 'list-template') {
       this.navigateToConfigTable('/manage-template/list-template');
+    } else if(arr[arr.length - 1] == 'list-bom') {
+      this.navigateToConfigTable('/manage-bom/list-bom');
     } else {
       if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm' || arr[arr.length - 1] == 'mdm-v2') {
         this.isVisableLayout = false;
