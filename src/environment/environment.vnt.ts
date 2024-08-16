@@ -9,6 +9,7 @@ export const environment = {
   api_end_point: 'http://api.vietnhattan.xfactory.vn/mdm-v2',
   domain_name_mdm: 'http://vietnhattan.xfactory.vn/mdm-v2',
   template_api_end_point: 'http://api.vietnhattan.xfactory.vn/template/template/',
+  api_end_point_s3: 'http://api.vietnhattan.xfactory.vn/s3/',
   // api_end_point: 'http://localhost:10320',
   auth_api: '/api/auth/',
   keycloak: {

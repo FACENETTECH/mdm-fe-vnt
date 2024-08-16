@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
   constructor(private baseService: BaseService) {}
 
   async getListUser(request: any) {
@@ -28,7 +27,9 @@ export class UserService {
   }
 
   async deleteGroup(groupCode: string) {
-    return await this.baseService.deleteData(`api/registration/group-roles/${groupCode}`);
+    return await this.baseService.deleteData(
+      `api/registration/group-roles/${groupCode}`
+    );
   }
 
   async getRole() {
@@ -40,11 +41,16 @@ export class UserService {
   }
 
   async getGroup(groupCode: string) {
-    return await this.baseService.getData(`api/registration/group-roles/${groupCode}`);
+    return await this.baseService.getData(
+      `api/registration/group-roles/${groupCode}`
+    );
   }
 
   async createGroup(request: any) {
-    return await this.baseService.postData(`api/registration/group-roles`, request);
+    return await this.baseService.postData(
+      `api/registration/group-roles`,
+      request
+    );
   }
 
   async updateGroup(request: any) {
@@ -67,5 +73,20 @@ export class UserService {
 
   async getRoleUser(userId: string) {
     return await this.baseService.getData(`api/roles/${userId}`);
+  }
+
+  async getDataAuthorities() {
+    return await this.baseService.getData(`api/dataAuthorities`);
+  }
+
+  async getDataAuthoritiesByRole(role: string) {
+    return await this.baseService.getData(`api/dataAuthorities/${role}`);
+  }
+
+  async updateListDataAuthorities(role: string, listDataAuthorities: any) {
+    return await this.baseService.putData(
+      `api/dataAuthorities/${role}`,
+      listDataAuthorities
+    );
   }
 }

@@ -24,3 +24,11 @@ export const ROLE_NAME = {
   DELETE: 'delete',
   CREATE_PARAM: 'create-param'
 }
+
+
+export const QR_TYPE = {
+  employee_qr: 1,
+  machine_qr: 2,
+  wo_qr: 3,
+  shape_qr: 4,
+};

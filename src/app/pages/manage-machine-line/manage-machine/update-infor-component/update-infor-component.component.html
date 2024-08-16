@@ -426,8 +426,9 @@
       </div>
       <div style="width: 30%;">
         <div style="display: flex; flex-direction: column;">
-            <div id="QR" style="text-align: center">
+            <div id="QR" style="text-align: center" (click)="downloadImg()">
                 <nz-qrcode [nzValue]="strQr"></nz-qrcode>
+                <a #download></a>
             </div>
             <span style="text-align: center; font-size: 12px;">{{ 'Mã QR' | translate }}</span>
         </div>

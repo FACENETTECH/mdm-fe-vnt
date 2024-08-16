@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener, ViewChild, ElementRef } from '@angular/core';
 import {
   FormBuilder,
   UntypedFormBuilder,
@@ -12,9 +12,10 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { ConfigService } from 'src/app/services/manage-config/config.service';
 import { InfoMachineService } from 'src/app/services/manage-machine-line/info-machine/info-machine.service';
-import { DATA_TYPE } from 'src/app/utils/constrant';
+import { DATA_TYPE, QR_TYPE } from 'src/app/utils/constrant';
 import { saveAs } from 'file-saver';
 import * as FileSaver from 'file-saver';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-info-machine-popup',
   templateUrl: './info-machine-popup.component.html',
@@ -28,7 +29,8 @@ export class InfoMachinePopupComponent {
     private i18n: NzI18nService,
     private manageService: ManageComponentService,
     private loader: NgxUiLoaderService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private sanitizer: DomSanitizer
   ) {}
   @Input() isvisible: boolean = true;
   @Input() inforComponent: any = '';
@@ -621,15 +623,95 @@ export class InfoMachinePopupComponent {
   }
 
   /**
-   * Hàm xử lý để sinh mã QR cho từng bản ghi
+   * Hàm xuất file PDF theo mã 
    */
   strQr: string = '';
   getRowDataAsString(inforData: any) {
+    let objQr: any = {};
     for(let i = 0; i < this.columns.length; i++) {
-      if(this.columns[i].isCode) {
-        this.strQr = inforData[this.columns[i].keyName];
+      if(this.columns[i].isQRCode) {
+        // this.strQr = inforData[this.columns[i].keyName];
+        objQr[this.columns[i].keyName] = inforData[this.columns[i].keyName]
       }
     }
+    if(JSON.stringify(objQr) === '{}') {
+      for(let i = 0; i < this.columns.length; i++) {
+        if(this.columns[i].isCode) {
+          this.strQr = inforData[this.columns[i].keyName];
+        }
+      }
+    } else {
+      switch(this.tableCode) {
+        case 'employee': 
+        objQr['qr_type'] = this.qrType.employee_qr;
+        break;
+        case 'machine': 
+        objQr['qr_type'] = this.qrType.machine_qr;
+        break;
+        case 'mold_detail': 
+        objQr['qr_type'] = this.qrType.shape_qr;
+        break;
+      }
+      this.strQr = JSON.stringify(objQr);
+    }
+  }
+
+  isvisiblePrint: boolean = false;
+  filePdfPrint?: Blob;
+  pdfPrintSrc?: any;
+  downloadImg(): void {
+    this.manageService
+      .getInforRecordByCode('template_form', this.tableCode)
+      .subscribe({
+        next: (res) => {
+          let request: any = {
+            ...this.inforMachine,
+            infor: this.strQr,
+          };
+          for (let property in request) {
+            if (request[property] == null) {
+              request[property] = '';
+            }
+          }
+          this.columns.forEach((col) => {
+            if(col.dataType == this.dataType.RELATION) {
+              if(request[col.keyName]) {
+                request[col.keyName] = request[col.keyName][col.relateColumn];
+              }
+            }
+          })
+          this.loader.start();
+          this.manageService
+            .generateTemplateByFileId(res.data.file_id, request)
+            .subscribe({
+              next: (data: any) => {
+                this.loader.stop();
+                this.filePdfPrint = data;
+                const blobUrl = window.URL.createObjectURL(data);
+                this.pdfPrintSrc =
+                  this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+                this.isvisiblePrint = true;
+              },
+              error: async (error) => {
+                this.loader.stop();
+                if (error.error instanceof Blob) {
+                  const errorText = await error.error.text();
+                  try {
+                    const errorJson = JSON.parse(errorText);
+                    // Bây giờ bạn có thể xử lý JSON chứa thông tin lỗi
+                    this.toast.error(errorJson.result.message);
+                  } catch (e) {
+                    // Nếu không phải JSON, xử lý như văn bản thông thường
+                    console.error('Error Text:', errorText);
+                  }
+                }
+              },
+            });
+        },
+        error: (err) => {
+          this.toast.error(err.result.message);
+        },
+      });
   }
 
   /**
@@ -707,4 +789,5 @@ export class InfoMachinePopupComponent {
   total: number = 0;
   @Input() machinee: any = '';
   protected readonly dataType = DATA_TYPE;
+  protected readonly qrType = QR_TYPE;
 }

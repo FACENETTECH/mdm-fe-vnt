@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class ManageComponentService {
   url: string = environment.api_end_point;
+  urlS3: string = environment.api_end_point_s3;
   template_url: string = environment.template_api_end_point;
   accpetLanguage: string = 'vi_VN';
   constructor(private baseService: BaseService, private httpClient: HttpClient,) {
@@ -309,7 +310,7 @@ export class ManageComponentService {
    * @returns 
    */
   uploadTemplate(form: any): Observable<any> {
-    return this.httpClient.post(this.template_url, form,{
+    return this.httpClient.post(`${this.template_url}template/`, form,{
       headers: new HttpHeaders({
         'Access-Control-Allow-Origin': '*'
       })
@@ -322,6 +323,45 @@ export class ManageComponentService {
    * @returns 
    */
   getTemplateUrl(file_id: string): string {
-    return this.template_url + file_id;
+    return `${this.template_url}template/${file_id}`;
+  }
+
+  /**
+   * API lấy ra thông tin bản ghi bên MDM
+   * @param request
+   */
+  getInforRecordByCode(tableCode: string, code: string): Observable<any> {
+    return this.httpClient.get(
+      `${this.url}/api/dynamic-tables/${tableCode}/code/${code}`
+    );
+  }
+
+  /**
+   * API tạo phiếu sản xuất
+   * @param fileId
+   * @param request
+   * @returns
+   */
+  generateTemplateByFileId(fileId: string, request: any) {
+    return this.httpClient.post(
+      `${this.template_url}render/${fileId}`,
+      request,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
+
+  /**
+   * API upload icon
+   * @param form file icon
+   * @returns 
+   */
+  uploadIcon(form: any): Observable<any> {
+    return this.httpClient.post(`${this.urlS3}api/storage/uploadFile/mdm/category/icons/url`, form, {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin': '*'
+      })
+    })
   }
 }
