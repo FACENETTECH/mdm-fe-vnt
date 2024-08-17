@@ -54,6 +54,7 @@ export class ListBomComponent {
   index: number = 0;
   blueprintCodeSelected: string = '';
   blueprintIdSelected?: number;
+  isvisiblePopupCreateOrUpdate: boolean = false;
   isvisiblePopupDelete: boolean = false;
   isvisiblePopupDeleteList: boolean = false;
   widthColumn: any[] = [];
@@ -80,6 +81,7 @@ export class ListBomComponent {
     {
       key: `1`,
       item: 'John Brown sr.',
+      product_code: 'MSC002btH35-AU1',
       description: 'John Brown sr.',
       component_yield: 1,
       bom_quantity: 30,
@@ -94,6 +96,7 @@ export class ListBomComponent {
     {
       key: `2`,
       item: 'John Brown sr.',
+      product_code: 'MSC002btH35-AU1',
       description: 'John Brown sr.',
       component_yield: 1,
       bom_quantity: 30,
@@ -378,26 +381,8 @@ export class ListBomComponent {
     this.isvisiblePopupAddNewWO = true;
   }
 
-  inforWoForCreateLots: Record<string, any> = {};
-  isvisiblePopupCreateLot: boolean = false;
-  openPopupCreateLot() {
-    this.inforWoForCreateLots = {};
-    if (this.setOfCheckedId.size > 0) {
-      for (let id of this.setOfCheckedId) {
-        for (let i = 0; i < this.listSxnb.length; i++) {
-          if (this.listSxnb[i].id == id) {
-            this.inforWoForCreateLots = { ...this.listSxnb[i] };
-            break;
-          }
-        }
-        if (this.inforWoForCreateLots.hasOwnProperty('id')) {
-          break;
-        }
-      }
-      this.isvisiblePopupCreateLot = true;
-    } else {
-      this.toast.warning('Vui lòng chọn bản ghi cần tạo LOT!');
-    }
+  openPopupCreateOrUpdate() {
+    this.isvisiblePopupCreateOrUpdate = true;
   }
 
   widthContent: string = '100%';

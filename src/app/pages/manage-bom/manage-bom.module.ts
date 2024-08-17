@@ -82,15 +82,19 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { ManageBomRoutingModule } from './manage-bom-routing.module';
 import { ListBomComponent } from './list-bom/list-bom.component';
+import { PopupCreateOrUpdateBomComponent } from './popup-create-or-update-bom/popup-create-or-update-bom.component';
+import { ManageMachineLineModule } from '../manage-machine-line/manage-machine-line.module';
 
 
 @NgModule({
   declarations: [
-    ListBomComponent
+    ListBomComponent,
+    PopupCreateOrUpdateBomComponent
   ],
   imports: [
     CommonModule,
     ManageBomRoutingModule,
+    ManageMachineLineModule,
     SharedModule,
 
     // Import module ant design

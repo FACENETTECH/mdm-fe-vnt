@@ -185,7 +185,8 @@ import { PopupManageParamComponent } from './manage-machine/popup-manage-param/p
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     exports: [
-        PopupDeleteListRecodrdComponent
+        PopupDeleteListRecodrdComponent,
+        PopupManageParamComponent
     ]
 })
 export class ManageMachineLineModule {}
