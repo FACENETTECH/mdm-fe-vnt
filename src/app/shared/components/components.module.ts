@@ -64,7 +64,7 @@ import { PopupPreviewPdfComponent } from './popup-preview-pdf/popup-preview-pdf.
     PopupLogoutComponent,
     PopupCopyComponent,
     SearchTreeComponent,
-    PopupPreviewPdfComponent
+    PopupPreviewPdfComponent,
   ],
   imports: [
     CommonModule,
@@ -89,7 +89,7 @@ import { PopupPreviewPdfComponent } from './popup-preview-pdf/popup-preview-pdf.
     NzInputModule,
     NzToolTipModule,
     TranslateModule,
-    NzCheckboxModule
+    NzCheckboxModule,
   ],
   exports: [
     BreadcrumbComponent,
@@ -109,7 +109,7 @@ import { PopupPreviewPdfComponent } from './popup-preview-pdf/popup-preview-pdf.
     PopupLogoutComponent,
     PopupCopyComponent,
     SearchTreeComponent,
-    PopupPreviewPdfComponent
+    PopupPreviewPdfComponent,
   ],
 })
 export class SharedModule {}
