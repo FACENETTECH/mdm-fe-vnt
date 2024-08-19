@@ -19,7 +19,6 @@
   align-items: center;
   padding: 10px;
   flex-wrap: wrap;
-
 }
 
 .container-homepage .title {
@@ -87,4 +86,241 @@
   border-radius: 4px;
   min-height: 186px;
   cursor: not-allowed;
+}
+
+/* Css dùng chung */
+.quoting-df {
+  display: flex;
+  align-items: center;
+}
+
+p {
+  margin-bottom: 0px;
+}
+
+.quoting-df-jus-around {
+  justify-content: space-around;
+}
+
+.quoting-df-jus-between {
+  justify-content: space-between;
+}
+
+.quoting-df-jus-evenly {
+  justify-content: space-evenly;
+}
+
+.quoting-color-white {
+  color: #ffffff;
+}
+
+.quoting-color-black {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.quoting-color-vnt {
+  color: #01aba8;
+}
+
+.quoting-menu-width-10 {
+  width: 10%;
+}
+
+.quoting-ml-10 {
+  margin-left: 10px;
+}
+
+.quoting-text-align-right {
+  text-align: right !important;
+}
+
+.quoting-border-left-right {
+  border-left: 1px solid #dddddd;
+}
+
+.quoting-ml-32px {
+  margin-left: -32px;
+}
+
+/* Css cho tung block */
+.content-container-close {
+  height: 20px;
+}
+
+.quoting-menu {
+  height: 46px;
+  background-color: #ebf6fe;
+  padding-left: 20px;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.quoting-menu-line {
+  width: 3px;
+  height: 100%;
+  background-color: #01aba8;
+  margin-right: 6px;
+}
+
+.quoting-menu-quoting {
+  cursor: pointer;
+  width: fit-content;
+  height: 100%;
+  padding: 0px 10px;
+  font-size: 14px !important;
+  font-weight: 600;
+}
+
+.quoting-menu-quoting:hover {
+  cursor: pointer;
+  width: fit-content;
+  height: 100%;
+  padding: 0px 10px;
+  font-size: 14px !important;
+  font-weight: 600;
+  /* border-bottom: 3px solid #01aba8; */
+  color: #01aba8;
+}
+
+.quoting-menu-quoting-active {
+  cursor: pointer;
+  width: fit-content;
+  height: 100%;
+  padding: 0px 10px;
+  font-size: 14px !important;
+  font-weight: 600;
+  border-bottom: 3px solid #01aba8;
+  color: #01aba8;
+}
+
+.quoting-menu-quoting-active-item {
+  cursor: pointer;
+  width: fit-content;
+  height: 100%;
+  padding: 0px 10px;
+  font-size: 14px !important;
+  font-weight: 600;
+  color: #01aba8;
+}
+
+.quoting-menu-util {
+  cursor: pointer;
+}
+
+.quoting-menu-lib {
+  cursor: pointer;
+}
+
+.quoting-header {
+  margin-top: 10px;
+  margin-bottom: 4px;
+  padding: 6px 2px;
+  background-color: #ffffff;
+}
+
+.quoting-header-search {
+  width: 20%;
+}
+
+.quoting-header-action {
+  width: 68%;
+}
+
+.quoting-content {
+  display: flex;
+  flex-grow: 1;
+}
+
+.tree-search {
+  width: 12%;
+  height: 100%;
+  background-color: #ffffff;
+}
+
+.quoting-table {
+  width: 88%;
+  padding-left: 6px;
+  height: calc(100vh - 275px);
+}
+
+.fn-css-action-grid {
+  justify-content: space-between;
+}
+
+.content-container-breadcrumb {
+  height: 20px;
+}
+
+.truncate-text {
+  max-width: 75px;
+  white-space: nowrap; /* Ngăn không cho text ngắt xuống dòng */
+  overflow: hidden; /* Ẩn phần text vượt quá kích thước của ô */
+  text-overflow: ellipsis; /* Hiển thị ba chấm (...) khi text bị ẩn */
+}
+
+/* Css của thư viện */
+::ng-deep .ant-input {
+  font-size: 13px;
+}
+
+::ng-deep .ant-tree {
+  font-size: 13px;
+}
+
+.ant-table-tbody > tr > td {
+  height: 32.8px;
+  padding: 0 8px;
+  font-size: 13px;
+}
+
+.tree-search {
+  overflow-y: scroll;
+}
+
+footer {
+  height: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+footer p {
+  margin: 0px;
+}
+
+footer a {
+  text-decoration: none;
+  color: #0c2e8a;
+  font-weight: bold;
+}
+
+.content {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.child-content {
+  flex-grow: 1;
+  padding: 20px;
+  height: calc(100vh - 114px);
+  overflow-y: auto;
+}
+
+.active-text {
+  color: #01aba8 !important;
+}
+
+.active-text span {
+  color: #01aba8 !important;
+}
+
+::ng-deep
+  .ant-dropdown-menu-submenu.ant-dropdown-menu-submenu-vertical.ng-star-inserted.active-text
+  .ng-star-inserted {
+  color: #01aba8 !important;
 }

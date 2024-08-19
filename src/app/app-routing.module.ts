@@ -50,13 +50,13 @@ const routes: Routes = [
         (m) => m.ManageTemplateModule
       ),
   },
-  {
-    path: 'exception',
-    loadChildren: () =>
-      import('./shared/exception/exception.module').then(
-        (m) => m.ExceptionModule
-      ),
-  },
+  // {
+  //   path: 'exception',
+  //   loadChildren: () =>
+  //     import('./shared/exception/exception.module').then(
+  //       (m) => m.ExceptionModule
+  //     ),
+  // },
 ];
 
 @NgModule({
