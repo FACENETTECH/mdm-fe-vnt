@@ -119,26 +119,6 @@ export class AppComponent {
     });
 
     if (this._router.url == '/') {
-      // if (this.roles.includes('admin_business')) {
-      //   this._router.navigate([`/home`]);
-      // } else {
-      //   this._router.navigate([`/home`]);
-      // }
-
-      // this.saveLanguage = localStorage.getItem('language');
-      // if (this.saveLanguage) {
-      //   this.selectLanguage = this.saveLanguage;
-      // }
-      // this.changeLanguage(this.selectLanguage);
-      // this.tourService.initialize(this.tourSteps, {
-      //   route: 'welcome',
-      // delayBeforeStepShow: 300,
-      // delayAfterNavigation: 150,
-      // enableBackdrop: true,
-      // prevBtnTitle: 'Trước',
-      // nextBtnTitle: 'Sau',
-      // endBtnTitle: 'Đóng',
-      // });
       this.tourService.end();
       this.getColumns();
       this.getName();
@@ -146,7 +126,7 @@ export class AppComponent {
 
     if (this.roles.includes('admin_fcim')) {
     }
-    this._router.navigate([`exception/403`]);
+    // this._router.navigate([`exception/403`]);
   }
 
   checkId(data: any): boolean {
