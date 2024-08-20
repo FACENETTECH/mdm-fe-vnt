@@ -7,20 +7,20 @@ import { PreviewComponent } from './preview/preview.component';
 const routes: Routes = [
   {
     path: ':id',
-    component: ConfigComponent
+    component: ConfigComponent,
   },
   {
     path: ':id/preview',
-    component: PreviewComponent
+    component: PreviewComponent,
   },
   {
     path: 'config-table/list-config',
-    component: ConfigTableComponent
-  }
+    component: ConfigTableComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ManageConfigRoutingModule { }
+export class ManageConfigRoutingModule {}
