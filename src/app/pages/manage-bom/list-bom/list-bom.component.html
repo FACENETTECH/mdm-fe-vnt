@@ -36,7 +36,7 @@
       <div class="quoting-table" #tableBlock [style.width]="widthContent">
         <nz-table
           #expandTable
-          [nzData]="listOfMapData"
+          [nzData]="listBom"
           nzTableLayout="fixed"
           nzBordered
           [nzSize]="'small'"
@@ -84,9 +84,155 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <ng-container *ngFor="let column of columns">
+                <ng-container
+                    *ngIf="
+                      column.localCheck &&
+                      column.keyName != 'status' &&
+                      column.dataType != dataType.DATE_TIME &&
+                      column.dataType != dataType.PARAM
+                    "
+                  >
+                    <td [nzLeft]="column.isFixed == 1 ? true : false">
+                      <nz-input-group
+                        [nzPrefix]="machineCodePrefix"
+                        [nzSuffix]="machineSuffix"
+                      >
+                        <ng-template #machineCodePrefix
+                          ><span
+                            nz-icon
+                            nzType="search"
+                            nzTheme="outline"
+                            style="color: #d8c6bf"
+                          ></span
+                        ></ng-template>
+                        <ng-template #machineSuffix
+                          ><span
+                            *ngIf="inforBom[column.keyName]"
+                            (click)="clearInput(column.keyName)"
+                            nz-icon
+                            nzType="close-circle"
+                            nzTheme="fill"
+                            style="
+                              font-size: 12px;
+                              cursor: pointer;
+                              color: rgb(172, 170, 170);
+                            "
+                          ></span
+                        ></ng-template>
+                        <input
+                          [nzAutocomplete]="auto"
+                          type="text"
+                          nz-input
+                          [(ngModel)]="inforBom[column.keyName]"
+                          (focus)="searchAutoComplete(column.keyName)"
+                          (input)="searchAutoComplete(column.keyName)"
+                          (keyup)="search($event)"
+                          nz-popover
+                          nzPopoverTrigger="hover"
+                          #popover="nzPopover"
+                        />
+                        <nz-autocomplete #auto [nzDefaultActiveFirstOption]="false">
+                          <nz-auto-option
+                            *ngFor="let option of optionsComplete"
+                            [nzValue]="option"
+                            >{{ option | translate }}</nz-auto-option
+                          >
+                        </nz-autocomplete>
+                      </nz-input-group>
+                    </td>
+                </ng-container>
+                <ng-container
+                    *ngIf="
+                      column.localCheck &&
+                      column.keyName == 'status'
+                    "
+                  >
+                    <td [nzLeft]="column.isFixed == 1 ? true : false">
+                      <i
+                        style="
+                          position: absolute;
+                          z-index: 1;
+                          top: 17px;
+                          left: 20px;
+                          color: #d8c6bf;
+                        "
+                        nz-icon
+                        nzType="search"
+                        nzTheme="outline"
+                      ></i>
+    
+                      <nz-select
+                        class="select-search"
+                        style="width: 100%"
+                        nzAllowClear
+                        [(ngModel)]="inforBom[column.keyName]"
+                        (ngModelChange)="searchSelectBox(column.keyName)"
+                      >
+                        <nz-option
+                          [nzValue]="1"
+                          nzLabel="{{ 'Hoạt động' | translate }}"
+                        ></nz-option>
+                        <nz-option
+                          [nzValue]="0"
+                          nzLabel="{{ 'Ngừng hoạt động' | translate }}"
+                        ></nz-option>
+                      </nz-select>
+                    </td>
+                </ng-container>
+                <ng-container *ngIf="
+                    column.localCheck &&
+                    column.keyName != 'status' &&
+                    column.dataType == dataType.PARAM
+                  ">
+                    <td [nzLeft]="column.isFixed == 1 ? true : false">
+                      <i
+                        style="
+                          position: absolute;
+                          z-index: 1;
+                          top: 17px;
+                          left: 20px;
+                          color: #d8c6bf;
+                        "
+                        nz-icon
+                        nzType="search"
+                        nzTheme="outline"
+                      ></i>
+                      <nz-select
+                        style="width: 100%"
+                        nzMode="default"
+                        [(ngModel)]="inforBom[column.keyName]"
+                        (ngModelChange)="searchSelectBox($event)"
+                        (nzOpenChange)="handleOpenChangeDataTypeParam($event, column)"
+                      >
+                        <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                      </nz-select>
+                    </td>
+                </ng-container>
+                <ng-container *ngIf="column.localCheck && column.dataType == dataType.DATE_TIME">
+                    <td [nzLeft]="column.isFixed == 1 ? true : false">
+                      <nz-date-picker
+                        class="select-search"
+                        [nzPlaceHolder]="''"
+                        style="width: 100%"
+                        type="text"
+                        nz-input
+                        [(ngModel)]="inforBom[column.keyName]"
+                        (ngModelChange)="searchSelectBox(column.keyName)"
+                        nz-popover
+                        nzPopoverTrigger="hover"
+                        #popover="nzPopover"
+                      >
+                      </nz-date-picker>
+                    </td>
+                </ng-container>
+              </ng-container>
+              <td [nzRight]="true"></td>
+            </tr>
             <ng-container *ngFor="let data of expandTable.data; let j = index">
               <ng-container
-                *ngFor="let item of mapOfExpandedData[data.key]; let k = index"
+                *ngFor="let item of mapOfExpandedData[data.id]; let k = index"
               >
                 <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
                   <ng-container *ngFor="let col of columns; let i = index">
@@ -98,7 +244,7 @@
                           [(nzExpand)]="item.expand"
                           (nzExpandChange)="
                             getChildren(
-                              mapOfExpandedData[item.key],
+                              mapOfExpandedData[item.id],
                               item,
                               j,
                               k,
@@ -106,7 +252,12 @@
                             )
                           "
                         >
-                          {{ item[col.keyName] }}
+                          <ng-container *ngIf="item[col.keyName]">
+                            {{ item[col.keyName] }}
+                          </ng-container>
+                          <ng-container *ngIf="!item[col.keyName]">
+                            {{ item['material_name'] }}
+                          </ng-container>
                         </td>
                       </ng-container>
                       <ng-container *ngIf="i != 0">
@@ -125,6 +276,7 @@
                         nz-button
                         nzType="link"
                         nz-tooltip="{{ 'btn.edit' | translate }}"
+                        (click)="openPopupUpdateInforBom(data)"
                       >
                         <img src="./assets/icons/Edit-VNT.svg" />
                       </button>
@@ -158,6 +310,10 @@
       </div>
     </div>
   </div>
-  <app-popup-create-or-update-bom *ngIf="isvisiblePopupCreateOrUpdate" [(isvisible)]="isvisiblePopupCreateOrUpdate">
+  <app-popup-create-or-update-bom 
+    *ngIf="isvisiblePopupCreateOrUpdate" 
+    [(isvisible)]="isvisiblePopupCreateOrUpdate"
+    [inforBOM]="bomDetail"
+    >
   </app-popup-create-or-update-bom>
   

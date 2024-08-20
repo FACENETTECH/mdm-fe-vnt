@@ -381,6 +381,13 @@ export class AppComponent {
         this._router.navigate(['/manage-account/list-account'])
       } else if(item.name == 'manage_bom') {
         this.isVisableLayout = true;
+        localStorage.setItem('baseUrl', JSON.stringify(item));
+        this.siderList.push({
+          ...item,
+          open: false,
+          path: '/manage-bom/list-bom',
+          requiredRoles: ['admin_business'],
+        })
         this._router.navigate(['/manage-bom/list-bom'])
       } else if(item.name == 'template_form') {
         this.isVisableLayout = true;

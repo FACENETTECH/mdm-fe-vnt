@@ -364,4 +364,113 @@ export class ManageComponentService {
       })
     })
   }
+
+  /**
+   * API tải xuống file mẫu để người dùng chỉnh sửa và inport lại vào hệ thống
+   * @param tableCode mã bảng cần import excel
+   * @returns 
+   */
+  downloadTemplateFileToImport(tableCode: string): Observable<any> {
+    return this.httpClient.get(
+      `${this.url}/api/excel/${tableCode}/export-to-import`, {
+        responseType: 'blob',
+      }
+    );
+  }
+
+  /**
+   * API import file excel trong bảng
+   * @param tableCode bảng cần import excel
+   * @param request file excel
+   * @returns 
+   */
+  importFormExcel(tableCode: string, request: any) {
+    return this.httpClient.post(
+      `${this.url}/api/excel/${tableCode}/import-from-excel`,
+      request
+    );
+  }
+
+  /**
+   * API thêm mới hoặc cập nhật thông tin BOM
+   * @param request thông tin BOM
+   * @returns 
+   */
+  createOrUpdateBom(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/add-bom`,
+      request
+    );
+  }
+
+  /**
+   * API thêm mới hoặc cập nhật thông tin chi tiết BOM
+   * @param request thông tin BOM chi tiết
+   * @returns 
+   */
+  createOrUpdateBomDetail(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/add-bomdetail`,
+      request
+    );
+  }
+
+  /**
+   * API lấy ra danh sách BOM
+   * @param request thông tin search BOM
+   * @returns 
+   */
+  getAllBom(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/get-all-bom`,
+      request
+    );
+  }
+
+  /**
+   * API lấy ra danh sách BOM chi tiết
+   * @param request thông tin search BOM chi tiết
+   * @returns 
+   */
+  getAllBomDetail(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/get-all-bomdetail`,
+      request
+    );
+  }
+
+  /**
+   * API lấy ra thông tin bom BOM chi tiết theo ID
+   * @param request id Bom cần lấy ra thông tin
+   * @returns 
+   */
+  getInforBom(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/get-bom-info`,
+      request
+    );
+  }
+
+
+  /**
+   * Cập nhật thông tin bản ghi trong table đang truy cập
+   * @param tableName Tên bảng cần cập nhật bản ghi
+   * @param id id bản ghi cần cập nhật
+   * @param request Thông tin các bản ghi cần cập nhật
+   * @returns
+   */
+  updateListInforRecordByIdV2(
+    tableName: string,
+    request: any
+  ): Observable<any> {
+    return this.httpClient.put(
+      `${this.url}/api/dynamic-tables/${tableName}/batch-v2`,
+      request,
+      {
+        headers: new HttpHeaders({
+          'Accept-Language': this.accpetLanguage,
+        }),
+      }
+    );
+  }
 }

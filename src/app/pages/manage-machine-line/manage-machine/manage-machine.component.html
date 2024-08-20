@@ -123,6 +123,20 @@
             {{ "btn.delete" | translate }}
           </button>
         </div>
+        <div nz-col>
+          <button
+            *ngIf="isCheckRoles(roleName.IMPORT_FILE)"
+            style="color: #01aba8"
+            nz-button
+            nzType="text"
+            (click)="openPopupUploadFile()"
+            class="mb-6"
+            nz-tooltip="{{ 'Import file' | translate }}"
+          >
+            <span nz-icon nzType="upload" nzTheme="outline" class="fn-icon-style"></span>
+            {{ "import.btn" | translate }}
+          </button>
+        </div>
     
         <div nz-col>
           <nz-row nzJustify="end">
@@ -577,3 +591,11 @@
   [(isvisible)]="isvisibleCopy"
 >
 </app-popup-copy>
+
+<app-popup-import-form-excel 
+  *ngIf="isvisiblePopupUpload" 
+  [(isvisible)]="isvisiblePopupUpload" 
+  [tableCode]="tableCode"
+  (import)="importConfirm($event)"
+  >
+</app-popup-import-form-excel>

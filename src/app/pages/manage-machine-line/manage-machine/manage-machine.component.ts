@@ -81,6 +81,7 @@ export class ManageMachineComponent implements OnInit {
   isvisibleDelete: boolean = false;
   isvisibleCopy: boolean = false;
   isvisibleDeleteList: boolean = false;
+  isvisiblePopupUpload: boolean = false;
   currentMachine: any = '';
   inforTable: any;
   count = 0;
@@ -388,6 +389,10 @@ export class ManageMachineComponent implements OnInit {
     }
   }
 
+  openPopupUploadFile() {
+    this.isvisiblePopupUpload = true;
+  }
+
   deleteConfirm(event: any) {
     this.manageComponentService.deleteRecordById(this.tableCode, this.currentMachine.id).subscribe({
       next: (res) => {
@@ -518,16 +523,13 @@ export class ManageMachineComponent implements OnInit {
   }
 
   async importConfirm($event: any) {
-    let res = this.http
-      .post(`${environment.api_end_point}/api/machines/import-excel`, $event)
-      .subscribe({
+    this.manageComponentService.importFormExcel(this.tableCode, $event).subscribe({
         next: (res: any) => {
           this.toast.success('Import file thành công');
           this.getData({ page: this.pageNumber, size: this.pageSize });
         },
         error: (err: any) => {
           this.toast.error(err.error.result.message);
-
           this.getData({ page: this.pageNumber, size: this.pageSize });
         },
       });

@@ -20,7 +20,7 @@ import { NzResizeEvent } from 'ng-zorro-antd/resizable';
 })
 export class ListBomComponent {
   @ViewChild('tableBlock', { static: false }) tableBlockRef!: ElementRef;
-  tableCode: string = 'work_order';
+  tableCode: string = 'bom';
   // Dữ liệu cho cây tìm kiếm
   selectedOptions: string[] = [];
   searchTreeName: string = '';
@@ -38,7 +38,7 @@ export class ListBomComponent {
   setOfCheckedId = new Set<number>();
   checked = false;
   indeterminate = false;
-  listSxnb: any[] = [];
+  listBom: any[] = [];
   columns: any[] = [];
   count = 0;
   pageNumber: number = 1;
@@ -46,7 +46,7 @@ export class ListBomComponent {
   total: number = 0;
   common: string = '';
   quotationCode: string = '';
-  inforSXNB: Record<string, any> = {};
+  inforBom: Record<string, any> = {};
   heightTree: any;
   openTree: boolean = true;
   searchAll: boolean = false;
@@ -61,6 +61,10 @@ export class ListBomComponent {
   isLoading: boolean = false;
   columnsSuggest: any[] = [];
   inforSearchSuggest: Record<string, any> = {};
+  noDataFound: boolean = false;
+  optionsComplete: any[] = [];
+  valueSelectBox: any[] = [];
+  bomDetail: Record<string, any> = {};
 
   breadcrumbs = [
     {
@@ -80,14 +84,14 @@ export class ListBomComponent {
   listOfMapData: any[] = [
     {
       key: `1`,
-      item: 'John Brown sr.',
-      product_code: 'MSC002btH35-AU1',
-      description: 'John Brown sr.',
+      bom_name: 'John Brown sr.',
+      material_id: 'MSC002btH35-AU1',
+      major_version: 'John Brown sr.',
       component_yield: 1,
       bom_quantity: 30,
       quantity: 60,
       unit: 'cai',
-      item_source: 'item_source',
+      minor_version: 'item_source',
       display_name_code: 'display_name_code',
       description_sx: 'description_sx',
       display_name_sx: 'display_name_sx',
@@ -95,29 +99,28 @@ export class ListBomComponent {
     },
     {
       key: `2`,
-      item: 'John Brown sr.',
-      product_code: 'MSC002btH35-AU1',
-      description: 'John Brown sr.',
+      bom_name: 'John Brown sr.',
+      material_id: 'MSC002btH35-AU1',
+      major_version: 'John Brown sr.',
       component_yield: 1,
       bom_quantity: 30,
       quantity: 60,
       unit: 'cai',
-      item_source: 'item_source',
+      minor_version: 'item_source',
       display_name_code: 'display_name_code',
       description_sx: 'description_sx',
       display_name_sx: 'display_name_sx',
       children: [],
     },
   ];
-  mapOfExpandedData: { [key: string]: any[] } = {};
+  mapOfExpandedData: { [id: number]: any[] } = {};
 
   collapse(array: any[], data: any, $event: boolean): void {
-    console.log('check: ', $event);
     data.expand = $event;
     if (!$event) {
       if (data.children) {
         data.children.forEach((d: any) => {
-          const target = array.find((a) => a.key === d.key)!;
+          const target = array.find((a) => a.id === d.id)!;
           target.expand = false;
           this.collapse(array, target, false);
         });
@@ -153,11 +156,11 @@ export class ListBomComponent {
 
   visitNode(
     node: any,
-    hashMap: { [key: string]: boolean },
+    hashMap: { [id: number]: boolean },
     array: any[]
   ): void {
-    if (!hashMap[node.key]) {
-      hashMap[node.key] = true;
+    if (!hashMap[node.id]) {
+      hashMap[node.id] = true;
       array.push(node);
     }
   }
@@ -169,46 +172,63 @@ export class ListBomComponent {
     k: number,
     $event: boolean
   ) {
-    let dataChildren: any[] = dummyDataChildren;
-    for (let i = 0; i < dataChildren.length; i++) {
-      dataChildren[i].key = parent['key'] + '-' + (i + 1);
-    }
-    // data.children = dataChildren;
-    // this.mapOfExpandedData[data.key] = this.convertTreeToList(data);
-    // console.log(this.mapOfExpandedData);
-
-    parent.expand = $event;
-    console.log('parent: ', parent);
-    if (!parent.children || parent.children.length <= 0) {
-      try {
-        let nodeParent: any[] = dataChildren;
-        console.log('nodeParent: ', nodeParent);
-        let nodeChild: any[] = [];
-        nodeParent.forEach((element, index) => {
-          nodeChild.push({
-            ...element,
-            level: parent.level + 1,
-            expand: false,
-            parent: parent,
-          });
-        });
-        parent.children = [...nodeChild];
-        console.log('nodeChild: ', nodeChild);
-        nodeChild.forEach((item: any) => {
-          this.mapOfExpandedData[this.listOfMapData[i].key] = this.insert(
-            this.mapOfExpandedData[this.listOfMapData[i].key],
-            ++k,
-            item
-          );
-        });
-        console.log('mapOfExpandedData: ', this.mapOfExpandedData);
-      } catch (error) {
-        console.error('Lỗi xảy ra: ', error);
-      } finally {
+    let request = {
+      pageNumber: 0,
+      pageSize: 0,
+      common: this.common,
+      filter: {
+        id: parent.id,
+      },
+      sortOrder: 'DESC',
+      sortProperty: 'created_at',
+      searchOptions: [],
+    };
+    this.loader.start();
+    this.componentService.getAllBomDetail(request).subscribe({
+      next: (res) => {
+        this.loader.stop();
+        let dataChildren: any[] = res.data;
+        dataChildren.forEach((child) => {
+          child['children'] = [];
+        })
+    
+        parent.expand = $event;
+        console.log('parent: ', parent);
+        if (!parent.children || parent.children.length <= 0) {
+          try {
+            let nodeParent: any[] = dataChildren;
+            console.log('nodeParent: ', nodeParent);
+            let nodeChild: any[] = [];
+            nodeParent.forEach((element, index) => {
+              nodeChild.push({
+                ...element,
+                level: parent.level + 1,
+                expand: false,
+                parent: parent,
+              });
+            });
+            parent.children = [...nodeChild];
+            console.log('nodeChild: ', nodeChild);
+            nodeChild.forEach((item: any) => {
+              this.mapOfExpandedData[this.listBom[i].id] = this.insert(
+                this.mapOfExpandedData[this.listBom[i].id],
+                ++k,
+                item
+              );
+            });
+          } catch (error) {
+            console.error('Lỗi xảy ra: ', error);
+          } finally {
+          }
+          // this.collapse(array, parent, $event);
+        }
+        this.collapse(array, parent, $event);
+      }, error: (err) => {
+        this.loader.stop();
+        this.toast.error(err.error.result.message);
       }
-      // this.collapse(array, parent, $event);
-    }
-    this.collapse(array, parent, $event);
+    })
+    
   }
 
   insert = (arr: any[], index: number, newItem: any) => [
@@ -221,9 +241,6 @@ export class ListBomComponent {
   ];
 
   ngOnInit(): void {
-    this.listOfMapData.forEach((item) => {
-      this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
-    });
     if (
       localStorage.getItem('userBehaviorBomProduction') != null &&
       localStorage.getItem('userBehaviorBomProduction') != undefined &&
@@ -234,7 +251,7 @@ export class ListBomComponent {
       );
       this.nodes = userBehaviorBomProduction.nodes;
       this.inforSearchSuggest = userBehaviorBomProduction.inforSearchSuggest;
-      this.inforSXNB = userBehaviorBomProduction.inforSearchWo;
+      this.inforBom = userBehaviorBomProduction.inforSearchWo;
       if (this.nodes.length > 0) {
         this.getData({ page: this.pageNumber, size: this.pageSize });
       }
@@ -246,7 +263,7 @@ export class ListBomComponent {
 
   async getColumn() {
     this.loader.start();
-    this.componentService.getColummnByTableName('bom_details').subscribe({
+    this.componentService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
         this.loader.stop();
         this.columns = [...res.data];
@@ -286,13 +303,13 @@ export class ListBomComponent {
   }
 
   recallData(event: any) {
-    this.inforSXNB = event;
+    this.inforBom = event;
     localStorage.setItem(
       'userBehaviorBomProduction',
       JSON.stringify({
         nodes: this.nodes,
         inforSearchSuggest: this.inforSearchSuggest,
-        inforSearchWo: this.inforSXNB,
+        inforSearchWo: this.inforBom,
       })
     );
     const searchData = {
@@ -326,7 +343,7 @@ export class ListBomComponent {
       element.classList.remove('active');
     });
     elements[data.indexQuota - 1]?.classList.add('active');
-    this.index = this.listSxnb.findIndex((item) => item == data);
+    this.index = this.listBom.findIndex((item) => item == data);
   }
 
   searchSuggest(event: any) {
@@ -336,7 +353,7 @@ export class ListBomComponent {
       JSON.stringify({
         nodes: this.nodes,
         inforSearchSuggest: this.inforSearchSuggest,
-        inforSearchWo: this.inforSXNB,
+        inforSearchWo: this.inforBom,
       })
     );
     const searchData = {
@@ -405,63 +422,27 @@ export class ListBomComponent {
       pageSize: page.size,
       common: this.common,
       filter: {
-        ...this.inforSXNB,
-        ...this.inforSearchSuggest,
+        ...this.inforBom,
       },
       sortOrder: 'DESC',
       sortProperty: 'created_at',
       searchOptions: [],
-      searchTree: this.nodes,
     };
     this.componentService
-      .getDataDynamicTable(this.tableCode, request)
+      .getAllBom(request)
       .subscribe({
         next: (res) => {
           this.isLoading = false;
-          this.listSxnb = res.data;
-          let grouped: any = {};
-          let indexRecord = 1;
-
-          for (let i = 0; i < this.listSxnb.length; i++) {
-            this.listSxnb[i]['isParent'] = false;
-            let item = this.listSxnb[i];
-            let quotaCode = item.wo_code;
-
-            if (grouped[quotaCode]) {
-              grouped[quotaCode].push(item);
-            } else {
-              grouped[quotaCode] = [item];
-            }
-          }
-
-          for (let gr in grouped) {
-            grouped[gr].sort((a: any, b: any) => {
-              return a.id - b.id;
-            });
-          }
-
-          let array: any[] = [];
-          for (const property in grouped) {
-            let obj = {
-              id: null,
-              wo_code: property,
-              isParent: true,
-              keyName: 'wo_code',
-              keyTitle: '',
-            };
-            array.push(obj);
-            array = [array, grouped[property]].reduce(
-              (result, arr) => result.concat(arr),
-              []
-            );
-          }
-          for (let i = 0; i < array.length; i++) {
-            if (!array[i].isParent) {
-              array[i]['indexRecord'] = indexRecord++;
-            }
-          }
-          this.listSxnb = array;
+          this.listBom = res.data;
           this.total = res.dataCount;
+          this.listBom.forEach((item) => {
+            item['children'] = [];
+          });
+          this.listBom.forEach((item) => {
+            this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
+          });
+          console.log('listBom: ', this.listBom);
+          console.log('map: ', this.mapOfExpandedData);
         },
         error: (err) => {
           this.isLoading = false;
@@ -513,7 +494,7 @@ export class ListBomComponent {
         request.push(id);
       });
     } else {
-      request.push(this.listSxnb[this.index].id);
+      request.push(this.listBom[this.index].id);
     }
     this.componentService
       .deleteListRecordByListId('po_blueprint', request)
@@ -535,7 +516,7 @@ export class ListBomComponent {
    * @param event : là thông tin về hàng được thay đổi vị trí
    */
   async drop(event: CdkDragDrop<string[], string, any>) {
-    moveItemInArray(this.listSxnb, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.listBom, event.previousIndex, event.currentIndex);
   }
 
   isvisiblePopupCopyBlueprint: boolean = false;
@@ -545,6 +526,76 @@ export class ListBomComponent {
     } else {
       this.toast.warning('Vui lòng chọn bản vẽ cần sao chép!');
     }
+  }
+
+  clearInput(keyName: string) {
+    this.inforBom[keyName] = '';
+  }
+
+  async searchAutoComplete(keyName: string) {}
+
+  search($event: any) {
+    if ($event.keyCode === 13) {
+      const searchData = {
+        page: this.pageNumber,
+        size: this.pageSize,
+      };
+
+      this.getData(searchData);
+    }
+  }
+
+  searchSelectBox($event: any) {
+    const searchData = {
+      page: this.pageNumber,
+      size: this.pageSize,
+    };
+    this.getData(searchData);
+  }
+
+  /**
+   * Hàm gọi API và xử lý dữ liệu option cho select box
+   */
+  handleOpenChangeDataTypeParam(data: any, column: any) {
+    if(data) {
+      this.componentService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
+        next: (res) => {
+          this.valueSelectBox = res.data;
+        }, error: (err) => {
+          this.toast.error(err.error.result.message);
+        }
+      })
+    }
+  }
+
+  openPopupUpdateInforBom(inforBom: any) {
+    let request = {
+      pageNumber: 0,
+      pageSize: 0,
+      common: null,
+      filter: {
+        id: inforBom.id,
+      },
+      sortOrder: 'DESC',
+      sortProperty: 'created_at',
+      searchOptions: [],
+    }
+    this.loader.start();
+    this.componentService.getInforBom(request).subscribe({
+      next: (res) => {
+        this.loader.stop();
+        console.log(res);
+        if(res.data.hasOwnProperty('id')) {
+          this.bomDetail = res.data;
+          this.isvisiblePopupCreateOrUpdate = true;
+        } else {
+          this.toast.warning('Không tìm thấy thông tin BOM!');
+        }
+      }, error: (err) => {
+        this.loader.stop();
+        this.toast.warning('Không tìm thấy thông tin BOM!');
+      }
+    })
   }
 
   /**
@@ -565,7 +616,7 @@ export class ListBomComponent {
   }
 
   // CÁC HÀM PHÍM TẮT CỦA HỆ THỐNG VÀ SỰ KIỆN CLICK, DBCLICK TRÊN ROW
-  onDbClickOnRow(inforSXNB: any) {}
+  onDbClickOnRow(inforBom: any) {}
 
   @HostListener('document:keydown', ['$event'])
   onTableKeyDown(event: KeyboardEvent) {
@@ -574,15 +625,15 @@ export class ListBomComponent {
       event.stopPropagation();
       if (event.key === 'ArrowUp') {
         this.index -= 1;
-        if (this.index == 0) this.index = this.listSxnb.length - 1;
-        if (this.listSxnb[this.index].isParent) this.index -= 1;
-        this.onChangeActiveRow(this.listSxnb[this.index]);
+        if (this.index == 0) this.index = this.listBom.length - 1;
+        if (this.listBom[this.index].isParent) this.index -= 1;
+        this.onChangeActiveRow(this.listBom[this.index]);
       }
       if (event.key === 'ArrowDown') {
         this.index += 1;
-        if (this.index == this.listSxnb.length) this.index = 1;
-        if (this.listSxnb[this.index].isParent) this.index += 1;
-        this.onChangeActiveRow(this.listSxnb[this.index]);
+        if (this.index == this.listBom.length) this.index = 1;
+        if (this.listBom[this.index].isParent) this.index += 1;
+        this.onChangeActiveRow(this.listBom[this.index]);
       }
       let tableElement = document.querySelector(
         'nz-table-inner-scroll.ant-table-container .ant-table-body'
@@ -624,16 +675,16 @@ export class ListBomComponent {
 
     if (this.setOfCheckedId.size > 0) {
       let idQuotation = 0;
-      let inforSXNB: any = {};
+      let inforBom: any = {};
       for (const item of this.setOfCheckedId) {
         idQuotation = item;
       }
 
       if (idQuotation != 0) {
-        inforSXNB = this.listSxnb.find((item) => item.id === idQuotation);
+        inforBom = this.listBom.find((item) => item.id === idQuotation);
       }
 
-      if (inforSXNB != undefined) {
+      if (inforBom != undefined) {
         // Gọi hàm mở popup cập nhật
       }
     } else {
@@ -666,26 +717,26 @@ export class ListBomComponent {
 
 const dummyDataChildren = [
   {
-    item: 'John Brown sr 1.',
-    description: 'John Brown sr 1.',
+    bom_name: 'John Brown sr 1.',
+    major_version: 'John Brown sr 1.',
     component_yield: 1,
     bom_quantity: 2320,
     quantity: 63220,
     unit: 'cai',
-    item_source: 'item_source',
+    minor_version: 'item_source',
     display_name_code: 'display_name_code',
     description_sx: 'description_sx',
     display_name_sx: 'display_name_sx',
     children: [],
   },
   {
-    item: 'John Brown sr 2.',
-    description: 'John Brown sr 2.',
+    bom_name: 'John Brown sr 2.',
+    major_version: 'John Brown sr 2.',
     component_yield: 1,
     bom_quantity: 21,
     quantity: 60211,
     unit: 'cai',
-    item_source: 'item_source',
+    minor_version: 'item_source',
     display_name_code: 'display_name_code',
     description_sx: 'description_sx',
     display_name_sx: 'display_name_sx',

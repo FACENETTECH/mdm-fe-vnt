@@ -22,7 +22,8 @@ export const ROLE_NAME = {
   VIEW_DETAIL: 'view-detail',
   UPDATE: 'update',
   DELETE: 'delete',
-  CREATE_PARAM: 'create-param'
+  CREATE_PARAM: 'create-param',
+  IMPORT_FILE: 'import-file',
 }
 
 

@@ -42,6 +42,7 @@ import { PopupCopyComponent } from './popup-copy/popup-copy.component';
 import { SearchTreeComponent } from './search-tree/search-tree.component';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { PopupPreviewPdfComponent } from './popup-preview-pdf/popup-preview-pdf.component';
+import { PopupImportFormExcelComponent } from './popup-import-form-excel/popup-import-form-excel.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { PopupPreviewPdfComponent } from './popup-preview-pdf/popup-preview-pdf.
     PopupLogoutComponent,
     PopupCopyComponent,
     SearchTreeComponent,
-    PopupPreviewPdfComponent
+    PopupPreviewPdfComponent,
+    PopupImportFormExcelComponent
   ],
   imports: [
     CommonModule,
@@ -109,7 +111,8 @@ import { PopupPreviewPdfComponent } from './popup-preview-pdf/popup-preview-pdf.
     PopupLogoutComponent,
     PopupCopyComponent,
     SearchTreeComponent,
-    PopupPreviewPdfComponent
+    PopupPreviewPdfComponent,
+    PopupImportFormExcelComponent
   ],
 })
 export class SharedModule {}
