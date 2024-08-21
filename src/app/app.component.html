@@ -4,217 +4,251 @@
       <app-header> </app-header>
     </div>
     <div class="quoting-menu quoting-df unselect">
-      <div
-        *ngFor="let item of lstFunction"
-        [class]="
-          checkId(item.id)
-            ? 'quoting-menu-quoting-active quoting-df quoting-menu-width-10'
-            : 'quoting-menu-quoting quoting-df quoting-menu-width-10'
-        "
-        (click)="directProduct(item)"
-      >
+      <ng-container *ngFor="let item of lstFunction">
         <div
-          class="quoting-menu-quoting-name quoting-ml-10"
-          *ngIf="item.children.length == 0"
+          *ngIf="
+            item.children.length == 0 &&
+            (item.isVisible || item.isVisible == null)
+          "
+          [class]="
+            checkId(item.id)
+              ? 'quoting-menu-quoting-active quoting-df quoting-menu-width-10'
+              : 'quoting-menu-quoting quoting-df quoting-menu-width-10'
+          "
+          (click)="directProduct(item)"
         >
-          <p>{{ item.displayName | translate }}</p>
+          <div class="quoting-menu-quoting-name quoting-ml-10">
+            <p>{{ item.displayName | translate }}</p>
+          </div>
         </div>
         <div
-          class="quoting-menu-quoting-name quoting-ml-10"
+          *ngIf="
+            item.children.length !== 0 &&
+            (item.isVisible || item.isVisible == null)
+          "
+          [class]="
+            checkId(item.id)
+              ? 'quoting-menu-quoting-active quoting-df quoting-menu-width-10'
+              : 'quoting-menu-quoting quoting-df quoting-menu-width-10'
+          "
           nz-dropdown
           nzTrigger="click"
           [nzDropdownMenu]="dropdownMenu"
-          *ngIf="item.children.length !== 0"
+          (click)="directProduct(item)"
         >
-          <p>{{ item.displayName | translate }}</p>
-        </div>
-        <nz-dropdown-menu #dropdownMenu>
-          <ul nz-menu>
-            <ng-container *ngFor="let content of item.children">
-              <li
-                nz-menu-item
-                *ngIf="
-                  content.children.length === 0 &&
-                  (content.isVisible == true || content.isVisible == null)
-                "
-                [class]="checkId(content.id) ? 'active-text' : ''"
-                (click)="directProduct(content)"
-              >
-                {{ content.displayName | translate }}
+          <div
+            class="quoting-menu-quoting-name quoting-ml-10"
+            style="display: flex; gap: 10px; align-items: center"
+          >
+            <p>{{ item.displayName | translate }}</p>
+            <span nz-icon nzType="down" nzTheme="outline"></span>
+          </div>
+          <nz-dropdown-menu #dropdownMenu>
+            <ul nz-menu>
+              <li nz-menu-item>
+                <input
+                  style="width: 100%"
+                  nz-input
+                  placeholder="{{ 'Tìm kiếm' | translate }}"
+                  [(ngModel)]="common"
+                  (click)="clickInput($event)"
+                />
               </li>
-              <li
-                nz-submenu
-                [nzTitle]="content.displayName | translate"
-                *ngIf="
-                  content.children.length !== 0 &&
-                  (content.isVisible == true || content.isVisible == null)
-                "
-                [class]="checkId(content.id) ? 'active-text' : ''"
-              >
-                <ul>
-                  <ng-container *ngFor="let content2 of content.children">
-                    <li
-                      nz-menu-item
-                      *ngIf="
-                        content2.children.length === 0 &&
-                        (content2.isVisible == true ||
-                          content2.isVisible == null)
-                      "
-                      [class]="checkId(content2.id) ? 'active-text' : ''"
-                      (click)="directProduct(content2)"
-                    >
-                      {{ content2.displayName | translate }}
-                    </li>
-                    <li
-                      nz-submenu
-                      [nzTitle]="content2.displayName | translate"
-                      *ngIf="
-                        content2.children.length !== 0 &&
-                        (content2.isVisible == true ||
-                          content2.isVisible == null)
-                      "
-                      [class]="checkId(content2.id) ? 'active-text' : ''"
-                    >
-                      <ul>
-                        <ng-container
-                          *ngFor="let content3 of content2.children"
-                        >
-                          <li
-                            nz-menu-item
-                            *ngIf="
-                              content3.children.length === 0 &&
-                              (content3.isVisible == true ||
-                                content3.isVisible == null)
-                            "
-                            [class]="checkId(content3.id) ? 'active-text' : ''"
-                            (click)="directProduct(content3)"
+              <ng-container *ngFor="let content of item.children">
+                <li
+                  nz-menu-item
+                  *ngIf="
+                    content.children.length === 0 &&
+                    (content.isVisible == true || content.isVisible == null) &&
+                    search(content.displayName)
+                  "
+                  [class]="checkId(content.id) ? 'active-text' : ''"
+                  (click)="directProduct(content)"
+                >
+                  {{ content.displayName | translate }}
+                </li>
+                <li
+                  nz-submenu
+                  [nzTitle]="content.displayName | translate"
+                  *ngIf="
+                    content.children.length !== 0 &&
+                    (content.isVisible == true || content.isVisible == null) &&
+                    search(content.displayName)
+                  "
+                  [class]="checkId(content.id) ? 'active-text' : ''"
+                >
+                  <ul>
+                    <ng-container *ngFor="let content2 of content.children">
+                      <li
+                        nz-menu-item
+                        *ngIf="
+                          content2.children.length === 0 &&
+                          (content2.isVisible == true ||
+                            content2.isVisible == null)
+                        "
+                        [class]="checkId(content2.id) ? 'active-text' : ''"
+                        (click)="directProduct(content2)"
+                      >
+                        {{ content2.displayName | translate }}
+                      </li>
+                      <li
+                        nz-submenu
+                        [nzTitle]="content2.displayName | translate"
+                        *ngIf="
+                          content2.children.length !== 0 &&
+                          (content2.isVisible == true ||
+                            content2.isVisible == null)
+                        "
+                        [class]="checkId(content2.id) ? 'active-text' : ''"
+                      >
+                        <ul>
+                          <ng-container
+                            *ngFor="let content3 of content2.children"
                           >
-                            {{ content3.displayName | translate }}
-                          </li>
-                          <li
-                            nz-submenu
-                            [nzTitle]="content3.displayName | translate"
-                            *ngIf="
-                              content3.children.length !== 0 &&
-                              (content3.isVisible == true ||
-                                content3.isVisible == null)
-                            "
-                            [class]="checkId(content3.id) ? 'active-text' : ''"
-                          >
-                            <ul>
-                              <ng-container
-                                *ngFor="let content4 of content3.children"
-                              >
-                                <li
-                                  nz-menu-item
-                                  *ngIf="
-                                    content4.children.length === 0 &&
-                                    (content4.isVisible == true ||
-                                      content4.isVisible == null)
-                                  "
-                                  [class]="
-                                    checkId(content4.id) ? 'active-text' : ''
-                                  "
-                                  (click)="directProduct(content4)"
+                            <li
+                              nz-menu-item
+                              *ngIf="
+                                content3.children.length === 0 &&
+                                (content3.isVisible == true ||
+                                  content3.isVisible == null)
+                              "
+                              [class]="
+                                checkId(content3.id) ? 'active-text' : ''
+                              "
+                              (click)="directProduct(content3)"
+                            >
+                              {{ content3.displayName | translate }}
+                            </li>
+                            <li
+                              nz-submenu
+                              [nzTitle]="content3.displayName | translate"
+                              *ngIf="
+                                content3.children.length !== 0 &&
+                                (content3.isVisible == true ||
+                                  content3.isVisible == null)
+                              "
+                              [class]="
+                                checkId(content3.id) ? 'active-text' : ''
+                              "
+                            >
+                              <ul>
+                                <ng-container
+                                  *ngFor="let content4 of content3.children"
                                 >
-                                  {{ content4.displayName | translate }}
-                                </li>
-                                <li
-                                  nz-submenu
-                                  [nzTitle]="content4.displayName | translate"
-                                  *ngIf="
-                                    content4.children.length !== 0 &&
-                                    (content4.isVisible == true ||
-                                      content4.isVisible == null)
-                                  "
-                                  [class]="
-                                    checkId(content4.id) ? 'active-text' : ''
-                                  "
-                                >
-                                  <ul>
-                                    <ng-container
-                                      *ngFor="let content5 of content4.children"
-                                    >
-                                      <li
-                                        nz-menu-item
-                                        *ngIf="
-                                          content5.children.length === 0 &&
-                                          (content5.isVisible == true ||
-                                            content5.isVisible == null)
-                                        "
-                                        [class]="
-                                          checkId(content5.id)
-                                            ? 'active-text'
-                                            : ''
-                                        "
-                                        (click)="
-                                          directProduct(content5);
-                                          setListId(content5)
+                                  <li
+                                    nz-menu-item
+                                    *ngIf="
+                                      content4.children.length === 0 &&
+                                      (content4.isVisible == true ||
+                                        content4.isVisible == null)
+                                    "
+                                    [class]="
+                                      checkId(content4.id) ? 'active-text' : ''
+                                    "
+                                    (click)="directProduct(content4)"
+                                  >
+                                    {{ content4.displayName | translate }}
+                                  </li>
+                                  <li
+                                    nz-submenu
+                                    [nzTitle]="content4.displayName | translate"
+                                    *ngIf="
+                                      content4.children.length !== 0 &&
+                                      (content4.isVisible == true ||
+                                        content4.isVisible == null)
+                                    "
+                                    [class]="
+                                      checkId(content4.id) ? 'active-text' : ''
+                                    "
+                                  >
+                                    <ul>
+                                      <ng-container
+                                        *ngFor="
+                                          let content5 of content4.children
                                         "
                                       >
-                                        {{ content5.displayName | translate }}
-                                      </li>
-                                      <li
-                                        nz-submenu
-                                        [nzTitle]="
-                                          content5.displayName | translate
-                                        "
-                                        *ngIf="
-                                          content5.children.length !== 0 &&
-                                          (content5.isVisible == true ||
-                                            content5.isVisible == null)
-                                        "
-                                        [class]="
-                                          checkId(content5.id)
-                                            ? 'active-text'
-                                            : ''
-                                        "
-                                      >
-                                        <ul>
-                                          <ng-container
-                                            *ngFor="
-                                              let content6 of content5.children
-                                            "
-                                          >
-                                            <li
-                                              nz-menu-item
-                                              (click)="
-                                                directProduct(content6);
-                                                setListId(content6)
-                                              "
-                                              *ngIf="
-                                                content6.isVisible == true ||
-                                                content6.isVisible == null
-                                              "
-                                              [class]="
-                                                checkId(content6.id)
-                                                  ? 'active-text'
-                                                  : ''
+                                        <li
+                                          nz-menu-item
+                                          *ngIf="
+                                            content5.children.length === 0 &&
+                                            (content5.isVisible == true ||
+                                              content5.isVisible == null)
+                                          "
+                                          [class]="
+                                            checkId(content5.id)
+                                              ? 'active-text'
+                                              : ''
+                                          "
+                                          (click)="
+                                            directProduct(content5);
+                                            setListId(content5)
+                                          "
+                                        >
+                                          {{ content5.displayName | translate }}
+                                        </li>
+                                        <li
+                                          nz-submenu
+                                          [nzTitle]="
+                                            content5.displayName | translate
+                                          "
+                                          *ngIf="
+                                            content5.children.length !== 0 &&
+                                            (content5.isVisible == true ||
+                                              content5.isVisible == null)
+                                          "
+                                          [class]="
+                                            checkId(content5.id)
+                                              ? 'active-text'
+                                              : ''
+                                          "
+                                        >
+                                          <ul>
+                                            <ng-container
+                                              *ngFor="
+                                                let content6 of content5.children
                                               "
                                             >
-                                              {{
-                                                content6.displayName | translate
-                                              }}
-                                            </li>
-                                          </ng-container>
-                                        </ul>
-                                      </li>
-                                    </ng-container>
-                                  </ul>
-                                </li>
-                              </ng-container>
-                            </ul>
-                          </li>
-                        </ng-container>
-                      </ul>
-                    </li>
-                  </ng-container>
-                </ul>
-              </li>
-            </ng-container>
-          </ul>
-        </nz-dropdown-menu>
-      </div>
+                                              <li
+                                                nz-menu-item
+                                                (click)="
+                                                  directProduct(content6);
+                                                  setListId(content6)
+                                                "
+                                                *ngIf="
+                                                  content6.isVisible == true ||
+                                                  content6.isVisible == null
+                                                "
+                                                [class]="
+                                                  checkId(content6.id)
+                                                    ? 'active-text'
+                                                    : ''
+                                                "
+                                              >
+                                                {{
+                                                  content6.displayName
+                                                    | translate
+                                                }}
+                                              </li>
+                                            </ng-container>
+                                          </ul>
+                                        </li>
+                                      </ng-container>
+                                    </ul>
+                                  </li>
+                                </ng-container>
+                              </ul>
+                            </li>
+                          </ng-container>
+                        </ul>
+                      </li>
+                    </ng-container>
+                  </ul>
+                </li>
+              </ng-container>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </ng-container>
     </div>
     <div class="child-content">
       <router-outlet></router-outlet>
