@@ -316,4 +316,13 @@
     [inforBOM]="bomDetail"
     >
   </app-popup-create-or-update-bom>
+
+  <app-popup-delete 
+    *ngIf="isvisiblePopupDelete" 
+    [(isvisible)]="isvisiblePopupDelete"
+    [tableName]="'BOM'"
+    [title]="'Xác nhận xoá thông tin BOM'"
+    (delete)="deleteRecordBom()"
+    >
+  </app-popup-delete>
   

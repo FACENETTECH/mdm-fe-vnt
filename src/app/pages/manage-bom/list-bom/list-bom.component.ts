@@ -53,7 +53,7 @@ export class ListBomComponent {
   heightTable: any;
   index: number = 0;
   blueprintCodeSelected: string = '';
-  blueprintIdSelected?: number;
+  recordIdSelected?: number;
   isvisiblePopupCreateOrUpdate: boolean = false;
   isvisiblePopupDelete: boolean = false;
   isvisiblePopupDeleteList: boolean = false;
@@ -64,7 +64,7 @@ export class ListBomComponent {
   noDataFound: boolean = false;
   optionsComplete: any[] = [];
   valueSelectBox: any[] = [];
-  bomDetail: Record<string, any> = {};
+  bomDetail: any = {};
 
   breadcrumbs = [
     {
@@ -370,9 +370,8 @@ export class ListBomComponent {
   /**
    * Hàm mở popup xoá bản vẽ của thông tin đơn hàng
    */
-  openPopupDelete(blueprint: any) {
-    this.blueprintCodeSelected = blueprint.wo_code;
-    this.blueprintIdSelected = blueprint.id;
+  openPopupDelete(record: any) {
+    this.recordIdSelected = record.id;
     this.isvisiblePopupDelete = true;
   }
 
@@ -399,6 +398,7 @@ export class ListBomComponent {
   }
 
   openPopupCreateOrUpdate() {
+    this.bomDetail = {};
     this.isvisiblePopupCreateOrUpdate = true;
   }
 
@@ -461,26 +461,31 @@ export class ListBomComponent {
   /**
    * Hàm xác nhận xoá thông tin bản vẽ
    */
-  deleteRecordSXNB() {
-    if (
-      this.blueprintIdSelected != null &&
-      this.blueprintIdSelected != undefined
-    ) {
-      this.loader.start();
-      this.componentService
-        .deleteRecordById(this.tableCode, this.blueprintIdSelected)
-        .subscribe({
-          next: (res) => {
-            this.toast.success(res.result.message);
-            this.getData({ page: this.pageNumber, size: this.pageSize });
-            this.loader.stop();
-          },
-          error: (err) => {
-            this.toast.error(err.error.result.message);
-            this.loader.stop();
-          },
-        });
+  deleteRecordBom() {
+    let request = {
+      pageNumber: 0,
+      pageSize: 0,
+      common: null,
+      filter: {
+        id: this.recordIdSelected,
+      },
+      sortOrder: 'DESC',
+      sortProperty: 'created_at',
     }
+    this.loader.start();
+    this.componentService
+      .deleteBomAndBomDetail(request)
+      .subscribe({
+        next: (res) => {
+          this.loader.stop();
+          this.getData({ page: this.pageNumber, size: this.pageSize });
+          this.toast.success(res.result.message);
+        },
+        error: (err) => {
+          this.loader.stop();
+          this.toast.error(err.error.result.message);
+        },
+      });
   }
 
   /**

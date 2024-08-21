@@ -451,6 +451,18 @@ export class ManageComponentService {
     );
   }
 
+  /**
+   * API xoá thông tin Bom và Bom detail
+   * @param request 
+   * @returns 
+   */
+  deleteBomAndBomDetail(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/delete-bom`,
+      request
+    );
+  }
+
 
   /**
    * Cập nhật thông tin bản ghi trong table đang truy cập

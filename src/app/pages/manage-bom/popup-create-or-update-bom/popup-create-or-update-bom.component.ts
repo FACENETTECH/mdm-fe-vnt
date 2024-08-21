@@ -13,7 +13,7 @@ import { DATA_TYPE } from 'src/app/utils/constrant';
 export class PopupCreateOrUpdateBomComponent {
   @Input() isvisible: boolean = true;
   @Input() inforComponent: any;
-  @Input() inforBOM: Record<string, any> = {};
+  @Input() inforBOM: any = {};
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() isvisibleUpdate: EventEmitter<boolean> = new EventEmitter();
   columns: any[] = [];
@@ -544,8 +544,10 @@ export class PopupCreateOrUpdateBomComponent {
   }
 
   ngOnDestroy() {
-    // for(let property in this.inforBOM) {
-    //   this.inforBOM[property] = undefined;
+    // if(Object.entries(this.inforBOM).length > 0) {
+    //   for(let property in this.inforBOM) {
+    //     this.inforBOM[property] = undefined;
+    //   }
     // }
   }
 
