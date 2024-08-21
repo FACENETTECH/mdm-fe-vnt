@@ -26,9 +26,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  choose: any = 0;
   siderList: any = [];
   isVisableLayout: boolean = false;
   isCheckRefresh: boolean = false;
+  listId: any[] = [];
 
   ///manage-user/list-account
 
@@ -51,27 +53,35 @@ export class AppComponent {
     private configService: ConfigService
   ) {
     let arr = window.location.href.split('/');
-    if(arr[arr.length - 1] == 'list-config') {
+    if (arr[arr.length - 1] == 'list-config') {
       this.navigateToConfigTable('/manage-config/config-table/list-config');
-    } else if(arr[arr.length - 1] == 'list-account') {
+    } else if (arr[arr.length - 1] == 'list-account') {
       this.navigateToConfigTable('/manage-account/list-account');
-    } else if(arr[arr.length - 1] == 'list-template') {
+    } else if (arr[arr.length - 1] == 'list-template') {
       this.navigateToConfigTable('/manage-template/list-template');
     } else if(arr[arr.length - 1] == 'list-bom') {
       this.navigateToConfigTable('/manage-bom/list-bom');
     } else {
-      if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm' || arr[arr.length - 1] == 'mdm-v2') {
+      if (
+        arr[arr.length - 1] == '' ||
+        arr[arr.length - 1] == 'mdm' ||
+        arr[arr.length - 1] == 'mdm-v2'
+      ) {
         this.isVisableLayout = false;
       } else {
-        if(arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
+        if (arr[arr.length - 1] == '' || arr[arr.length - 1] == 'mdm') {
           this.isVisableLayout = false;
         } else {
           let baseUrl = JSON.parse(localStorage.getItem('baseUrl')!);
-          if(baseUrl.children.length > 0) {
-            if(baseUrl.name != arr[arr.length - 2]) {
+          if (baseUrl.children.length > 0) {
+            if (baseUrl.name != arr[arr.length - 2]) {
               this.getListFunctionByName(arr[arr.length - 1], false);
             } else {
-              this.getListFunctionByName(baseUrl.name, true, arr[arr.length - 1]);
+              this.getListFunctionByName(
+                baseUrl.name,
+                true,
+                arr[arr.length - 1]
+              );
             }
           } else {
             this.getListFunctionByName(arr[arr.length - 1], false);
@@ -111,33 +121,76 @@ export class AppComponent {
     });
 
     if (this._router.url == '/') {
-      // if (this.roles.includes('admin_business')) {
-      //   this._router.navigate([`/home`]);
-      // } else {
-      //   this._router.navigate([`/home`]);
-      // }
-
-      // this.saveLanguage = localStorage.getItem('language');
-      // if (this.saveLanguage) {
-      //   this.selectLanguage = this.saveLanguage;
-      // }
-      // this.changeLanguage(this.selectLanguage);
-      // this.tourService.initialize(this.tourSteps, {
-      //   route: 'welcome',
-      // delayBeforeStepShow: 300,
-      // delayAfterNavigation: 150,
-      // enableBackdrop: true,
-      // prevBtnTitle: 'Trước',
-      // nextBtnTitle: 'Sau',
-      // endBtnTitle: 'Đóng',
-      // });
       this.tourService.end();
       this.getColumns();
       this.getName();
     }
 
     if (this.roles.includes('admin_fcim')) {
-      this._router.navigate([`exception/403`]);
+    }
+    // this._router.navigate([`exception/403`]);
+  }
+
+  checkId(data: any): boolean {
+    let check: boolean = false;
+    for (let i of this.listId) {
+      if (i == data) {
+        check = true;
+        break;
+      }
+    }
+    return check;
+  }
+
+  setListId(data: any) {
+    this.listId = [];
+    for (let i of this.lstFunction) {
+      if (i.id == data.id) {
+        this.listId.push(i.id);
+        break;
+      }
+      if (i.children.length !== 0) {
+        for (let j of i.children) {
+          if (j.id == data.id) {
+            this.listId.push(i.id);
+            this.listId.push(j.id);
+            break;
+          }
+          if (j.children.length !== 0) {
+            for (let k of j.children) {
+              if (k.id == data.id) {
+                this.listId.push(i.id);
+                this.listId.push(j.id);
+                this.listId.push(k.id);
+                break;
+              }
+              if (k.children.length !== 0) {
+                for (let g of k.children) {
+                  if (g.id == data.id) {
+                    this.listId.push(i.id);
+                    this.listId.push(j.id);
+                    this.listId.push(k.id);
+                    this.listId.push(g.id);
+                    break;
+                  }
+                  if (i.children.length !== 0) {
+                    for (let h of g.children) {
+                      if (i.id == data.id) {
+                        this.listId.push(i.id);
+                        this.listId.push(j.id);
+                        this.listId.push(k.id);
+                        this.listId.push(g.id);
+                        this.listId.push(h.id);
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -235,16 +288,17 @@ export class AppComponent {
 
   async getColumns() {
     this.table.map(async (t: any) => {
-      this.http
-        .get(`${environment.api_end_point}/api/column-properties/${t.id}`)
-        // .subscribe({
-        //   next: (res: any) => {
-        //     res.data.map((x: any) => {
-        //       x.localCheck = true;
-        //     });
-        //     localStorage.setItem(t.name, JSON.stringify(res.data));
-        //   },
-        // });
+      this.http.get(
+        `${environment.api_end_point}/api/column-properties/${t.id}`
+      );
+      // .subscribe({
+      //   next: (res: any) => {
+      //     res.data.map((x: any) => {
+      //       x.localCheck = true;
+      //     });
+      //     localStorage.setItem(t.name, JSON.stringify(res.data));
+      //   },
+      // });
     });
   }
 
@@ -307,7 +361,7 @@ export class AppComponent {
   }
 
   // Các hàm gọi API và xử lý thông tin các chức năng con
-  
+
   /**
    * Đây là hàm lấy ra danh sách chức năng con theo tên chức năng cha
    */
@@ -317,28 +371,28 @@ export class AppComponent {
       next: (res) => {
         sider = res.data;
         // Nếu chức năng cha có chức năng con sẽ thêm các thông tin về router với baseUrl là tên của chức năng cha
-        if(sider.children.length > 0) {
+        if (sider.children.length > 0) {
           localStorage.setItem('baseUrl', JSON.stringify(sider));
-          for(let i = 0; i < sider.children.length; i++) {
+          for (let i = 0; i < sider.children.length; i++) {
             this.siderList.push({
               ...sider.children[i],
               open: false,
               path: '/mdm/' + sider.name + '/' + sider.children[i].name,
               requiredRoles: ['admin_business'],
-              children: []
-            })
+              children: [],
+            });
           }
-          if(this.siderList.length > 0) {
-            this.siderList.sort((a: any, b: any) => a.index - b.index)
+          if (this.siderList.length > 0) {
+            this.siderList.sort((a: any, b: any) => a.index - b.index);
           }
           this.isVisableLayout = true;
-          if(check) {
+          if (check) {
             this._router.navigate([`/mdm/${data}/${childrenName}`]);
           } else {
             this._router.navigate([`/mdm/${data}/${this.siderList[0].name}`]);
           }
         }
-        // Nếu chức năng cha KHÔNG có chức năng con sẽ thêm các thông tin về router không có baseUrl là tên của chức năng cha 
+        // Nếu chức năng cha KHÔNG có chức năng con sẽ thêm các thông tin về router không có baseUrl là tên của chức năng cha
         else {
           localStorage.setItem('baseUrl', JSON.stringify(sider));
           this.siderList.push({
@@ -346,37 +400,37 @@ export class AppComponent {
             open: false,
             path: '/mdm/' + sider.name,
             requiredRoles: ['admin_business'],
-          })
+          });
           this.isVisableLayout = true;
-          if(check) {
+          if (check) {
             this._router.navigate([`/mdm/${data}/${childrenName}`]);
           } else {
             this._router.navigate([`/mdm/${data}`]);
           }
         }
-      }, error: (err) => {
+      },
+      error: (err) => {
         this.toast.error(err.error.result.message);
-      }
-    })
-
+      },
+    });
   }
 
   /** Block xử lý các chức năng trong phân hệ MDM */
-  /** 
+  /**
    * Đây làm hàm link về trang chứa các phân hệ của hệ thống
-  */
+   */
   goToHomePage() {
     // this.router.navigateByUrl('/auth/business-acc-setting/home-page')
   }
 
-  /** 
+  /**
    * Đây là hàm link tới các phân hệ trong hệ thống
    * @param item là biến chứa thông tin của phân hệ di chuyển đến
-  */
+   */
   directProduct(item: any) {
-    console.log(item);
-    if(this.isCheckRoles(item.name)) {
-      if(item.name == 'manage_account') {
+    if (item.children.length !== 0) return;
+    if (this.isCheckRoles(item.name)) {
+      if (item.name == 'manage_account') {
         this.isVisableLayout = true;
         this._router.navigate(['/manage-account/list-account'])
       } else if(item.name == 'manage_bom') {
@@ -397,24 +451,24 @@ export class AppComponent {
           open: false,
           path: '/manage-template/list-template',
           requiredRoles: ['admin_business'],
-        })
-        this._router.navigate(['/manage-template/list-template'])
-      }
-      else {
+        });
+        this._router.navigate(['/manage-template/list-template']);
+      } else {
         this.isVisableLayout = true;
         this.getListFunctionByName(item.name, false);
       }
+      this.setListId(item);
     } else {
       this.toast.warning('Tài khoản không có quyền thực hiện chức năng này!');
     }
   }
 
-  /** 
+  /**
    * Đây là hàm xử lý quyền của tài khoản để trả về giá className phù hợp
    * @param item là biến chứa thông tin của phân hệ di chuyển đến
-  */
-   getClassByRole(item: any): string {
-    if(this.isCheckRoles(item.name)) {
+   */
+  getClassByRole(item: any): string {
+    if (this.isCheckRoles(item.name)) {
       return 'container-item';
     } else {
       return 'un-active';
@@ -423,16 +477,21 @@ export class AppComponent {
 
   /**
    * Hàm kiểm tra tài khoản có quyền để thực hiện action hay không
-   * @param role 
-   * @returns 
+   * @param role
+   * @returns
    */
-   isCheckRoles(tableCode: string) {
-    if(this.baseService.isAuthorized('admin_business')) {
+  isCheckRoles(tableCode: string) {
+    if (this.baseService.isAuthorized('admin_business')) {
       return true;
     } else {
       let tenant = '';
-      if(this.keycloak.getKeycloakInstance().idTokenParsed != null && this.keycloak.getKeycloakInstance().idTokenParsed != undefined) {
-        tenant = this.keycloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+      if (
+        this.keycloak.getKeycloakInstance().idTokenParsed != null &&
+        this.keycloak.getKeycloakInstance().idTokenParsed != undefined
+      ) {
+        tenant = this.keycloak
+          .getKeycloakInstance()
+          .idTokenParsed!['groups'][0].slice(1);
       }
       let role = tenant + '_mdm_' + tableCode;
       return this.baseService.isAuthorized(role);
@@ -442,7 +501,7 @@ export class AppComponent {
   /**
    * Đây là hàm lấy ra danh sách các chức năng của từng phân hệ được phân biệt theo Type
    */
-   getFunctionsByType() {
+  getFunctionsByType() {
     // Xử lý thông tin phân hệ nhận được từ state trong router và gọi API để lấy ra danh sách chức năng
     this.configService.getAllFunction().subscribe({
       next: (res) => {
@@ -482,11 +541,11 @@ export class AppComponent {
         this.lstFunction = [ ...this.lstFunction, ...functionAdditional]
       }, error: (err) => {
         this.toast.error(err.error.message);
-      }
-    })
+      },
+    });
   }
 
-  async convertUrlS3 (url: string) {
+  async convertUrlS3(url: string) {
     const response = await fetch(url);
     const blobData = await response.blob();
 
@@ -496,7 +555,7 @@ export class AppComponent {
 
   /**
    * Hàm xử lý sự kiện back ở trình duyệt, khi phát hiện được sự kiện sẽ load lại trang với href được lấy ở trong đối Window
-   * @param event 
+   * @param event
    */
   @HostListener('window:popstate', ['$event'])
   onPopState(event: any) {

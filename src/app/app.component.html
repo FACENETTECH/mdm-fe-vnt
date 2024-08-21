@@ -1,161 +1,228 @@
-
-<!-- <nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="300px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null" [nzTheme]="'light'">
-    <div class="sidebar-logo" style="background-color: #2a3884">
-      <a href="localhost:4200/" target="_blank">
-        <ng-container *ngIf="logoBusiness; else notLogo">
-          <img *ngIf="!isCollapsed" src="{{ logoBusiness }}" alt="logo" />
-          <img
-            style="width: 32px"
-            *ngIf="isCollapsed"
-            src="{{ logoBusiness }}"
-            alt="logo"
-          />
-        </ng-container>
-        <ng-template #notLogo>
-          <img
-            *ngIf="!isCollapsed"
-            src="./assets/img/logo_FaceNet.png"
-            alt="logo"
-          />
-          <img
-            style="width: 32px"
-            *ngIf="isCollapsed"
-            src="./assets/img/logo_FaceNet.png"
-            alt="logo"
-          />
-        </ng-template>
-        <h1 *ngIf="!isCollapsed" style="color: #ffffff; font-size: 28px">
-          {{ nameBusiness }}
-        </h1>
-      </a>
+<fn-layout>
+  <div class="content">
+    <div class="menu">
+      <app-header> </app-header>
     </div>
-    <app-menu [isCollapsed]="isCollapsed"></app-menu>
-  </nz-sider>
-  <nz-layout>
-    <nz-header>
+    <div class="quoting-menu quoting-df unselect">
       <div
-        class="app-header d-flex j-content-between a-items-center color-header"
-        style="color: #ffffff"
+        *ngFor="let item of lstFunction"
+        [class]="
+          checkId(item.id)
+            ? 'quoting-menu-quoting-active quoting-df quoting-menu-width-10'
+            : 'quoting-menu-quoting quoting-df quoting-menu-width-10'
+        "
+        (click)="directProduct(item)"
       >
-        <div class="d-flex j-content-between a-items-center">
-          <span
-            class="header-trigger"
-            (click)="isCollapsed = !isCollapsed"
-            style="display: flex"
-          >
-            <span
-              class="trigger d-flex a-items-center"
-              nz-icon
-              [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-            ></span>
-          </span>
-          <span style="color: #ffffff; font-size: 28px">
-            {{ "Master Data Management " | translate }}
-          </span>
-        </div>
-        <span
-          style="padding: 0 24px 0 0"
-          class="d-flex j-content-between a-items-center"
+        <div
+          class="quoting-menu-quoting-name quoting-ml-10"
+          *ngIf="item.children.length == 0"
         >
-          &nbsp; &nbsp;
-          <span
-            style="font-size: 24px"
-            class="d-flex j-content-between a-items-center"
-          >
-            <nz-avatar nzIcon="user"></nz-avatar>
-            &nbsp;
-
-            <span style="font-size: 16px; position: relative;">
-              
-              <span style="font-size: 15px;position: absolute; top: -10px;">{{"Xin chào" | translate}}<br></span>
-              <span style="position: relative; top: 10px">
-                {{ name }}
-              </span>
-            </span>
-          </span>
-          &nbsp; &nbsp;
-          <span class="d-flex c-pointer" (click)="showOption()">
-            <nz-avatar [nzSrc]="srcImg"></nz-avatar>
-          </span>
-          &nbsp; &nbsp;
-          <ng-container *ngIf="true">
-            <nz-select
-              [(ngModel)]="selectLanguage"
-              (ngModelChange)="changeLanguage($event)"
-              style="width: 120px"
-            >
-              <nz-option
-                *ngFor="let option of options"
-                [nzLabel]="option.label | translate"
-                [nzValue]="option.value"
-              ></nz-option>
-            </nz-select>
-            &nbsp; &nbsp;
-          </ng-container>
-          &nbsp; &nbsp;
-          <span
-            (click)="fullScreen()"
-            nz-icon
-            style="font-size: 24px"
-            [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"
-            nzTheme="outline"
-          ></span>
-          &nbsp; &nbsp; &nbsp; &nbsp;
-
-          <span
-            (click)="notify()"
-            nz-icon
-            style="font-size: 24px"
-            nzType="bell"
-            nzTheme="outline"
-          ></span>
-          &nbsp; &nbsp;
-          <span
-            (click)="logoutConfirm()"
-            nz-icon
-            style="font-size: 24px"
-            nzType="logout"
-            nzTheme="outline"
-          ></span>
-        </span>
-      </div>
-    </nz-header>
-    <nz-content>
-      <div class="inner-content">
-        <router-outlet></router-outlet>
-        <ngx-ui-loader></ngx-ui-loader>
-      </div>
-    </nz-content>
-    <footer>
-      <div class="container-footer">
-        <div class="footer-content">
-          <p>
-            &copy; Copyright FaceNet 2023. All rights reserved. Designed by
-            <a
-              style="text-decoration: none; color: gray; font-weight: 600"
-              href="https://facenet.vn/"
-              target="_blank"
-              >FaceNet</a
-            >
-          </p>
+          <p>{{ item.displayName | translate }}</p>
         </div>
+        <div
+          class="quoting-menu-quoting-name quoting-ml-10"
+          nz-dropdown
+          nzTrigger="click"
+          [nzDropdownMenu]="dropdownMenu"
+          *ngIf="item.children.length !== 0"
+        >
+          <p>{{ item.displayName | translate }}</p>
+        </div>
+        <nz-dropdown-menu #dropdownMenu>
+          <ul nz-menu>
+            <ng-container *ngFor="let content of item.children">
+              <li
+                nz-menu-item
+                *ngIf="
+                  content.children.length === 0 &&
+                  (content.isVisible == true || content.isVisible == null)
+                "
+                [class]="checkId(content.id) ? 'active-text' : ''"
+                (click)="directProduct(content)"
+              >
+                {{ content.displayName | translate }}
+              </li>
+              <li
+                nz-submenu
+                [nzTitle]="content.displayName | translate"
+                *ngIf="
+                  content.children.length !== 0 &&
+                  (content.isVisible == true || content.isVisible == null)
+                "
+                [class]="checkId(content.id) ? 'active-text' : ''"
+              >
+                <ul>
+                  <ng-container *ngFor="let content2 of content.children">
+                    <li
+                      nz-menu-item
+                      *ngIf="
+                        content2.children.length === 0 &&
+                        (content2.isVisible == true ||
+                          content2.isVisible == null)
+                      "
+                      [class]="checkId(content2.id) ? 'active-text' : ''"
+                      (click)="directProduct(content2)"
+                    >
+                      {{ content2.displayName | translate }}
+                    </li>
+                    <li
+                      nz-submenu
+                      [nzTitle]="content2.displayName | translate"
+                      *ngIf="
+                        content2.children.length !== 0 &&
+                        (content2.isVisible == true ||
+                          content2.isVisible == null)
+                      "
+                      [class]="checkId(content2.id) ? 'active-text' : ''"
+                    >
+                      <ul>
+                        <ng-container
+                          *ngFor="let content3 of content2.children"
+                        >
+                          <li
+                            nz-menu-item
+                            *ngIf="
+                              content3.children.length === 0 &&
+                              (content3.isVisible == true ||
+                                content3.isVisible == null)
+                            "
+                            [class]="checkId(content3.id) ? 'active-text' : ''"
+                            (click)="directProduct(content3)"
+                          >
+                            {{ content3.displayName | translate }}
+                          </li>
+                          <li
+                            nz-submenu
+                            [nzTitle]="content3.displayName | translate"
+                            *ngIf="
+                              content3.children.length !== 0 &&
+                              (content3.isVisible == true ||
+                                content3.isVisible == null)
+                            "
+                            [class]="checkId(content3.id) ? 'active-text' : ''"
+                          >
+                            <ul>
+                              <ng-container
+                                *ngFor="let content4 of content3.children"
+                              >
+                                <li
+                                  nz-menu-item
+                                  *ngIf="
+                                    content4.children.length === 0 &&
+                                    (content4.isVisible == true ||
+                                      content4.isVisible == null)
+                                  "
+                                  [class]="
+                                    checkId(content4.id) ? 'active-text' : ''
+                                  "
+                                  (click)="directProduct(content4)"
+                                >
+                                  {{ content4.displayName | translate }}
+                                </li>
+                                <li
+                                  nz-submenu
+                                  [nzTitle]="content4.displayName | translate"
+                                  *ngIf="
+                                    content4.children.length !== 0 &&
+                                    (content4.isVisible == true ||
+                                      content4.isVisible == null)
+                                  "
+                                  [class]="
+                                    checkId(content4.id) ? 'active-text' : ''
+                                  "
+                                >
+                                  <ul>
+                                    <ng-container
+                                      *ngFor="let content5 of content4.children"
+                                    >
+                                      <li
+                                        nz-menu-item
+                                        *ngIf="
+                                          content5.children.length === 0 &&
+                                          (content5.isVisible == true ||
+                                            content5.isVisible == null)
+                                        "
+                                        [class]="
+                                          checkId(content5.id)
+                                            ? 'active-text'
+                                            : ''
+                                        "
+                                        (click)="
+                                          directProduct(content5);
+                                          setListId(content5)
+                                        "
+                                      >
+                                        {{ content5.displayName | translate }}
+                                      </li>
+                                      <li
+                                        nz-submenu
+                                        [nzTitle]="
+                                          content5.displayName | translate
+                                        "
+                                        *ngIf="
+                                          content5.children.length !== 0 &&
+                                          (content5.isVisible == true ||
+                                            content5.isVisible == null)
+                                        "
+                                        [class]="
+                                          checkId(content5.id)
+                                            ? 'active-text'
+                                            : ''
+                                        "
+                                      >
+                                        <ul>
+                                          <ng-container
+                                            *ngFor="
+                                              let content6 of content5.children
+                                            "
+                                          >
+                                            <li
+                                              nz-menu-item
+                                              (click)="
+                                                directProduct(content6);
+                                                setListId(content6)
+                                              "
+                                              *ngIf="
+                                                content6.isVisible == true ||
+                                                content6.isVisible == null
+                                              "
+                                              [class]="
+                                                checkId(content6.id)
+                                                  ? 'active-text'
+                                                  : ''
+                                              "
+                                            >
+                                              {{
+                                                content6.displayName | translate
+                                              }}
+                                            </li>
+                                          </ng-container>
+                                        </ul>
+                                      </li>
+                                    </ng-container>
+                                  </ul>
+                                </li>
+                              </ng-container>
+                            </ul>
+                          </li>
+                        </ng-container>
+                      </ul>
+                    </li>
+                  </ng-container>
+                </ul>
+              </li>
+            </ng-container>
+          </ul>
+        </nz-dropdown-menu>
       </div>
-    </footer>
-  </nz-layout>
-</nz-layout>
-
-<app-popup-logout *ngIf="isvisibleLogout"  [(isvisible)]="isvisibleLogout" (logout)="logOut()"  ></app-popup-logout>
-<tour-step-template></tour-step-template> -->
-
-<div *ngIf="!isVisableLayout">
-  <div class="menu">
-    <app-header> </app-header>
-  </div>
-  <div class="bg-gray">
-    <div class="btn-back">
     </div>
+    <div class="child-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</fn-layout>
+<!-- <div class="bg-gray">
+    <div class="btn-back"></div>
     <div class="container-homepage">
       <ng-container *ngFor="let item of lstFunction">
           <ng-container *ngIf="item.parent == null">
@@ -177,10 +244,8 @@
           </ng-container>
       </ng-container>
     </div>
-  </div>
-</div>
+  </div> -->
 
-<fn-layout *ngIf="isVisableLayout" [data]="siderList">
+<!-- <fn-layout *ngIf="isVisableLayout" [data]="siderList">
   <router-outlet></router-outlet>
-</fn-layout>
-
+</fn-layout> -->

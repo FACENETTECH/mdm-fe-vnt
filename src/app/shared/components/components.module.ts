@@ -91,7 +91,7 @@ import { PopupImportFormExcelComponent } from './popup-import-form-excel/popup-i
     NzInputModule,
     NzToolTipModule,
     TranslateModule,
-    NzCheckboxModule
+    NzCheckboxModule,
   ],
   exports: [
     BreadcrumbComponent,
