@@ -91,6 +91,7 @@ export class AppComponent {
     }
   }
 
+  common: string = '';
   isCollapsed: boolean = false;
   selectLanguage: string = 'vi_VN';
   srcImg: string = '';
@@ -129,6 +130,21 @@ export class AppComponent {
     if (this.roles.includes('admin_fcim')) {
     }
     // this._router.navigate([`exception/403`]);
+  }
+
+  clickInput(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  search(data: any): boolean {
+    return data
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/Đ/g, 'D')
+      .toLowerCase()
+      .includes(this.common);
   }
 
   checkId(data: any): boolean {

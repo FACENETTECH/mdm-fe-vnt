@@ -45,12 +45,22 @@
           </div>
           <nz-dropdown-menu #dropdownMenu>
             <ul nz-menu>
+              <li nz-menu-item>
+                <input
+                  style="width: 100%"
+                  nz-input
+                  placeholder="{{ 'Tìm kiếm' | translate }}"
+                  [(ngModel)]="common"
+                  (click)="clickInput($event)"
+                />
+              </li>
               <ng-container *ngFor="let content of item.children">
                 <li
                   nz-menu-item
                   *ngIf="
                     content.children.length === 0 &&
-                    (content.isVisible == true || content.isVisible == null)
+                    (content.isVisible == true || content.isVisible == null) &&
+                    search(content.displayName)
                   "
                   [class]="checkId(content.id) ? 'active-text' : ''"
                   (click)="directProduct(content)"
@@ -62,7 +72,8 @@
                   [nzTitle]="content.displayName | translate"
                   *ngIf="
                     content.children.length !== 0 &&
-                    (content.isVisible == true || content.isVisible == null)
+                    (content.isVisible == true || content.isVisible == null) &&
+                    search(content.displayName)
                   "
                   [class]="checkId(content.id) ? 'active-text' : ''"
                 >
