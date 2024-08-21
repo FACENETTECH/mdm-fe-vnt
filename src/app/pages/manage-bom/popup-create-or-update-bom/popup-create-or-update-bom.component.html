@@ -39,9 +39,21 @@
           </clipPath>
         </defs>
       </svg>
-      <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Thêm mới thông tin BOM' | translate }}
-      </p>
+        <ng-container *ngIf="typePopup == TYPE_POPUP.create">
+            <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+                {{ 'Thêm mới thông tin BOM' | translate }}
+            </p>
+        </ng-container>
+        <ng-container *ngIf="typePopup == TYPE_POPUP.update">
+            <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+                {{ 'Cập nhật thông tin BOM' | translate }}
+            </p>
+        </ng-container>
+        <ng-container *ngIf="typePopup == TYPE_POPUP.copy">
+            <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
+                {{ 'Sao chép thông tin BOM' | translate }}
+            </p>
+        </ng-container>
     </div>
   </ng-template>
 
@@ -959,7 +971,15 @@
         class="fn-bg-default"
         style="border-radius: 4px;width: 86px; text-align: center;"
       >
-        <span>{{ 'Thêm mới' | translate }}</span>
+        <ng-container *ngIf="typePopup == TYPE_POPUP.create">
+            <span>{{ 'Thêm mới' | translate }}</span>
+        </ng-container>
+        <ng-container *ngIf="typePopup == TYPE_POPUP.update">
+            <span>{{ 'Cập nhật' | translate }}</span>
+        </ng-container>
+        <ng-container *ngIf="typePopup == TYPE_POPUP.copy">
+            <span>{{ 'Sao chép' | translate }}</span>
+        </ng-container>
       </button>
   </ng-template>
   <!-- <app-popup-cancel

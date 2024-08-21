@@ -65,6 +65,7 @@ export class ListBomComponent {
   optionsComplete: any[] = [];
   valueSelectBox: any[] = [];
   bomDetail: any = {};
+  typePopup: number = 0;
 
   breadcrumbs = [
     {
@@ -399,6 +400,7 @@ export class ListBomComponent {
 
   openPopupCreateOrUpdate() {
     this.bomDetail = {};
+    this.typePopup = 0;
     this.isvisiblePopupCreateOrUpdate = true;
   }
 
@@ -573,7 +575,7 @@ export class ListBomComponent {
     }
   }
 
-  openPopupUpdateInforBom(inforBom: any) {
+  openPopupUpdateInforBom(inforBom: any, type: number) {
     let request = {
       pageNumber: 0,
       pageSize: 0,
@@ -592,6 +594,7 @@ export class ListBomComponent {
         console.log(res);
         if(res.data.hasOwnProperty('id')) {
           this.bomDetail = res.data;
+          this.typePopup = type;
           this.isvisiblePopupCreateOrUpdate = true;
         } else {
           this.toast.warning('Không tìm thấy thông tin BOM!');

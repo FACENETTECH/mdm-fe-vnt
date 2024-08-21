@@ -276,9 +276,23 @@
                         nz-button
                         nzType="link"
                         nz-tooltip="{{ 'btn.edit' | translate }}"
-                        (click)="openPopupUpdateInforBom(data)"
+                        (click)="openPopupUpdateInforBom(data, 1)"
                       >
                         <img src="./assets/icons/Edit-VNT.svg" />
+                      </button>
+                      <button
+                        style="color: #00AEEE"
+                        nz-button
+                        nzType="link"
+                        nz-tooltip="{{ 'btn.copy' | translate }}"
+                        (click)="openPopupUpdateInforBom(data, 2)"
+                      >
+                        <span
+                          nz-icon
+                          nzType="copy"
+                          nzTheme="outline"
+                          class="fn-icon-style"
+                        ></span>
                       </button>
                       <button
                         nz-button
@@ -314,6 +328,8 @@
     *ngIf="isvisiblePopupCreateOrUpdate" 
     [(isvisible)]="isvisiblePopupCreateOrUpdate"
     [inforBOM]="bomDetail"
+    [typePopup]="typePopup"
+    (isvisibleUpdate)="loadingAfterFinish($event)"
     >
   </app-popup-create-or-update-bom>
 

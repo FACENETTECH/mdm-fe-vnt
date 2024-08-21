@@ -11,6 +11,7 @@ import { DATA_TYPE } from 'src/app/utils/constrant';
   styleUrls: ['./popup-create-or-update-bom.component.css']
 })
 export class PopupCreateOrUpdateBomComponent {
+  @Input() typePopup: number = 0;
   @Input() isvisible: boolean = true;
   @Input() inforComponent: any;
   @Input() inforBOM: any = {};
@@ -40,7 +41,6 @@ export class PopupCreateOrUpdateBomComponent {
   constructor(private loader: NgxUiLoaderService, private manageService: ManageComponentService, private toast: ToastrService, private configService: ConfigService){}
 
   ngOnInit() {
-    console.log("ngOnInit: ", this.inforBOM);
     this.getColumns();
     this.getColumnsStage();
     this.getColumnsBomDetail();
@@ -400,10 +400,12 @@ export class PopupCreateOrUpdateBomComponent {
 
   handleChangeValueMaterialId(event: any, index: number) {
     let record = this.listMaterial.find((record) => record['id'] == event);
-    // console.log("changeValueMaterialId: ", record);
-    // this.columnsBomDetail.forEach((column) => {
-    //   this.listChildrenBom[index][column.keyName] = record[column.keyName];
-    // })
+    console.log("changeValueMaterialId: ", record);
+    this.columnsBomDetail.forEach((column) => {
+      if (column.keyName != 'material_id') {
+        this.listChildrenBom[index][column.keyName] = record[column.keyName];
+      }
+    })
   }
 
   /**
@@ -472,6 +474,9 @@ export class PopupCreateOrUpdateBomComponent {
   }
 
   async submit() {
+    if(this.typePopup == this.TYPE_POPUP.copy) {
+      this.inforBOM['id'] = undefined;
+    }
     this.loader.start();
     this.manageService.createOrUpdateBom(this.inforBOM).subscribe({
       next: (res) => {
@@ -495,6 +500,7 @@ export class PopupCreateOrUpdateBomComponent {
               this.toast.success(response.result.message);
               this.isvisible = false;
               this.isvisibleChange.emit(this.isvisible);
+              this.isvisibleUpdate.emit(true);
               this.updateInforStage();
             }, error: (error) => {
               this.loader.stop();
@@ -543,13 +549,14 @@ export class PopupCreateOrUpdateBomComponent {
       });
   }
 
-  ngOnDestroy() {
-    // if(Object.entries(this.inforBOM).length > 0) {
-    //   for(let property in this.inforBOM) {
-    //     this.inforBOM[property] = undefined;
-    //   }
-    // }
-  }
+  ngOnDestroy() {}
 
   protected readonly dataType = DATA_TYPE;
+  protected readonly TYPE_POPUP = typePopup;
+}
+
+const typePopup = {
+  create: 0,
+  update: 1,
+  copy: 2,
 }
