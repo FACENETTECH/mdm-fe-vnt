@@ -66,6 +66,7 @@ export class ListBomComponent {
   valueSelectBox: any[] = [];
   bomDetail: any = {};
   typePopup: number = 0;
+  widthRow: string = '';
 
   breadcrumbs = [
     {
@@ -269,6 +270,7 @@ export class ListBomComponent {
         this.loader.stop();
         this.columns = [...res.data];
         // this.getSearchTreeNodes();
+        this.setWidthColumnTabBlueprint();
       },
       error: (err) => {
         this.loader.stop();
@@ -297,6 +299,16 @@ export class ListBomComponent {
       }
     }
     this.widthColumn = [...widthColumns, '100px'];
+
+    // let currentWidthCol = 0;
+    // this.widthColumn.forEach((col) => {
+    //   currentWidthCol = currentWidthCol + Number(col.replace('px', ''));
+    // })
+    // this.widthRow = currentWidthCol + 'px';
+  }
+
+  trackByFn(index: number, item: any): any {
+    return item.id; // Hoặc một giá trị duy nhất nào đó để theo dõi các phần tử
   }
 
   getSetOfChecked(event: any) {

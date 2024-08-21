@@ -152,6 +152,12 @@
     overflow: hidden; /* Ẩn phần text vượt quá kích thước của ô */
     text-overflow: ellipsis; /* Hiển thị ba chấm (...) khi text bị ẩn */
   }
+
+  .example-viewport {
+    height: fit-content;
+    min-height: 40px;
+    width: 100%;
+  }
   
   /* Css của thư viện */
   ::ng-deep .ant-input {
