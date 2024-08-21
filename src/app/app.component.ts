@@ -59,7 +59,7 @@ export class AppComponent {
       this.navigateToConfigTable('/manage-account/list-account');
     } else if (arr[arr.length - 1] == 'list-template') {
       this.navigateToConfigTable('/manage-template/list-template');
-    } else if(arr[arr.length - 1] == 'list-bom') {
+    } else if (arr[arr.length - 1] == 'list-bom') {
       this.navigateToConfigTable('/manage-bom/list-bom');
     } else {
       if (
@@ -432,8 +432,8 @@ export class AppComponent {
     if (this.isCheckRoles(item.name)) {
       if (item.name == 'manage_account') {
         this.isVisableLayout = true;
-        this._router.navigate(['/manage-account/list-account'])
-      } else if(item.name == 'manage_bom') {
+        this._router.navigate(['/manage-account/list-account']);
+      } else if (item.name == 'manage_bom') {
         this.isVisableLayout = true;
         localStorage.setItem('baseUrl', JSON.stringify(item));
         this.siderList.push({
@@ -441,9 +441,9 @@ export class AppComponent {
           open: false,
           path: '/manage-bom/list-bom',
           requiredRoles: ['admin_business'],
-        })
-        this._router.navigate(['/manage-bom/list-bom'])
-      } else if(item.name == 'template_form') {
+        });
+        this._router.navigate(['/manage-bom/list-bom']);
+      } else if (item.name == 'template_form') {
         this.isVisableLayout = true;
         localStorage.setItem('baseUrl', JSON.stringify(item));
         this.siderList.push({
@@ -508,38 +508,39 @@ export class AppComponent {
         this.lstFunction = res.data;
         let functionAdditional = [
           {
-            "id": 64,
-            "name": "manage_account",
-            "displayName": "Quản lý tài khoản",
-            "label": "quản lý tài khoản",
-            "index": 31,
-            "isEntity": true,
-            "note": null,
-            "icon": "https://sin1.contabostorage.com/cf2afab5ee3b4f658b343e49ae70391c:fcimcloud/devnew/mdm/category/icons/fcim_cloud_(13).png",
-            "color": null,
-            "link": "http://dev.fcim.facenet.vn/mdm-v2",
-            "parent": null,
-            "isVisible": true,
-            "children": []
+            id: 999,
+            name: 'manage_bom',
+            displayName: 'Quản lý BOM',
+            label: 'quản lý BOM',
+            index: 32,
+            isEntity: true,
+            note: null,
+            icon: 'https://sin1.contabostorage.com/cf2afab5ee3b4f658b343e49ae70391c:fcimcloud/devnew/mdm/category/icons/fcim_cloud_(13).png',
+            color: null,
+            link: 'http://dev.fcim.facenet.vn/mdm-v2',
+            parent: null,
+            isVisible: true,
+            children: [],
           },
           {
-            "id": 64,
-            "name": "manage_bom",
-            "displayName": "Quản lý BOM",
-            "label": "quản lý BOM",
-            "index": 32,
-            "isEntity": true,
-            "note": null,
-            "icon": "https://sin1.contabostorage.com/cf2afab5ee3b4f658b343e49ae70391c:fcimcloud/devnew/mdm/category/icons/fcim_cloud_(13).png",
-            "color": null,
-            "link": "http://dev.fcim.facenet.vn/mdm-v2",
-            "parent": null,
-            "isVisible": true,
-            "children": []
-          }
-        ]
-        this.lstFunction = [ ...this.lstFunction, ...functionAdditional]
-      }, error: (err) => {
+            id: 64,
+            name: 'manage_account',
+            displayName: 'Quản lý tài khoản',
+            label: 'quản lý tài khoản',
+            index: 31,
+            isEntity: true,
+            note: null,
+            icon: 'https://sin1.contabostorage.com/cf2afab5ee3b4f658b343e49ae70391c:fcimcloud/devnew/mdm/category/icons/fcim_cloud_(13).png',
+            color: null,
+            link: 'http://dev.fcim.facenet.vn/mdm-v2',
+            parent: null,
+            isVisible: true,
+            children: [],
+          },
+        ];
+        this.lstFunction = [...this.lstFunction, ...functionAdditional];
+      },
+      error: (err) => {
         this.toast.error(err.error.message);
       },
     });
