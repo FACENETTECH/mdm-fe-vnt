@@ -8,7 +8,7 @@ import { DATA_TYPE } from 'src/app/utils/constrant';
 @Component({
   selector: 'app-popup-create-or-update-bom',
   templateUrl: './popup-create-or-update-bom.component.html',
-  styleUrls: ['./popup-create-or-update-bom.component.css']
+  styleUrls: ['./popup-create-or-update-bom.component.css'],
 })
 export class PopupCreateOrUpdateBomComponent {
   @Input() typePopup: number = 0;
@@ -38,7 +38,12 @@ export class PopupCreateOrUpdateBomComponent {
   isvisiblesubmit: boolean = false;
   listStageDeleteOfBom: any[] = [];
 
-  constructor(private loader: NgxUiLoaderService, private manageService: ManageComponentService, private toast: ToastrService, private configService: ConfigService){}
+  constructor(
+    private loader: NgxUiLoaderService,
+    private manageService: ManageComponentService,
+    private toast: ToastrService,
+    private configService: ConfigService
+  ) {}
 
   ngOnInit() {
     this.getColumns();
@@ -91,16 +96,18 @@ export class PopupCreateOrUpdateBomComponent {
 
   getColumnsStage() {
     this.loader.start();
-    this.manageService.getColummnByTableName('technology_process_operation').subscribe({
-      next: (res) => {
-        this.loader.stop();
-        this.columnsStage = [...res.data];
-        // this.getSearchTreeNodes();
-      },
-      error: (err) => {
-        this.loader.stop();
-      },
-    });
+    this.manageService
+      .getColummnByTableName('technology_process_operation')
+      .subscribe({
+        next: (res) => {
+          this.loader.stop();
+          this.columnsStage = [...res.data];
+          // this.getSearchTreeNodes();
+        },
+        error: (err) => {
+          this.loader.stop();
+        },
+      });
   }
 
   getListBomDetailOfBom() {
@@ -120,45 +127,54 @@ export class PopupCreateOrUpdateBomComponent {
       next: (res) => {
         this.loader.stop();
         this.listChildrenBom = res.data;
-      }, error: (err) => {
+      },
+      error: (err) => {
         this.loader.stop();
         this.toast.error(err.error.result.message);
-      }
-    })
+      },
+    });
   }
 
   getDataStages() {
-    let technologyProcessCode = this.listStage.find((record) => record.id == this.inforBOM['mdm_technology_process_id']);
-    if(technologyProcessCode) {
-      this.technologyProcessCode = technologyProcessCode['technology_process_code']
+    let technologyProcessCode = this.listStage.find(
+      (record) => record.id == this.inforBOM['mdm_technology_process_id']
+    );
+    if (technologyProcessCode) {
+      this.technologyProcessCode =
+        technologyProcessCode['technology_process_code'];
       this.loader.start();
       let request = {
         pageNumber: 0,
         pageSize: 0,
-        common: "",
+        common: '',
         filter: {
-          technology_process_code: technologyProcessCode['technology_process_code']
+          technology_process_code:
+            technologyProcessCode['technology_process_code'],
         },
-        sortOrder: "DESC",
-        sortProperty: "index",
-        searchOptions: []
-      }
-      this.manageService.getDataDynamicTable('technology_process_operation', request).subscribe({
-        next: (res) => {
-          this.loader.stop();
-          this.listStageOfBom = [...res.data];
-          if (this.listStageOfBom.length > 0) {
-            this.listStageOfBom.sort((a, b) => a['operation_order'] - b['operation_order']);
-            this.listStageOfBom.forEach((stage) => {
-              stage['isNew'] = false;
-            })
-          }
-          // this.getSearchTreeNodes();
-        },
-        error: (err) => {
-          this.loader.stop();
-        },
-      });
+        sortOrder: 'DESC',
+        sortProperty: 'index',
+        searchOptions: [],
+      };
+      this.manageService
+        .getDataDynamicTable('technology_process_operation', request)
+        .subscribe({
+          next: (res) => {
+            this.loader.stop();
+            this.listStageOfBom = [...res.data];
+            if (this.listStageOfBom.length > 0) {
+              this.listStageOfBom.sort(
+                (a, b) => a['operation_order'] - b['operation_order']
+              );
+              this.listStageOfBom.forEach((stage) => {
+                stage['isNew'] = false;
+              });
+            }
+            // this.getSearchTreeNodes();
+          },
+          error: (err) => {
+            this.loader.stop();
+          },
+        });
     }
   }
 
@@ -166,56 +182,60 @@ export class PopupCreateOrUpdateBomComponent {
     let request = {
       pageNumber: 0,
       pageSize: 0,
-      common: "",
+      common: '',
       filter: {},
-      sortOrder: "DESC",
-      sortProperty: "index",
-      searchOptions: []
-    }
+      sortOrder: 'DESC',
+      sortProperty: 'index',
+      searchOptions: [],
+    };
     this.manageService.getDataDynamicTable('material', request).subscribe({
       next: (res) => {
         this.listMaterial = res.data;
-      }, error: (err) => {
+      },
+      error: (err) => {
         console.error(err);
-      }
-    })
+      },
+    });
   }
 
   getListStage() {
     let request = {
       pageNumber: 0,
       pageSize: 0,
-      common: "",
+      common: '',
       filter: {},
-      sortOrder: "DESC",
-      sortProperty: "index",
-      searchOptions: []
-    }
-    this.manageService.getDataDynamicTable('technology_process', request).subscribe({
-      next: (res) => {
-        this.listStage = res.data;
-        console.log(this.listStage);
-      }, error: (err) => {
-        console.error(err);
-      }
-    })
+      sortOrder: 'DESC',
+      sortProperty: 'index',
+      searchOptions: [],
+    };
+    this.manageService
+      .getDataDynamicTable('technology_process', request)
+      .subscribe({
+        next: (res) => {
+          this.listStage = res.data;
+          console.log(this.listStage);
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
   }
 
   formatNumber(input: any) {
     // Lấy giá trị đang nhập từ input
     let value = input.value;
-  
+
     // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
     value = value.replace(/[^0-9.]/g, '');
 
-    // Convert string thành number 
+    // Convert string thành number
     const numberValue = Number.parseFloat(value);
     if (value[value.length - 1] != '.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
-      const formattedValue = numberValue.toLocaleString('en-US', { 
+      const formattedValue = numberValue.toLocaleString('en-US', {
         useGrouping: true,
-        maximumSignificantDigits: 20
-       });
+        maximumSignificantDigits: 20,
+      });
       // Gán giá trị đã được định dạng lại vào input
       input.value = formattedValue;
     }
@@ -229,8 +249,7 @@ export class PopupCreateOrUpdateBomComponent {
     this.columns.map((x: any) => {
       if (
         x.isRequired == true &&
-        (this.inforBOM[x.keyName] == null ||
-          this.inforBOM[x.keyname] == '')
+        (this.inforBOM[x.keyName] == null || this.inforBOM[x.keyname] == '')
       ) {
         this.checkMachine[x.keyName] = `Không được bỏ trống ${x.keyTitle}`;
       } else if (
@@ -250,17 +269,18 @@ export class PopupCreateOrUpdateBomComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có đơn vị tính
    */
   handleOpenChangeUnit(data: any, column: any) {
-    if(data) {
-      if(column.note != '' && column.note != null) {
+    if (data) {
+      if (column.note != '' && column.note != null) {
         this.manageService.getParamsByCode(column.note).subscribe({
           next: (res) => {
             this.valueTypeParam = res.data;
-          }, error: (err) => {
+          },
+          error: (err) => {
             this.toast.error(err.error.result.message);
-          }
+          },
         });
       } else {
-        this.toast.warning("Không tìm thấy tên cột!");
+        this.toast.warning('Không tìm thấy tên cột!');
       }
     }
   }
@@ -273,15 +293,15 @@ export class PopupCreateOrUpdateBomComponent {
   };
 
   addItem(isParam: any, column: any): void {
-    if(isParam) {
+    if (isParam) {
       this.requestAddNewParam = {
         tableName: this.tableCode,
-        columnName: column.keyName
-      }
+        columnName: column.keyName,
+      };
     } else {
       this.requestAddNewParam = {
-        paramCode: column.note
-      }
+        paramCode: column.note,
+      };
     }
     this.isVisibleManageParam = true;
   }
@@ -290,14 +310,17 @@ export class PopupCreateOrUpdateBomComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box
    */
   handleOpenChangeDataTypeParam(data: any, column: any) {
-    if(data) {
-      this.manageService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
-        next: (res) => {
-          this.valueSelectBox = res.data;
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
+    if (data) {
+      this.manageService
+        .getParamByTableNameAndColumnName(column.tableName, column.keyName)
+        .subscribe({
+          next: (res) => {
+            this.valueSelectBox = res.data;
+          },
+          error: (err) => {
+            this.toast.error(err.error.result.message);
+          },
+        });
     }
   }
 
@@ -306,40 +329,41 @@ export class PopupCreateOrUpdateBomComponent {
    */
   handleOpenChangeRelation(event: any, column: any) {
     // this.columnRelation = '';
-    if(this.listEntityByRelation.length > 0) {
+    if (this.listEntityByRelation.length > 0) {
       let tableCode = '';
-      for(let i = 0; i < this.listEntityByRelation.length; i++) {
-        if(this.listEntityByRelation[i].name == column.relateTable) {
+      for (let i = 0; i < this.listEntityByRelation.length; i++) {
+        if (this.listEntityByRelation[i].name == column.relateTable) {
           tableCode = this.listEntityByRelation[i].name;
         }
       }
-      if(tableCode != '') {
+      if (tableCode != '') {
         let request = {
-          "pageNumber": 0,
-          "pageSize": 0,
-          "common": "",
-          "filter": {},
-          "sortOrder": "DESC",
-          "sortProperty": "index",
-          "searchOptions": []
-        }
+          pageNumber: 0,
+          pageSize: 0,
+          common: '',
+          filter: {},
+          sortOrder: 'DESC',
+          sortProperty: 'index',
+          searchOptions: [],
+        };
         this.manageService.getDataDynamicTable(tableCode, request).subscribe({
           next: (res) => {
             this.optionsRelation = res.data;
             this.manageService.getColummnByTableName(tableCode).subscribe({
               next: (res) => {
-                for(let i = 0; i < res.data.length; i++) {
-                  if(res.data[i].keyName == column.relateColumn) {
+                for (let i = 0; i < res.data.length; i++) {
+                  if (res.data[i].keyName == column.relateColumn) {
                     this.columnRelation = res.data[i].keyName;
                     break;
                   }
                 }
-              }
-            })
-          }, error: (err) => {
+              },
+            });
+          },
+          error: (err) => {
             this.toast.error(err.error.result.message);
-          }
-        })
+          },
+        });
       }
     }
   }
@@ -349,63 +373,67 @@ export class PopupCreateOrUpdateBomComponent {
    */
   handleOpenChangeOperationCode(event: any, columnName: string) {
     // this.columnRelation = '';
-    if(event) {
-      if(this.listEntityByRelation.length > 0) {
+    if (event) {
+      if (this.listEntityByRelation.length > 0) {
         let tableCode = '';
-        for(let i = 0; i < this.listEntityByRelation.length; i++) {
-          if(this.listEntityByRelation[i].name == 'operation') {
+        for (let i = 0; i < this.listEntityByRelation.length; i++) {
+          if (this.listEntityByRelation[i].name == 'operation') {
             tableCode = this.listEntityByRelation[i].name;
           }
         }
-        if(tableCode != '') {
+        if (tableCode != '') {
           let request = {
-            "pageNumber": 0,
-            "pageSize": 0,
-            "common": "",
-            "filter": {},
-            "sortOrder": "DESC",
-            "sortProperty": "index",
-            "searchOptions": []
-          }
+            pageNumber: 0,
+            pageSize: 0,
+            common: '',
+            filter: {},
+            sortOrder: 'DESC',
+            sortProperty: 'index',
+            searchOptions: [],
+          };
           this.manageService.getDataDynamicTable(tableCode, request).subscribe({
             next: (res) => {
               this.optionsRelation = res.data;
               this.manageService.getColummnByTableName(tableCode).subscribe({
                 next: (res) => {
-                  for(let i = 0; i < res.data.length; i++) {
-                    if(res.data[i].keyName == columnName) {
+                  for (let i = 0; i < res.data.length; i++) {
+                    if (res.data[i].keyName == columnName) {
                       this.columnRelation = res.data[i].keyName;
                       break;
                     }
                   }
-                }
-              })
-            }, error: (err) => {
+                },
+              });
+            },
+            error: (err) => {
               this.toast.error(err.error.result.message);
-            }
-          })
+            },
+          });
         }
       }
     }
   }
 
   handleChangeValueOperationCode(event: any, index: number) {
-    let operation = this.optionsRelation.find((record) => record[this.columnRelation!] == event);
+    let operation = this.optionsRelation.find(
+      (record) => record[this.columnRelation!] == event
+    );
     this.columnsStage.forEach((column) => {
       this.listStageOfBom[index][column.keyName] = operation[column.keyName];
-    })
+    });
     this.listStageOfBom[index]['operation_order'] = this.listStageOfBom.length;
-    this.listStageOfBom[index]['technology_process_code'] = this.technologyProcessCode;
+    this.listStageOfBom[index]['technology_process_code'] =
+      this.technologyProcessCode;
   }
 
   handleChangeValueMaterialId(event: any, index: number) {
     let record = this.listMaterial.find((record) => record['id'] == event);
-    console.log("changeValueMaterialId: ", record);
+    console.log('changeValueMaterialId: ', record);
     this.columnsBomDetail.forEach((column) => {
       if (column.keyName != 'material_id') {
         this.listChildrenBom[index][column.keyName] = record[column.keyName];
       }
-    })
+    });
   }
 
   /**
@@ -415,33 +443,34 @@ export class PopupCreateOrUpdateBomComponent {
     this.listEntityByRelation = [];
     this.configService.getAllCategory().subscribe({
       next: (res) => {
-        for(let i = 0; i < res.data.length; i++) {
-          if(res.data[i].isEntity) {
-            this.listEntityByRelation.push(res.data[i])
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data[i].isEntity) {
+            this.listEntityByRelation.push(res.data[i]);
           }
-          if(res.data[i].children.length > 0) {
-            for(let j = 0; j < res.data[i].children.length; j++) {
-              if(res.data[i].children[j].isEntity) {
-                this.listEntityByRelation.push(res.data[i].children[j])
+          if (res.data[i].children.length > 0) {
+            for (let j = 0; j < res.data[i].children.length; j++) {
+              if (res.data[i].children[j].isEntity) {
+                this.listEntityByRelation.push(res.data[i].children[j]);
               }
             }
           }
         }
         this.handleOpenChangeOperationCode(true, 'operation_code');
-      }, error: (err) => {
+      },
+      error: (err) => {
         this.toast.error(err.error.result.message);
-      }
-    })
+      },
+    });
   }
 
   addNewRow() {
     let record: Record<string, any> = {};
     this.columns.forEach((col) => {
       record[col.name] = null;
-    })
+    });
     this.listChildrenBom.push({
-      ...record
-    })
+      ...record,
+    });
   }
 
   deleteRow(data: any, index: number) {
@@ -452,21 +481,21 @@ export class PopupCreateOrUpdateBomComponent {
     let record: Record<string, any> = {};
     this.columnsStage.forEach((col) => {
       record[col.name] = null;
-    })
+    });
     record['isNew'] = true;
     this.listStageOfBom.push({
-      ...record
-    })
+      ...record,
+    });
   }
 
   deleteRowTableStage(data: any, index: number) {
-    if(data.hasOwnProperty('id')) {
+    if (data.hasOwnProperty('id')) {
       this.listStageDeleteOfBom.push(data.id);
     }
     this.listStageOfBom.splice(index, 1);
     this.listStageOfBom.forEach((stage, index) => {
       stage['operation_order'] = index + 1;
-    })
+    });
   }
 
   submitDemo() {
@@ -474,7 +503,7 @@ export class PopupCreateOrUpdateBomComponent {
   }
 
   async submit() {
-    if(this.typePopup == this.TYPE_POPUP.copy) {
+    if (this.typePopup == this.TYPE_POPUP.copy) {
       this.inforBOM['id'] = undefined;
     }
     this.loader.start();
@@ -483,36 +512,43 @@ export class PopupCreateOrUpdateBomComponent {
         this.loader.stop();
         this.toast.success(res.result.message);
         console.log(res);
-        if(res.data) {
+        if (res.data) {
           this.listChildrenBom.forEach((bom) => {
             bom['bom_id'] = res.data.id;
             this.columnsBomDetail.forEach((col) => {
-              if(col.dataType == this.dataType.NUMBER && col.keyName != 'material_id') {
+              if (
+                col.dataType == this.dataType.NUMBER &&
+                col.keyName != 'material_id'
+              ) {
                 bom[col.keyName] = Number(bom[col.keyName]);
               }
-            })
-          })
+            });
+          });
           console.log(this.listChildrenBom);
           this.loader.start();
-          this.manageService.createOrUpdateBomDetail(this.listChildrenBom).subscribe({
-            next: (response) => {
-              this.loader.stop();
-              this.toast.success(response.result.message);
-              this.isvisible = false;
-              this.isvisibleChange.emit(this.isvisible);
-              this.isvisibleUpdate.emit(true);
-              this.updateInforStage();
-            }, error: (error) => {
-              this.loader.stop();
-              this.toast.error(error.error.result.message);
-            }
-          })
+          this.manageService
+            .createOrUpdateBomDetail(this.listChildrenBom)
+            .subscribe({
+              next: (response) => {
+                this.loader.stop();
+                this.toast.success(response.result.message);
+                this.isvisible = false;
+                this.isvisibleChange.emit(this.isvisible);
+                this.isvisibleUpdate.emit(true);
+                this.updateInforStage();
+              },
+              error: (error) => {
+                this.loader.stop();
+                this.toast.error(error.error.result.message);
+              },
+            });
         }
-      }, error: (err) => {
+      },
+      error: (err) => {
         this.loader.stop();
         this.toast.error(err.error.result.message);
-      }
-    })
+      },
+    });
   }
 
   updateInforStage() {
@@ -535,10 +571,7 @@ export class PopupCreateOrUpdateBomComponent {
       toCreateEntities: requestAddNew,
     };
     this.manageService
-      .updateListInforRecordByIdV2(
-        'technology_process_operation',
-        request
-      )
+      .updateListInforRecordByIdV2('technology_process_operation', request)
       .subscribe({
         next: (response) => {
           this.listStageDeleteOfBom = [];
@@ -559,4 +592,4 @@ const typePopup = {
   create: 0,
   update: 1,
   copy: 2,
-}
+};

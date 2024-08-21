@@ -431,7 +431,6 @@ export class AppComponent {
     if (item.children.length !== 0) return;
     if (this.isCheckRoles(item.name)) {
       if (item.name == 'manage_account') {
-        this.isVisableLayout = true;
         this._router.navigate(['/manage-account/list-account']);
       } else if (item.name == 'manage_bom') {
         this.isVisableLayout = true;
@@ -513,7 +512,7 @@ export class AppComponent {
             displayName: 'Quản lý BOM',
             label: 'quản lý BOM',
             index: 32,
-            isEntity: true,
+            isEntity: false,
             note: null,
             icon: 'https://sin1.contabostorage.com/cf2afab5ee3b4f658b343e49ae70391c:fcimcloud/devnew/mdm/category/icons/fcim_cloud_(13).png',
             color: null,
@@ -528,7 +527,7 @@ export class AppComponent {
             displayName: 'Quản lý tài khoản',
             label: 'quản lý tài khoản',
             index: 31,
-            isEntity: true,
+            isEntity: false,
             note: null,
             icon: 'https://sin1.contabostorage.com/cf2afab5ee3b4f658b343e49ae70391c:fcimcloud/devnew/mdm/category/icons/fcim_cloud_(13).png',
             color: null,

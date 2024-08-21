@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/manage-user/user.service';
 @Component({
   selector: 'app-list-account',
   templateUrl: './list-account.component.html',
-  styleUrls: ['./list-account.component.css']
+  styleUrls: ['./list-account.component.css'],
 })
 export class ListAccountComponent {
   constructor(
@@ -103,7 +103,6 @@ export class ListAccountComponent {
   ];
 
   ngOnInit() {
-    console.log(this.keycloak);
     this.getUser({ page: this.pageNumber, size: this.pageSize });
     this.getRole();
     this.getListGroups({
@@ -178,7 +177,6 @@ export class ListAccountComponent {
     if (res.result.ok) {
       this.listUser = res.data;
       this.total = res.dataCount;
-      console.log('[Hoang] List User: ', this.listUser);
     } else {
       this.toast.error(res.result.message);
     }
@@ -270,7 +268,9 @@ export class ListAccountComponent {
   async deleteGroupConfirm() {
     let res = await this.userService.deleteGroup(this.currentGroup.name);
     if (res.result.ok) {
-      this.toast.success(`Xóa nhóm ${this.currentGroup.description} thành công`);
+      this.toast.success(
+        `Xóa nhóm ${this.currentGroup.description} thành công`
+      );
       this.getListGroups({ page: this.pageNumber, size: this.pageSize });
       this.isvisibleDeleteGroup = false;
     } else {

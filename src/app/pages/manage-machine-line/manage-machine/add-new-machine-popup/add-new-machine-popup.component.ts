@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  HostListener,
+} from '@angular/core';
 import {
   FormBuilder,
   UntypedFormBuilder,
@@ -30,7 +37,7 @@ export class AddNewMachinePopupComponent {
     private loader: NgxUiLoaderService,
     private configService: ConfigService,
     private keyCloak: KeycloakService,
-    private baseService: BaseService,
+    private baseService: BaseService
   ) {}
   @Input() isvisible: boolean = true;
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
@@ -107,15 +114,15 @@ export class AddNewMachinePopupComponent {
     return !isEmpty && !containsSpecialCharacter;
   }
   addItem(isParam: any, column: any): void {
-    if(isParam) {
+    if (isParam) {
       this.requestAddNewParam = {
         tableName: this.tableCode,
-        columnName: column.keyName
-      }
+        columnName: column.keyName,
+      };
     } else {
       this.requestAddNewParam = {
-        paramCode: column.note
-      }
+        paramCode: column.note,
+      };
     }
     this.isVisibleManageParam = true;
     // const newItem = inputElement.value.trim();
@@ -354,56 +361,78 @@ export class AddNewMachinePopupComponent {
         return;
       }
     });
-    if(check) {
-      for(let i = 0; i < this.columns.length; i++) {
-        if(this.columns[i].dataType == this.dataType.NUMBER && this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
-          this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].replace(/,/g, '');
-          this.inforMachine[this.columns[i].keyName] = Number.parseFloat(this.inforMachine[this.columns[i].keyName]).toFixed(2);
+    if (check) {
+      for (let i = 0; i < this.columns.length; i++) {
+        if (
+          this.columns[i].dataType == this.dataType.NUMBER &&
+          this.inforMachine[this.columns[i].keyName] != null &&
+          this.inforMachine[this.columns[i].keyName] != ''
+        ) {
+          this.inforMachine[this.columns[i].keyName] = this.inforMachine[
+            this.columns[i].keyName
+          ].replace(/,/g, '');
+          this.inforMachine[this.columns[i].keyName] = Number.parseFloat(
+            this.inforMachine[this.columns[i].keyName]
+          ).toFixed(2);
         }
       }
-      for(let i = 0; i < this.columns.length; i++) {
-        if(this.columns[i].dataType == this.dataType.RELATION) {
-          if(this.inforMachine[this.columns[i].keyName] != null && this.inforMachine[this.columns[i].keyName] != '') {
-            this.inforMachine[this.columns[i].keyName] = this.inforMachine[this.columns[i].keyName].id;
+      for (let i = 0; i < this.columns.length; i++) {
+        if (this.columns[i].dataType == this.dataType.RELATION) {
+          if (
+            this.inforMachine[this.columns[i].keyName] != null &&
+            this.inforMachine[this.columns[i].keyName] != ''
+          ) {
+            this.inforMachine[this.columns[i].keyName] =
+              this.inforMachine[this.columns[i].keyName].id;
           }
         }
       }
-      this.manageService.addNewRecord(this.tableCode, this.inforMachine).subscribe({
-        next: (res) => {
-          let isImage = false;
-          for(let i = 0; i < this.columns.length; i++) {
-            if(this.columns[i].dataType == this.dataType.IMAGE) {
-              isImage = true;
-              break;
-            }
-          }
-          if(isImage && this.checkActionImage) {
-            this.manageService.uploadImageInComponents(this.tableCode, Number(res.data), this.formUpload).subscribe({
-              next: (data) => {
-                this.toast.success(res.result.message);
-                this.isvisible = false;
-                this.isvisibleChange.emit(false);
-                this.isvisibleAdd.emit(true);
-                this.loader.stop();
-              }, error: (err) => {
-                this.toast.error(err.error.result.message);
-                this.loader.stop();
+      this.manageService
+        .addNewRecord(this.tableCode, this.inforMachine)
+        .subscribe({
+          next: (res) => {
+            let isImage = false;
+            for (let i = 0; i < this.columns.length; i++) {
+              if (this.columns[i].dataType == this.dataType.IMAGE) {
+                isImage = true;
+                break;
               }
-            })
-          } else {
-            this.toast.success(res.result.message);
-            this.isvisible = false;
-            this.isvisibleChange.emit(false);
-            this.isvisibleAdd.emit(true);
+            }
+            if (isImage && this.checkActionImage) {
+              this.manageService
+                .uploadImageInComponents(
+                  this.tableCode,
+                  Number(res.data),
+                  this.formUpload
+                )
+                .subscribe({
+                  next: (data) => {
+                    this.toast.success(res.result.message);
+                    this.isvisible = false;
+                    this.isvisibleChange.emit(false);
+                    this.isvisibleAdd.emit(true);
+                    this.loader.stop();
+                  },
+                  error: (err) => {
+                    this.toast.error(err.error.result.message);
+                    this.loader.stop();
+                  },
+                });
+            } else {
+              this.toast.success(res.result.message);
+              this.isvisible = false;
+              this.isvisibleChange.emit(false);
+              this.isvisibleAdd.emit(true);
+              this.loader.stop();
+            }
+          },
+          error: (err) => {
+            this.toast.error(err.error.result.message);
             this.loader.stop();
-          }
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-          this.loader.stop();
-        }
-      })
+          },
+        });
     } else {
-      this.toast.warning("Vui lòng nhập đầy đủ thông tin yêu cầu bắt buộc!");
+      this.toast.warning('Vui lòng nhập đầy đủ thông tin yêu cầu bắt buộc!');
       this.loader.stop();
     }
   }
@@ -425,28 +454,31 @@ export class AddNewMachinePopupComponent {
     this.manageService.getColummnByTableName(this.tableCode).subscribe({
       next: (res) => {
         this.columns = res.data;
-        for(let i = 0; i < this.columns.length; i++) {
-          if(this.columns[i].isCode) {
+        for (let i = 0; i < this.columns.length; i++) {
+          if (this.columns[i].isCode) {
             this.columnKey = this.columns[i].keyName;
             break;
           }
         }
-      }
-    })
+      },
+    });
   }
 
   /**
    * Hàm gọi API và xử lý dữ liệu option cho select box
    */
   handleOpenChangeDataTypeParam(data: any, column: any) {
-    if(data) {
-      this.manageService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
-        next: (res) => {
-          this.valueSelectBox = res.data;
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
+    if (data) {
+      this.manageService
+        .getParamByTableNameAndColumnName(column.tableName, column.keyName)
+        .subscribe({
+          next: (res) => {
+            this.valueSelectBox = res.data;
+          },
+          error: (err) => {
+            this.toast.error(err.error.result.message);
+          },
+        });
     }
   }
 
@@ -454,17 +486,18 @@ export class AddNewMachinePopupComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có đơn vị tính
    */
   handleOpenChangeUnit(data: any, column: any) {
-    if(data) {
-      if(column.note != '' && column.note != null) {
+    if (data) {
+      if (column.note != '' && column.note != null) {
         this.manageService.getParamsByCode(column.note).subscribe({
           next: (res) => {
             this.valueTypeParam = res.data;
-          }, error: (err) => {
+          },
+          error: (err) => {
             this.toast.error(err.error.result.message);
-          }
+          },
         });
       } else {
-        this.toast.warning("Không tìm thấy tên cột!");
+        this.toast.warning('Không tìm thấy tên cột!');
       }
     }
   }
@@ -474,40 +507,41 @@ export class AddNewMachinePopupComponent {
    */
   handleOpenChangeRelation(event: any, column: any) {
     // this.columnRelation = '';
-    if(this.listEntityByRelation.length > 0) {
+    if (this.listEntityByRelation.length > 0) {
       let tableCode = '';
-      for(let i = 0; i < this.listEntityByRelation.length; i++) {
-        if(this.listEntityByRelation[i].name == column.relateTable) {
+      for (let i = 0; i < this.listEntityByRelation.length; i++) {
+        if (this.listEntityByRelation[i].name == column.relateTable) {
           tableCode = this.listEntityByRelation[i].name;
         }
       }
-      if(tableCode != '') {
+      if (tableCode != '') {
         let request = {
-          "pageNumber": 0,
-          "pageSize": 0,
-          "common": "",
-          "filter": {},
-          "sortOrder": "DESC",
-          "sortProperty": "index",
-          "searchOptions": []
-        }
+          pageNumber: 0,
+          pageSize: 0,
+          common: '',
+          filter: {},
+          sortOrder: 'DESC',
+          sortProperty: 'index',
+          searchOptions: [],
+        };
         this.manageService.getDataDynamicTable(tableCode, request).subscribe({
           next: (res) => {
             this.optionsRelation = res.data;
             this.manageService.getColummnByTableName(tableCode).subscribe({
               next: (res) => {
-                for(let i = 0; i < res.data.length; i++) {
-                  if(res.data[i].keyName == column.relateColumn) {
+                for (let i = 0; i < res.data.length; i++) {
+                  if (res.data[i].keyName == column.relateColumn) {
                     this.columnRelation = res.data[i].keyName;
                     break;
                   }
                 }
-              }
-            })
-          }, error: (err) => {
+              },
+            });
+          },
+          error: (err) => {
             this.toast.error(err.error.result.message);
-          }
-        })
+          },
+        });
       }
     }
   }
@@ -519,28 +553,29 @@ export class AddNewMachinePopupComponent {
     this.listEntityByRelation = [];
     this.configService.getAllCategory().subscribe({
       next: (res) => {
-        for(let i = 0; i < res.data.length; i++) {
-          if(res.data[i].isEntity) {
-            this.listEntityByRelation.push(res.data[i])
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data[i].isEntity) {
+            this.listEntityByRelation.push(res.data[i]);
           }
-          if(res.data[i].children.length > 0) {
-            for(let j = 0; j < res.data[i].children.length; j++) {
-              if(res.data[i].children[j].isEntity) {
-                this.listEntityByRelation.push(res.data[i].children[j])
+          if (res.data[i].children.length > 0) {
+            for (let j = 0; j < res.data[i].children.length; j++) {
+              if (res.data[i].children[j].isEntity) {
+                this.listEntityByRelation.push(res.data[i].children[j]);
               }
             }
           }
         }
-      }, error: (err) => {
+      },
+      error: (err) => {
         this.toast.error(err.error.result.message);
-      }
-    })
+      },
+    });
   }
 
   /**
    * Hàm xử lý import file với những trường là ảnh
    */
-  formUpload= new FormData();
+  formUpload = new FormData();
   handleChange(item: any, column: any) {
     this.formUpload.append(column.keyName, item.target.files['0']);
     this.inforMachine[column.keyName] = item.target.files['0'].name;
@@ -554,7 +589,7 @@ export class AddNewMachinePopupComponent {
 
       reader.readAsDataURL(file);
     }
-  };
+  }
 
   /**
    * Hàm xử lý click vào form upload file
@@ -563,22 +598,21 @@ export class AddNewMachinePopupComponent {
     // document.getElementById('fileInput')?.click();
   }
 
-  
   formatNumber(input: any) {
     // Lấy giá trị đang nhập từ input
     let value = input.value;
-  
+
     // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
     value = value.replace(/[^0-9.]/g, '');
 
-    // Convert string thành number 
+    // Convert string thành number
     const numberValue = Number.parseFloat(value);
     if (value[value.length - 1] != '.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
-      const formattedValue = numberValue.toLocaleString('en-US', { 
+      const formattedValue = numberValue.toLocaleString('en-US', {
         useGrouping: true,
-        maximumSignificantDigits: 20
-       });
+        maximumSignificantDigits: 20,
+      });
       // Gán giá trị đã được định dạng lại vào input
       input.value = formattedValue;
     }
@@ -586,16 +620,21 @@ export class AddNewMachinePopupComponent {
 
   /**
    * Hàm kiểm tra tài khoản có quyền để thực hiện action hay không
-   * @param role 
-   * @returns 
+   * @param role
+   * @returns
    */
-   isCheckRoles(action: string) {
-    if(this.baseService.isAuthorized('admin_business')) {
+  isCheckRoles(action: string) {
+    if (this.baseService.isAuthorized('admin_business')) {
       return true;
     } else {
       let tenant = '';
-      if(this.keyCloak.getKeycloakInstance().idTokenParsed != null && this.keyCloak.getKeycloakInstance().idTokenParsed != undefined) {
-        tenant = this.keyCloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+      if (
+        this.keyCloak.getKeycloakInstance().idTokenParsed != null &&
+        this.keyCloak.getKeycloakInstance().idTokenParsed != undefined
+      ) {
+        tenant = this.keyCloak
+          .getKeycloakInstance()
+          .idTokenParsed!['groups'][0].slice(1);
       }
       let role = tenant + '_mdm_' + this.tableCode + '_' + action;
       return this.baseService.isAuthorized(role);
@@ -604,12 +643,12 @@ export class AddNewMachinePopupComponent {
 
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
-   * @param event 
+   * @param event
    */
-   @HostListener('document:keydown.Escape', ['$event'])
-   handleUpdate(event: any) {
-     this.handleCancel();
-   }
+  @HostListener('document:keydown.Escape', ['$event'])
+  handleUpdate(event: any) {
+    this.handleCancel();
+  }
 
   machineColumn: Record<string, any> = {};
   columns: any[] = [];
