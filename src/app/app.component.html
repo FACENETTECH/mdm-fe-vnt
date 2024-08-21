@@ -11,6 +11,9 @@
             ? 'quoting-menu-quoting-active quoting-df quoting-menu-width-10'
             : 'quoting-menu-quoting quoting-df quoting-menu-width-10'
         "
+        nz-dropdown
+        nzTrigger="click"
+        [nzDropdownMenu]="dropdownMenu"
         (click)="directProduct(item)"
       >
         <div
@@ -21,12 +24,11 @@
         </div>
         <div
           class="quoting-menu-quoting-name quoting-ml-10"
-          nz-dropdown
-          nzTrigger="click"
-          [nzDropdownMenu]="dropdownMenu"
           *ngIf="item.children.length !== 0"
+          style="display: flex; gap: 10px; align-items: center"
         >
           <p>{{ item.displayName | translate }}</p>
+          <span nz-icon nzType="down" nzTheme="outline"></span>
         </div>
         <nz-dropdown-menu #dropdownMenu>
           <ul nz-menu>
