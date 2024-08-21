@@ -523,7 +523,7 @@ export class AppComponent {
             "children": []
           },
           {
-            "id": 64,
+            "id": 999,
             "name": "manage_bom",
             "displayName": "Quản lý BOM",
             "label": "quản lý BOM",
