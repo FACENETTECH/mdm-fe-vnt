@@ -79,6 +79,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { ManageBomRoutingModule } from './manage-bom-routing.module';
 import { ListBomComponent } from './list-bom/list-bom.component';
@@ -176,6 +177,7 @@ import { ManageMachineLineModule } from '../manage-machine-line/manage-machine-l
     DragDropModule,
     FormsModule,
     ReactiveFormsModule,
+    ScrollingModule
   ]
 })
 export class ManageBomModule { }

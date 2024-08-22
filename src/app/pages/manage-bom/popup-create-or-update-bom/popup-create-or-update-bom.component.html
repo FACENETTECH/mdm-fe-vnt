@@ -348,7 +348,8 @@
                         [(ngModel)]="inforBOM[col.keyName]"
                         (ngModelChange)="checkValid()"
                         (ngModelChange)="checkAction = true"
-                        nzFormat="dd/MM/yyyy">
+                        nzFormat="dd/MM/yyyy"
+                        [disabled]="col.isDisable">
                       </nz-date-picker>
                       <span
                         style="color: red"
@@ -374,6 +375,7 @@
                           col.keyTitle | translate
                         }} "
                         (ngModelChange)="checkAction = true"
+                        [disabled]="col.isDisable"
                       />
                       <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                         checkMachine[col.keyName]
@@ -397,6 +399,7 @@
                         }} "
                         (ngModelChange)="checkAction = true"
                         rows="1"
+                        [disabled]="col.isDisable"
                       ></textarea>
                       <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                         checkMachine[col.keyName]
@@ -496,6 +499,7 @@
                         }} ----"
                         (ngModelChange)="checkAction = true"
                         [nzShowSearch]="true"
+                        [disabled]="col.isDisable"
                       >
                         <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
                       </nz-select>
@@ -515,198 +519,200 @@
                 <span nz-icon nzType="file-protect"></span>
                 {{ 'Danh sách nguyên vật liệu' }}
               </ng-template>
-              <nz-table
-                #childrenBomTable
-                [nzData]="['']"
-                nzTableLayout="fixed"
-                nzBordered
-                [nzSize]="'small'"
-                nzShowPagination="false"
-                [nzScroll]="{ x: 'auto', y: '500px' }"
-              >
-                <thead>
-                  <tr>
-                    <th nzWidth="48px" nzAlign="center">
-                        {{ "STT" | translate }}
-                    </th>
-                    <ng-container *ngFor="let column of columnsBomDetail; let i = index">
-                      <ng-container *ngIf="column.localCheck">
-                        <th
-                          *ngIf="column.isFixed"
-                          nz-resizable
-                          [nzWidth]="column.width"
-                          [nzAlign]="'center'"
-                          nzLeft
-                        >
-                          <div class="editable-cell">
-                            {{ column.keyTitle | translate }}
-                          </div>
+              <!-- <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport"> -->
+                  <nz-table
+                    #childrenBomTable
+                    [nzData]="['']"
+                    nzTableLayout="fixed"
+                    nzBordered
+                    [nzSize]="'small'"
+                    nzShowPagination="false"
+                    [nzScroll]="{ x: 'auto', y: '500px' }"
+                  >
+                    <thead>
+                      <tr>
+                        <th nzWidth="48px" nzAlign="center">
+                            {{ "STT" | translate }}
                         </th>
-                        <th
-                          *ngIf="!column.isFixed"
-                          nz-resizable
-                          [nzWidth]="column.width"
-                          [nzAlign]="'center'"
-                        >
-                          <div class="editable-cell">
-                            {{ column.keyTitle | translate }}
-                          </div>
+                        <ng-container *ngFor="let column of columnsBomDetail; let i = index">
+                          <ng-container *ngIf="column.localCheck">
+                            <th
+                              *ngIf="column.isFixed"
+                              nz-resizable
+                              [nzWidth]="column.width"
+                              [nzAlign]="'center'"
+                              nzLeft
+                            >
+                              <div class="editable-cell">
+                                {{ column.keyTitle | translate }}
+                              </div>
+                            </th>
+                            <th
+                              *ngIf="!column.isFixed"
+                              nz-resizable
+                              [nzWidth]="column.width"
+                              [nzAlign]="'center'"
+                            >
+                              <div class="editable-cell">
+                                {{ column.keyTitle | translate }}
+                              </div>
+                            </th>
+                          </ng-container>
+                        </ng-container>
+                        <th nzWidth="86px" nzAlign="center" nzRight>
+                          {{ "Thao tác" | translate }}
                         </th>
-                      </ng-container>
-                    </ng-container>
-                    <th nzWidth="86px" nzAlign="center" nzRight>
-                      {{ "Thao tác" | translate }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngFor="let data of listChildrenBom; let i = index">
-                        <tr>
-                            <td class="fn-text-align-center">
-                                {{ i + 1}}
-                            </td>
-                            <ng-container *ngFor="let col of columnsBomDetail">
-                                <ng-container *ngIf="col.localCheck">
-                                    <ng-container *ngIf="col.dataType == dataType.NUMBER">
-                                        <td>
-                                            <ng-container *ngIf="col.keyName == 'material_id'">
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let data of listChildrenBom; let i = index">
+                            <tr>
+                                <td class="fn-text-align-center">
+                                    {{ i + 1}}
+                                </td>
+                                <ng-container *ngFor="let col of columnsBomDetail">
+                                    <ng-container *ngIf="col.localCheck">
+                                        <ng-container *ngIf="col.dataType == dataType.NUMBER">
+                                            <td>
+                                                <ng-container *ngIf="col.keyName == 'material_id'">
+                                                    <nz-select
+                                                        style="width: 100%"
+                                                        nzMode="default"
+                                                        [(ngModel)]="data[col.keyName]"
+                                                        (ngModelChange)="handleChangeValueMaterialId($event, i)"
+                                                        nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                                                        col.keyTitle | translate
+                                                        }} ----"
+                                                        [nzShowSearch]="true"
+                                                        [disabled]="col.isDisable"
+                                                    >
+                                                        <nz-option *ngFor="let item of listMaterial" [nzValue]="item['id']" [nzLabel]="item['material_name']"></nz-option>
+                                                    </nz-select>
+                                                </ng-container>
+                                                <ng-container *ngIf="col.keyName != 'material_id'">
+                                                    <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)" type="text" [(ngModel)]="data[col.keyName]" 
+                                                    placeholder="---- {{ 'Nhập' | translate }} {{
+                                                        col.keyTitle | translate
+                                                        }} ----" [disabled]="col.isDisable"/>
+                                                </ng-container>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
+                                            <td>
+                                                <nz-date-picker
+                                                    style="width: 100%"
+                                                    [(ngModel)]="data[col.keyName]"
+                                                    nzFormat="dd/MM/yyyy"
+                                                    [disabled]="col.isDisable">
+                                                </nz-date-picker>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngIf="col.dataType == dataType.STRING">
+                                            <td>
+                                                <input
+                                                    type="text"
+                                                    nz-input
+                                                    [(ngModel)]="data[col.keyName]"
+                                                    placeholder=" {{ 'Nhập' | translate }} {{
+                                                    col.keyTitle | translate
+                                                    }} "
+                                                    [disabled]="col.isDisable"
+                                                />
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
+                                            <td>
+                                                <textarea
+                                                    nz-input
+                                                    [(ngModel)]="data[col.keyName]"
+                                                    placeholder=" {{ 'Nhập' | translate }} {{
+                                                    col.keyTitle | translate
+                                                    }} "
+                                                    rows="1"
+                                                    [disabled]="col.isDisable"
+                                                ></textarea>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngIf="col.dataType == dataType.PARAM">
+                                            <td>
                                                 <nz-select
                                                     style="width: 100%"
                                                     nzMode="default"
                                                     [(ngModel)]="data[col.keyName]"
-                                                    (ngModelChange)="handleChangeValueMaterialId($event, i)"
+                                                    (nzOpenChange)="handleOpenChangeDataTypeParam($event, col)"
+                                                    nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                                                    col.keyTitle | translate
+                                                    }} ----"
+                                                    [disabled]="col.isDisable"
+                                                >
+                                                    <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                                                </nz-select>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngIf="col.dataType == dataType.RELATION">
+                                            <td>
+                                                <nz-select
+                                                    style="width: 100%"
+                                                    nzMode="default"
+                                                    [(ngModel)]="data[col.keyName]"
+                                                    (nzOpenChange)="handleOpenChangeRelation($event, col)"
                                                     nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
                                                     col.keyTitle | translate
                                                     }} ----"
                                                     [nzShowSearch]="true"
                                                     [disabled]="col.isDisable"
                                                 >
-                                                    <nz-option *ngFor="let item of listMaterial" [nzValue]="item['id']" [nzLabel]="item['material_name']"></nz-option>
+                                                    <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
                                                 </nz-select>
-                                            </ng-container>
-                                            <ng-container *ngIf="col.keyName != 'material_id'">
-                                                <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)" type="text" [(ngModel)]="data[col.keyName]" 
-                                                placeholder="---- {{ 'Nhập' | translate }} {{
-                                                    col.keyTitle | translate
-                                                    }} ----" [disabled]="col.isDisable"/>
-                                            </ng-container>
-                                        </td>
-                                    </ng-container>
-                                    <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
-                                        <td>
-                                            <nz-date-picker
-                                                style="width: 100%"
-                                                [(ngModel)]="data[col.keyName]"
-                                                nzFormat="dd/MM/yyyy"
-                                                [disabled]="col.isDisable">
-                                            </nz-date-picker>
-                                        </td>
-                                    </ng-container>
-                                    <ng-container *ngIf="col.dataType == dataType.STRING">
-                                        <td>
-                                            <input
-                                                type="text"
-                                                nz-input
-                                                [(ngModel)]="data[col.keyName]"
-                                                placeholder=" {{ 'Nhập' | translate }} {{
-                                                col.keyTitle | translate
-                                                }} "
-                                                [disabled]="col.isDisable"
-                                            />
-                                        </td>
-                                    </ng-container>
-                                    <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
-                                        <td>
-                                            <textarea
-                                                nz-input
-                                                [(ngModel)]="data[col.keyName]"
-                                                placeholder=" {{ 'Nhập' | translate }} {{
-                                                col.keyTitle | translate
-                                                }} "
-                                                rows="1"
-                                                [disabled]="col.isDisable"
-                                            ></textarea>
-                                        </td>
-                                    </ng-container>
-                                    <ng-container *ngIf="col.dataType == dataType.PARAM">
-                                        <td>
-                                            <nz-select
-                                                style="width: 100%"
-                                                nzMode="default"
-                                                [(ngModel)]="data[col.keyName]"
-                                                (nzOpenChange)="handleOpenChangeDataTypeParam($event, col)"
-                                                nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
-                                                col.keyTitle | translate
-                                                }} ----"
-                                                [disabled]="col.isDisable"
-                                            >
-                                                <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
-                                            </nz-select>
-                                        </td>
-                                    </ng-container>
-                                    <ng-container *ngIf="col.dataType == dataType.RELATION">
-                                        <td>
-                                            <nz-select
-                                                style="width: 100%"
-                                                nzMode="default"
-                                                [(ngModel)]="data[col.keyName]"
-                                                (nzOpenChange)="handleOpenChangeRelation($event, col)"
-                                                nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
-                                                col.keyTitle | translate
-                                                }} ----"
-                                                [nzShowSearch]="true"
-                                                [disabled]="col.isDisable"
-                                            >
-                                                <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
-                                            </nz-select>
-                                        </td>
-                                    </ng-container>
-                                    <ng-container *ngIf="col.dataType == dataType.BOOLEAN">
-                                        <td>
-                                            <nz-radio-group
-                                                [disabled]="col.isDisable"
-                                                nz-col
-                                                nzSpan="24"
-                                                [(ngModel)]="data[col.keyName]"
-                                                style="margin-top: 6px; display: flex; justify-content: space-between;"
-                                            >
-                                                <label
-                                                style="width: 50%; margin: 0; font-size: 13px;"
-                                                nz-radio
-                                                [nzValue]="true"
-                                                >{{ "Có" | translate }}</label
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngIf="col.dataType == dataType.BOOLEAN">
+                                            <td>
+                                                <nz-radio-group
+                                                    [disabled]="col.isDisable"
+                                                    nz-col
+                                                    nzSpan="24"
+                                                    [(ngModel)]="data[col.keyName]"
+                                                    style="margin-top: 6px; display: flex; justify-content: space-between;"
                                                 >
-                                                <label
-                                                style="width: 45%; margin: 0; font-size: 13px;"
-                                                nz-radio
-                                                [nzValue]="false"
-                                                >{{ "Không" | translate }}</label
-                                                >
-                                            </nz-radio-group>
-                                        </td>
+                                                    <label
+                                                    style="width: 50%; margin: 0; font-size: 13px;"
+                                                    nz-radio
+                                                    [nzValue]="true"
+                                                    >{{ "Có" | translate }}</label
+                                                    >
+                                                    <label
+                                                    style="width: 45%; margin: 0; font-size: 13px;"
+                                                    nz-radio
+                                                    [nzValue]="false"
+                                                    >{{ "Không" | translate }}</label
+                                                    >
+                                                </nz-radio-group>
+                                            </td>
+                                        </ng-container>
                                     </ng-container>
                                 </ng-container>
-                            </ng-container>
-                            <td nzRight>
-                                <div class="fn-df fn-df-justify-center">
-                                    <button
-                                      nz-button
-                                      nzType="link"
-                                      nz-tooltip="{{ 'btn.delete' | translate }}"
-                                      (click)="deleteRow(data, i)"
-                                    >
-                                      <img
-                                        width="16px"
-                                        height="16px"
-                                        src="./assets/icons/Delete-VNT.svg"
-                                      />
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-              </nz-table>
+                                <td nzRight>
+                                    <div class="fn-df fn-df-justify-center">
+                                        <button
+                                          nz-button
+                                          nzType="link"
+                                          nz-tooltip="{{ 'btn.delete' | translate }}"
+                                          (click)="deleteRow(data, i)"
+                                        >
+                                          <img
+                                            width="16px"
+                                            height="16px"
+                                            src="./assets/icons/Delete-VNT.svg"
+                                          />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                  </nz-table>
+              <!-- </cdk-virtual-scroll-viewport> -->
               <div>
                 <button
                   style="color: #01aba8"

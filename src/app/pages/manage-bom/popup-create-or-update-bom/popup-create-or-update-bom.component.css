@@ -57,6 +57,11 @@
     width: 35%;
   }
 
+  .example-viewport {
+    height: 280px;
+    width: 100%;
+  }
+
 ::ng-deep .ant-input {
   font-size: 13px;
 }
