@@ -531,7 +531,7 @@ export class UpdateInforComponentComponent {
       reader.readAsDataURL(file);
     }
    };
- 
+
    /**
     * Hàm xử lý click vào form upload file
     */
@@ -663,15 +663,15 @@ export class UpdateInforComponentComponent {
   formatNumber(input: any) {
     // Lấy giá trị đang nhập từ input
     let value = input.value;
-  
+
     // Loại bỏ tất cả các ký tự không phải chữ số hoặc dấu .
     value = value.replace(/[^0-9.]/g, '');
-  
-    // Convert string thành number 
+
+    // Convert string thành number
     const numberValue = Number.parseFloat(value);
     if (value[value.length - 1]!='.' && !isNaN(numberValue)) {
       // Định dạng lại giá trị với dấu phẩy
-      const formattedValue = numberValue.toLocaleString('en-US', { 
+      const formattedValue = numberValue.toLocaleString('en-US', {
         useGrouping: true,
         maximumSignificantDigits: 20
        });
@@ -708,17 +708,42 @@ export class UpdateInforComponentComponent {
 
   /**
    * Hàm so sánh giá trị của select box
-   * @param object1 
-   * @param object2 
-   * @returns 
+   * @param object1
+   * @param object2
+   * @returns
    */
   compareFn = (object1: any, object2: any): boolean => {
     return object1 && object2 ? object1.compareBy === object2.compareBy : object1 === object2;
   }
 
+  convertStringToNumber(value: any): number {
+    if (value == null || value == '' || value == undefined) {
+      return 0;
+    }
+    let cleanedValue = value.replace(/,/g, '');
+    return Number(cleanedValue);
+  }
+
+  handleChangeNumber($event: any, column: any) {
+    if (column.formula) {
+      const formulas = column.formula.split(',');
+
+      formulas.forEach((formula: any) => {
+        const formulaParts = formula.split('=');
+        const resultField = formulaParts[1].trim();
+        const expression = formulaParts[0].trim();
+
+        const expressionWithValues = expression.replace(/(\w+)/g, (match: any) => {
+          return this.convertStringToNumber(this.inforMachine[match]);
+        });
+        this.inforMachine[resultField] = Number(eval(expressionWithValues));
+      });
+    }
+  }
+
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
-   * @param event 
+   * @param event
    */
    @HostListener('document:keydown.Escape', ['$event'])
    handleEscape(event: any) {
