@@ -41,7 +41,7 @@
             nzBordered
             [nzSize]="'small'"
             nzShowPagination="false"
-            [nzScroll]="{ x: 'auto', y: this.heightTable + 'px' }"
+            [nzScroll]="{ x: 'auto', y: '700px' }"
           >
             <thead>
               <tr>
@@ -230,11 +230,11 @@
                 </ng-container>
                 <td [nzRight]="true"></td>
               </tr>
-              <tr *ngFor="let data of expandTable.data; let j = index; trackBy: trackByFn">
+              <ng-container *ngFor="let data of expandTable.data; let j = index;">
                   <ng-container
                       *ngFor="let item of mapOfExpandedData[data.id]; let k = index"
                     >
-                      <ng-container *ngIf="(item.parent && item.parent.expand) || !item.parent">
+                      <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
                         <ng-container *ngFor="let col of columns; let i = index">
                           <ng-container *ngIf="col.localCheck">
                             <ng-container *ngIf="i == 0">
@@ -308,9 +308,9 @@
                             </button>
                           </div>
                         </td>
-                      </ng-container>
+                      </tr>
                   </ng-container>
-              </tr>
+              </ng-container>
             </tbody>
           </nz-table>
           <app-pagination

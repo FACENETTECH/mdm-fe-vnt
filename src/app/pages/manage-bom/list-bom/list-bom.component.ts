@@ -67,6 +67,11 @@ export class ListBomComponent {
   bomDetail: any = {};
   typePopup: number = 0;
   widthRow: string = '';
+  pageSizeTableChild: number = 100;      // Số lượng bản ghi mỗi lần tải
+  currentIndex: number = 0;
+  setOfDataChildren: Map<string, any[]> = new Map<string, any[]>();
+  setOfPageChildren: Map<string, any> = new Map<string, any>();
+  mapOfExpandedData: { [id: number]: any[] } = {};
 
   breadcrumbs = [
     {
@@ -82,40 +87,6 @@ export class ListBomComponent {
     private componentService: ManageComponentService,
     private cdr: ChangeDetectorRef
   ) {}
-
-  listOfMapData: any[] = [
-    {
-      key: `1`,
-      bom_name: 'John Brown sr.',
-      material_id: 'MSC002btH35-AU1',
-      major_version: 'John Brown sr.',
-      component_yield: 1,
-      bom_quantity: 30,
-      quantity: 60,
-      unit: 'cai',
-      minor_version: 'item_source',
-      display_name_code: 'display_name_code',
-      description_sx: 'description_sx',
-      display_name_sx: 'display_name_sx',
-      children: [],
-    },
-    {
-      key: `2`,
-      bom_name: 'John Brown sr.',
-      material_id: 'MSC002btH35-AU1',
-      major_version: 'John Brown sr.',
-      component_yield: 1,
-      bom_quantity: 30,
-      quantity: 60,
-      unit: 'cai',
-      minor_version: 'item_source',
-      display_name_code: 'display_name_code',
-      description_sx: 'description_sx',
-      display_name_sx: 'display_name_sx',
-      children: [],
-    },
-  ];
-  mapOfExpandedData: { [id: number]: any[] } = {};
 
   collapse(array: any[], data: any, $event: boolean): void {
     data.expand = $event;
@@ -174,6 +145,7 @@ export class ListBomComponent {
     k: number,
     $event: boolean
   ) {
+    console.log('parent', parent);
     let request = {
       pageNumber: 0,
       pageSize: 0,
@@ -189,6 +161,12 @@ export class ListBomComponent {
     this.componentService.getAllBomDetail(request).subscribe({
       next: (res) => {
         this.loader.stop();
+        // this.setOfDataChildren.set(parent.id, res.data);
+        // this.setOfPageChildren.set(parent.id, {
+        //   pageSize: 100,
+        //   currentIndex: 100
+        // });
+        // let dataChildren: any[] = this.setOfDataChildren.get(parent.id)!.slice(0, 500);
         let dataChildren: any[] = res.data;
         dataChildren.forEach((child) => {
           child['children'] = [];
@@ -211,6 +189,7 @@ export class ListBomComponent {
             });
             parent.children = [...nodeChild];
             console.log('nodeChild: ', nodeChild);
+            console.log('start time: ', new Date());
             nodeChild.forEach((item: any) => {
               this.mapOfExpandedData[this.listBom[i].id] = this.insert(
                 this.mapOfExpandedData[this.listBom[i].id],
@@ -218,6 +197,7 @@ export class ListBomComponent {
                 item
               );
             });
+            console.log('end time: ', new Date());
           } catch (error) {
             console.error('Lỗi xảy ra: ', error);
           } finally {
@@ -230,7 +210,6 @@ export class ListBomComponent {
         this.toast.error(err.error.result.message);
       }
     })
-    
   }
 
   insert = (arr: any[], index: number, newItem: any) => [
@@ -305,10 +284,6 @@ export class ListBomComponent {
     //   currentWidthCol = currentWidthCol + Number(col.replace('px', ''));
     // })
     // this.widthRow = currentWidthCol + 'px';
-  }
-
-  trackByFn(index: number, item: any): any {
-    return item.id; // Hoặc một giá trị duy nhất nào đó để theo dõi các phần tử
   }
 
   getSetOfChecked(event: any) {
@@ -455,14 +430,43 @@ export class ListBomComponent {
           this.listBom.forEach((item) => {
             this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
           });
-          console.log('listBom: ', this.listBom);
-          console.log('map: ', this.mapOfExpandedData);
         },
         error: (err) => {
           this.isLoading = false;
           this.toast.error(err.error.result.message);
         },
       });
+  }
+
+  // Tải thêm dữ liệu khi nhấn "Load more"
+  loadMoreData(parent: any): void {
+    console.log('loadMoreData: ', this.setOfPageChildren.get(parent.id).currentIndex)
+    const nextIndex = this.setOfPageChildren.get(parent.id).currentIndex + this.setOfPageChildren.get(parent.id).pageSize;
+    const dataToAdd = this.setOfDataChildren.get(parent.id)!.slice(this.setOfPageChildren.get(parent.id).currentIndex, nextIndex);
+    this.setOfPageChildren.set(parent.id, {
+      pageSize: 100,
+      currentIndex: nextIndex
+    });
+    let dataChildren: any[] = [...this.mapOfExpandedData[parent.id], ...dataToAdd];
+    dataChildren.forEach((child) => {
+      child['children'] = [];
+    })
+    let nodeParent: any[] = dataChildren;
+    console.log('nodeParent: ', nodeParent);
+    let nodeChild: any[] = [];
+    nodeParent.forEach((element, index) => {
+      nodeChild.push({
+        ...element,
+        level: parent.level + 1,
+        expand: false,
+        parent: parent,
+      });
+    });
+    this.mapOfExpandedData[parent.id] = [...nodeChild];
+    console.log('nodeParent: ', this.mapOfExpandedData[parent.id]);
+    // this.displayData = [...this.displayData, ...dataToAdd];
+    this.currentIndex = nextIndex;
+    
   }
 
   // Làm tròn giá trị tăng lên đến hàng nghìn gần nhất

@@ -374,6 +374,7 @@
                           col.keyTitle | translate
                         }} "
                         (ngModelChange)="checkAction = true"
+                        [disabled]="col.isDisable"
                       />
                       <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                         checkMachine[col.keyName]
@@ -397,6 +398,7 @@
                         }} "
                         (ngModelChange)="checkAction = true"
                         rows="1"
+                        [disabled]="col.isDisable"
                       ></textarea>
                       <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                         checkMachine[col.keyName]
@@ -496,6 +498,7 @@
                         }} ----"
                         (ngModelChange)="checkAction = true"
                         [nzShowSearch]="true"
+                        [disabled]="col.isDisable"
                       >
                         <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
                       </nz-select>
@@ -515,7 +518,7 @@
                 <span nz-icon nzType="file-protect"></span>
                 {{ 'Danh sách nguyên vật liệu' }}
               </ng-template>
-              <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+              <!-- <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport"> -->
                   <nz-table
                     #childrenBomTable
                     [nzData]="['']"
@@ -561,7 +564,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <ng-container *cdkVirtualFor="let data of listChildrenBom; let i = index">
+                        <ng-container *ngFor="let data of listChildrenBom; let i = index">
                             <tr>
                                 <td class="fn-text-align-center">
                                     {{ i + 1}}
@@ -708,7 +711,7 @@
                         </ng-container>
                     </tbody>
                   </nz-table>
-              </cdk-virtual-scroll-viewport>
+              <!-- </cdk-virtual-scroll-viewport> -->
               <div>
                 <button
                   style="color: #01aba8"
