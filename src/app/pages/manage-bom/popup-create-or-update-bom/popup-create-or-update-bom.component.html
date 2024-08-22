@@ -348,7 +348,8 @@
                         [(ngModel)]="inforBOM[col.keyName]"
                         (ngModelChange)="checkValid()"
                         (ngModelChange)="checkAction = true"
-                        nzFormat="dd/MM/yyyy">
+                        nzFormat="dd/MM/yyyy"
+                        [disabled]="col.isDisable">
                       </nz-date-picker>
                       <span
                         style="color: red"

@@ -404,6 +404,18 @@ export class ManageComponentService {
   }
 
   /**
+   * API cập nhật thông tin BOM
+   * @param request thông tin BOM
+   * @returns 
+   */
+  updateInforBom(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/update-bom`,
+      request
+    );
+  }
+
+  /**
    * API thêm mới hoặc cập nhật thông tin chi tiết BOM
    * @param request thông tin BOM chi tiết
    * @returns 

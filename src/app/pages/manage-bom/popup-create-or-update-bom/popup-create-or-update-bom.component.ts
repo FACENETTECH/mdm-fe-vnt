@@ -504,52 +504,99 @@ export class PopupCreateOrUpdateBomComponent {
   }
 
   async submit() {
-    if (this.typePopup == this.TYPE_POPUP.copy) {
-      this.inforBOM['id'] = undefined;
+    if (this.typePopup == this.TYPE_POPUP.copy || this.typePopup == this.TYPE_POPUP.create) {
+      if (this.typePopup == this.TYPE_POPUP.copy) {
+        this.inforBOM['id'] = undefined;
+      }
+      this.loader.start();
+      this.manageService.createOrUpdateBom(this.inforBOM).subscribe({
+        next: (res) => {
+          this.loader.stop();
+          this.toast.success(res.result.message);
+          console.log(res);
+          if (res.data) {
+            this.listChildrenBom.forEach((bom) => {
+              bom['bom_id'] = res.data.id;
+              this.columnsBomDetail.forEach((col) => {
+                if (
+                  col.dataType == this.dataType.NUMBER &&
+                  col.keyName != 'material_id'
+                ) {
+                  bom[col.keyName] = Number(bom[col.keyName]);
+                }
+              });
+            });
+            console.log(this.listChildrenBom);
+            this.loader.start();
+            this.manageService
+              .createOrUpdateBomDetail(this.listChildrenBom)
+              .subscribe({
+                next: (response) => {
+                  this.loader.stop();
+                  this.toast.success(response.result.message);
+                  this.isvisible = false;
+                  this.isvisibleChange.emit(this.isvisible);
+                  this.isvisibleUpdate.emit(true);
+                  this.updateInforStage();
+                },
+                error: (error) => {
+                  this.loader.stop();
+                  this.toast.error(error.error.result.message);
+                },
+              });
+          }
+        },
+        error: (err) => {
+          this.loader.stop();
+          this.toast.error(err.error.result.message);
+        },
+      });
     }
-    this.loader.start();
-    this.manageService.createOrUpdateBom(this.inforBOM).subscribe({
-      next: (res) => {
-        this.loader.stop();
-        this.toast.success(res.result.message);
-        console.log(res);
-        if (res.data) {
-          this.listChildrenBom.forEach((bom) => {
-            bom['bom_id'] = res.data.id;
-            this.columnsBomDetail.forEach((col) => {
-              if (
-                col.dataType == this.dataType.NUMBER &&
-                col.keyName != 'material_id'
-              ) {
-                bom[col.keyName] = Number(bom[col.keyName]);
-              }
+    if (this.typePopup == this.TYPE_POPUP.update) {
+      this.loader.start();
+      this.manageService.updateInforBom(this.inforBOM).subscribe({
+        next: (res) => {
+          this.loader.stop();
+          this.toast.success(res.result.message);
+          console.log(res);
+          if (res.data) {
+            this.listChildrenBom.forEach((bom) => {
+              bom['bom_id'] = res.data.id;
+              this.columnsBomDetail.forEach((col) => {
+                if (
+                  col.dataType == this.dataType.NUMBER &&
+                  col.keyName != 'material_id'
+                ) {
+                  bom[col.keyName] = Number(bom[col.keyName]);
+                }
+              });
             });
-          });
-          console.log(this.listChildrenBom);
-          this.loader.start();
-          this.manageService
-            .createOrUpdateBomDetail(this.listChildrenBom)
-            .subscribe({
-              next: (response) => {
-                this.loader.stop();
-                this.toast.success(response.result.message);
-                this.isvisible = false;
-                this.isvisibleChange.emit(this.isvisible);
-                this.isvisibleUpdate.emit(true);
-                this.updateInforStage();
-              },
-              error: (error) => {
-                this.loader.stop();
-                this.toast.error(error.error.result.message);
-              },
-            });
-        }
-      },
-      error: (err) => {
-        this.loader.stop();
-        this.toast.error(err.error.result.message);
-      },
-    });
+            console.log(this.listChildrenBom);
+            this.loader.start();
+            this.manageService
+              .createOrUpdateBomDetail(this.listChildrenBom)
+              .subscribe({
+                next: (response) => {
+                  this.loader.stop();
+                  this.toast.success(response.result.message);
+                  this.isvisible = false;
+                  this.isvisibleChange.emit(this.isvisible);
+                  this.isvisibleUpdate.emit(true);
+                  this.updateInforStage();
+                },
+                error: (error) => {
+                  this.loader.stop();
+                  this.toast.error(error.error.result.message);
+                },
+              });
+          }
+        },
+        error: (err) => {
+          this.loader.stop();
+          this.toast.error(err.error.result.message);
+        },
+      });
+    }
   }
 
   updateInforStage() {
