@@ -20,13 +20,23 @@ export class TokenInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const authToken = this.kcService.getKeycloakInstance().token || '';
-    const token = this.tokenExtractor.getToken() as string;
-    request = request.clone({
-      setHeaders: {
-        Authorization: 'Bearer ' + authToken,
-      },
-    });
+    const noAuthUrls = [
+      '/template/template/',
+      '/template/render/',
+    ]
+
+    const requiresAuth = !noAuthUrls.some(url => request.url.includes(url));
+
+    if(requiresAuth) {
+      const authToken = this.kcService.getKeycloakInstance().token || '';
+      const token = this.tokenExtractor.getToken() as string;
+      request = request.clone({
+        setHeaders: {
+          Authorization: 'Bearer ' + authToken,
+        },
+      });
+    }
+
     return next.handle(request);
   }
 }
