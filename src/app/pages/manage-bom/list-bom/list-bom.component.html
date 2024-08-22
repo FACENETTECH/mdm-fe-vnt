@@ -271,7 +271,7 @@
                           </ng-container>
                         </ng-container>
                         <td nzRight>
-                          <div class="quoting-df-jus-evenly quoting-df">
+                          <div class="quoting-df-jus-evenly quoting-df" *ngIf="!item.parent">
                             <button
                               nz-button
                               nzType="link"

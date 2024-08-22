@@ -152,6 +152,7 @@ export class ListBomComponent {
       common: this.common,
       filter: {
         id: parent.id,
+        bom_tree_id: parent.bom_tree_id
       },
       sortOrder: 'DESC',
       sortProperty: 'created_at',
