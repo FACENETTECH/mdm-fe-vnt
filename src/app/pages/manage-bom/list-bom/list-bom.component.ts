@@ -145,72 +145,75 @@ export class ListBomComponent {
     k: number,
     $event: boolean
   ) {
-    console.log('parent', parent);
-    let request = {
-      pageNumber: 0,
-      pageSize: 0,
-      common: this.common,
-      filter: {
-        id: parent.id,
-        bom_tree_id: parent.bom_tree_id
-      },
-      sortOrder: 'DESC',
-      sortProperty: 'created_at',
-      searchOptions: [],
-    };
-    this.loader.start();
-    this.componentService.getAllBomDetail(request).subscribe({
-      next: (res) => {
-        this.loader.stop();
-        // this.setOfDataChildren.set(parent.id, res.data);
-        // this.setOfPageChildren.set(parent.id, {
-        //   pageSize: 100,
-        //   currentIndex: 100
-        // });
-        // let dataChildren: any[] = this.setOfDataChildren.get(parent.id)!.slice(0, 500);
-        let dataChildren: any[] = res.data;
-        dataChildren.forEach((child) => {
-          child['children'] = [];
-        })
-    
-        parent.expand = $event;
-        console.log('parent: ', parent);
-        if (!parent.children || parent.children.length <= 0) {
-          try {
-            let nodeParent: any[] = dataChildren;
-            console.log('nodeParent: ', nodeParent);
-            let nodeChild: any[] = [];
-            nodeParent.forEach((element, index) => {
-              nodeChild.push({
-                ...element,
-                level: parent.level + 1,
-                expand: false,
-                parent: parent,
+    if($event) {
+      let request = {
+        pageNumber: 0,
+        pageSize: 0,
+        common: this.common,
+        filter: {
+          id: parent.id,
+          bom_tree_id: parent.bom_tree_id
+        },
+        sortOrder: 'DESC',
+        sortProperty: 'created_at',
+        searchOptions: [],
+      };
+      this.loader.start();
+      this.componentService.getAllBomDetail(request).subscribe({
+        next: (res) => {
+          this.loader.stop();
+          // this.setOfDataChildren.set(parent.id, res.data);
+          // this.setOfPageChildren.set(parent.id, {
+          //   pageSize: 100,
+          //   currentIndex: 100
+          // });
+          // let dataChildren: any[] = this.setOfDataChildren.get(parent.id)!.slice(0, 500);
+          let dataChildren: any[] = res.data;
+          dataChildren.forEach((child) => {
+            child['children'] = [];
+          })
+      
+          parent.expand = $event;
+          console.log('parent: ', parent);
+          if (!parent.children || parent.children.length <= 0) {
+            try {
+              let nodeParent: any[] = dataChildren;
+              console.log('nodeParent: ', nodeParent);
+              let nodeChild: any[] = [];
+              nodeParent.forEach((element, index) => {
+                nodeChild.push({
+                  ...element,
+                  level: parent.level + 1,
+                  expand: false,
+                  parent: parent,
+                });
               });
-            });
-            parent.children = [...nodeChild];
-            console.log('nodeChild: ', nodeChild);
-            console.log('start time: ', new Date());
-            nodeChild.forEach((item: any) => {
-              this.mapOfExpandedData[this.listBom[i].id] = this.insert(
-                this.mapOfExpandedData[this.listBom[i].id],
-                ++k,
-                item
-              );
-            });
-            console.log('end time: ', new Date());
-          } catch (error) {
-            console.error('Lỗi xảy ra: ', error);
-          } finally {
+              parent.children = [...nodeChild];
+              console.log('nodeChild: ', nodeChild);
+              console.log('start time: ', new Date());
+              nodeChild.forEach((item: any) => {
+                this.mapOfExpandedData[this.listBom[i].id] = this.insert(
+                  this.mapOfExpandedData[this.listBom[i].id],
+                  ++k,
+                  item
+                );
+              });
+              console.log('end time: ', new Date());
+            } catch (error) {
+              console.error('Lỗi xảy ra: ', error);
+            } finally {
+            }
+            // this.collapse(array, parent, $event);
           }
-          // this.collapse(array, parent, $event);
+          this.collapse(array, parent, $event);
+        }, error: (err) => {
+          this.loader.stop();
+          this.toast.error(err.error.result.message);
         }
-        this.collapse(array, parent, $event);
-      }, error: (err) => {
-        this.loader.stop();
-        this.toast.error(err.error.result.message);
-      }
-    })
+      })
+    } else {
+      parent.expand = $event;
+    }
   }
 
   insert = (arr: any[], index: number, newItem: any) => [
