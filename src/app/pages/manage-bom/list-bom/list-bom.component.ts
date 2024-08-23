@@ -174,11 +174,9 @@ export class ListBomComponent {
           })
       
           parent.expand = $event;
-          console.log('parent: ', parent);
           if (!parent.children || parent.children.length <= 0) {
             try {
               let nodeParent: any[] = dataChildren;
-              console.log('nodeParent: ', nodeParent);
               let nodeChild: any[] = [];
               nodeParent.forEach((element, index) => {
                 nodeChild.push({
@@ -189,8 +187,6 @@ export class ListBomComponent {
                 });
               });
               parent.children = [...nodeChild];
-              console.log('nodeChild: ', nodeChild);
-              console.log('start time: ', new Date());
               nodeChild.forEach((item: any) => {
                 this.mapOfExpandedData[this.listBom[i].id] = this.insert(
                   this.mapOfExpandedData[this.listBom[i].id],
@@ -198,7 +194,6 @@ export class ListBomComponent {
                   item
                 );
               });
-              console.log('end time: ', new Date());
             } catch (error) {
               console.error('Lỗi xảy ra: ', error);
             } finally {
