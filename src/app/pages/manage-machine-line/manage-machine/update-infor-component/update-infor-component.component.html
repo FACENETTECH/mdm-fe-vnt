@@ -65,7 +65,7 @@
                   <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
                   type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
-                  />
+                         (ngModelChange)="handleChangeNumber($event, col)"/>
                   <!-- <nz-input-number
                     nz-input
                     [(ngModel)]="inforMachine[col.keyName]"
@@ -234,7 +234,7 @@
                 <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
                   type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
-                />
+                       (ngModelChange)="handleChangeNumber($event, col)"/>
                 <!-- <nz-input-number
                   [nzMin]="0"
                   [nzStep]="1"
@@ -444,10 +444,10 @@
                   <label class="fn-label"
                     >{{ col.keyTitle | translate }}</label
                   >
-                  <input 
+                  <input
                     [id]="'fileInput' + col.keyName"
                     (change)="checkActionImage = true"
-                    type="file" 
+                    type="file"
                     (change)="handleChange($event, col)"
                     style="display: none"
                     accept=".png,.jpg,.jpeg"/>
