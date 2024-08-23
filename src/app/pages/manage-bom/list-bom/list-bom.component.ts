@@ -145,6 +145,7 @@ export class ListBomComponent {
     k: number,
     $event: boolean
   ) {
+    console.log('parent: ', parent);
     if($event) {
       let request = {
         pageNumber: 0,
@@ -208,6 +209,10 @@ export class ListBomComponent {
       })
     } else {
       parent.expand = $event;
+      let nodeParent: any[] = parent.children;
+      nodeParent.forEach((element, index) => {
+        this.collapse(array, element, false);
+      });
     }
   }
 

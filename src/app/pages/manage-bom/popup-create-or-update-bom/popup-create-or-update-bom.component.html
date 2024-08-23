@@ -988,25 +988,10 @@
         </ng-container>
       </button>
   </ng-template>
-  <!-- <app-popup-cancel
-    [(isvisible)]="isvisibleCancel"
-    (cancel)="cancelConfirm($event)"
-  ></app-popup-cancel>
-  <app-add-column
-    *ngIf="isvisibleAddColumn"
-    [entryType]="6"
-    [(isvisible)]="isvisibleAddColumn"
-  ></app-add-column> -->
   <app-popup-add
     [(isvisible)]="isvisiblesubmit"
     [tableName]="'BOM'"
     [code]="''"
     (add)="submit()"
   ></app-popup-add>
-  <!-- <app-popup-manage-param
-  *ngIf="isVisibleManageParam"
-  [(isvisible)]="isVisibleManageParam"
-  [requestAddNewParam]="requestAddNewParam"
-  >
-  </app-popup-manage-param> -->
 </nz-modal>
