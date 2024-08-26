@@ -5,16 +5,17 @@
 export const environment = {
   production: false,
   url_home_page:
-    'http://vietnhattan.xfactory.vn/home-page/#/auth/business-acc-setting/home-page',
-  api_end_point: 'http://api.vietnhattan.xfactory.vn/mdm-v2',
-  domain_name_mdm: 'http://vietnhattan.xfactory.vn/mdm-v2',
+    'http://dev.fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
+  api_end_point: 'http://dev.apifcim.facenet.vn/mdm-v2',
+  domain_name_mdm: 'http://dev.fcim.facenet.vn/mdm-v2',
   template_api_end_point: 'http://api.vietnhattan.xfactory.vn/template/',
-  api_end_point_s3: 'http://api.vietnhattan.xfactory.vn/s3/',
+  api_end_point_s3: 'http://dev.apifcim.facenet.vn/s3/',
+
   // api_end_point: 'http://localhost:10320',
   auth_api: '/api/auth/',
   keycloak: {
     // issuer: 'https://ssoproduction.xfactory.vn/auth/',
-    issuer: 'https://ssovnt.xfactory.vn/auth/',
+    issuer: 'https://sso.xfactory.vn/auth/',
     // Realm
     realm: 'fcim_cloud',
     clientId: 'fcim_cloud',
@@ -24,7 +25,7 @@ export const environment = {
     CLIENT_ADDRESS: 'http://localhost:8082',
   },
   // API_URL: 'http://dev.apifcim.facenet.vn/all',
-  API_URL: 'http://api.vietnhattan.xfactory.vn/all',
+  API_URL: 'http://222.252.25.37:10302',
 };
 
 // export const environment = {

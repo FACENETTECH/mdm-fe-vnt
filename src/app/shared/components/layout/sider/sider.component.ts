@@ -49,7 +49,9 @@ export class SiderComponent {
     // });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('silder: ', this.sider);
+  }
 
   openParent(i: number) {
     this.sider[i].open = true;

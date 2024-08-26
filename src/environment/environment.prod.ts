@@ -8,7 +8,7 @@ export const environment = {
     'http://fcim.facenet.vn/home-page/#/auth/business-acc-setting/home-page',
   api_end_point: 'http://222.252.25.37:10319',
   domain_name_mdm: 'http://fcim.facenet.vn/mdm-v2',
-  template_api_end_point: 'http://api.vietnhattan.xfactory.vn/template/template/',
+  template_api_end_point: 'http://api.vietnhattan.xfactory.vn/template/',
   // api_end_point: 'http://localhost:10320',
   auth_api: '/api/auth/',
   keycloak: {

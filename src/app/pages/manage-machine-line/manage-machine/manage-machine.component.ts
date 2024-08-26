@@ -39,7 +39,7 @@ export class ManageMachineComponent implements OnInit {
     private manageComponentService: ManageComponentService,
     private router: Router,
     private baseService: BaseService,
-    private keyCloak: KeycloakService,
+    private keyCloak: KeycloakService
   ) {
     this.router.events.subscribe((e: Event) => {
       if (e instanceof NavigationEnd) {
@@ -81,6 +81,7 @@ export class ManageMachineComponent implements OnInit {
   isvisibleDelete: boolean = false;
   isvisibleCopy: boolean = false;
   isvisibleDeleteList: boolean = false;
+  isvisiblePopupUpload: boolean = false;
   currentMachine: any = '';
   inforTable: any;
   count = 0;
@@ -93,19 +94,19 @@ export class ManageMachineComponent implements OnInit {
 
   // Dữ liệu cho cây tìm kiếm
   selectedOptions: string[] = [];
-  searchTreeName: string = "";
+  searchTreeName: string = '';
   searchTreeOptions: {
-    label: string,
-    value: any,
-    checked: boolean
+    label: string;
+    value: any;
+    checked: boolean;
   }[] = [];
 
   treeVisible: boolean = false;
 
   classList: any = {
-    searchTree: "search-tree-container-close",
-    content: "content-container-close",
-  }
+    searchTree: 'search-tree-container-close',
+    content: 'content-container-close',
+  };
 
   breadcrumbs = [
     {
@@ -137,14 +138,16 @@ export class ManageMachineComponent implements OnInit {
   }
 
   getBreadcrumbs(tableCode: any) {
+    if (!this.inforTable.isEntity) return;
     this.manageComponentService.getInforTables(tableCode).subscribe({
       next: (res) => {
         this.breadcrumbs[0].name = res.data.displayName;
         this.tableName = res.data.displayName.toUpperCase();
-      }, error: (err) => {
+      },
+      error: (err) => {
         this.toast.error(err.error.result.message);
-      }
-    })
+      },
+    });
   }
 
   clearInput(keyName: string) {
@@ -156,7 +159,7 @@ export class ManageMachineComponent implements OnInit {
   }
 
   async addColumnConfirm(event: any) {
-    if(event) {
+    if (event) {
       this.getData({ page: this.pageNumber, size: this.pageSize });
     }
   }
@@ -284,44 +287,49 @@ export class ManageMachineComponent implements OnInit {
       sortProperty: this.propertySort,
       searchOptions: this.selectedOptions,
     };
-
     this.loader.start();
-    this.manageComponentService.getDataDynamicTable(this.tableCode, request).subscribe({
-      next: (res) => {
-        this.listMachine = res.data;
-        this.total = res.dataCount;
-        for (let j = 0; j < this.columns.length; j++) {
-          let compare: Record<string, any> = {};
-          compare[this.columns[j].keyName] = this.columns[j].keyName;
-          compare['compare'] = (a: any, b: any) =>
-            a[this.columns[j].keyName].localeCompare(b[this.columns[j].keyName]);
-          this.columnSort.push(compare);
-        }
-    
-        this.total = res.dataCount;
-        this.columns.map((x: any) => {
-          this.stageTemplate[x.keyTitle] = '';
-        });
-        // this.columns.map((x: any) => {
-        //   if (x.keyName != 'status') {
-        //     x.width = '300px';
-        //   } else {
-        //     x.width = '150px';
-        //   }
-        // });
-        this.listMachineToExport = [];
-        this.listMachineTemplate.push(this.stageTemplate);
-        if (this.listMachine.length == 0) {
-          this.noDataFound = true;
-        } else {
-          this.noDataFound = false;
-        }
-        this.loader.stop();
-      }, error: (err) => {
-        this.toast.error(err.error.result.message);
-        this.loader.stop();
-      }
-    })
+    if (!this.inforTable.isEntity) return;
+    this.manageComponentService
+      .getDataDynamicTable(this.tableCode, request)
+      .subscribe({
+        next: (res) => {
+          this.listMachine = res.data;
+          this.total = res.dataCount;
+          for (let j = 0; j < this.columns.length; j++) {
+            let compare: Record<string, any> = {};
+            compare[this.columns[j].keyName] = this.columns[j].keyName;
+            compare['compare'] = (a: any, b: any) =>
+              a[this.columns[j].keyName].localeCompare(
+                b[this.columns[j].keyName]
+              );
+            this.columnSort.push(compare);
+          }
+
+          this.total = res.dataCount;
+          this.columns.map((x: any) => {
+            this.stageTemplate[x.keyTitle] = '';
+          });
+          // this.columns.map((x: any) => {
+          //   if (x.keyName != 'status') {
+          //     x.width = '300px';
+          //   } else {
+          //     x.width = '150px';
+          //   }
+          // });
+          this.listMachineToExport = [];
+          this.listMachineTemplate.push(this.stageTemplate);
+          if (this.listMachine.length == 0) {
+            this.noDataFound = true;
+          } else {
+            this.noDataFound = false;
+          }
+          this.loader.stop();
+        },
+        error: (err) => {
+          this.toast.error(err.error.result.message);
+          this.loader.stop();
+        },
+      });
   }
   changeColumn() {
     localStorage.setItem('machine', JSON.stringify(this.columns));
@@ -373,49 +381,58 @@ export class ManageMachineComponent implements OnInit {
   }
 
   openPopupCopy() {
-    if(this.setOfCheckedId.size > 0) {
+    if (this.setOfCheckedId.size > 0) {
       this.isvisibleCopy = true;
     } else {
-      this.toast.warning("Vui lòng chọn bản ghi để sử dụng chức năng này!")
+      this.toast.warning('Vui lòng chọn bản ghi để sử dụng chức năng này!');
     }
   }
 
   openPopupDeleteList() {
-    if(this.setOfCheckedId.size > 0) {
+    if (this.setOfCheckedId.size > 0) {
       this.isvisibleDeleteList = true;
     } else {
-      this.toast.warning("Vui lòng chọn bản ghi để sử dụng chức năng này!")
+      this.toast.warning('Vui lòng chọn bản ghi để sử dụng chức năng này!');
     }
   }
 
+  openPopupUploadFile() {
+    this.isvisiblePopupUpload = true;
+  }
+
   deleteConfirm(event: any) {
-    this.manageComponentService.deleteRecordById(this.tableCode, this.currentMachine.id).subscribe({
-      next: (res) => {
-        this.toast.success(res.result.message);
-        this.getData({ page: this.pageNumber, size: this.pageSize });
-      }, error: (err) => {
-        this.toast.error(err.error.result.message);
-      }
-    })
+    this.manageComponentService
+      .deleteRecordById(this.tableCode, this.currentMachine.id)
+      .subscribe({
+        next: (res) => {
+          this.toast.success(res.result.message);
+          this.getData({ page: this.pageNumber, size: this.pageSize });
+        },
+        error: (err) => {
+          this.toast.error(err.error.result.message);
+        },
+      });
   }
 
   deleteListConfirm(event: any) {
     let request: any = [];
     this.setOfCheckedId.forEach((item) => {
       request.push(item);
-    })
-    this.manageComponentService.deleteListRecordByListId(this.tableCode, request).subscribe({
-      next: (res) => {
-        this.toast.success(res.result.message);
-        this.setOfCheckedId = new Set<number>();
-        this.refreshCheckedStatus();
-        this.getData({ page: this.pageNumber, size: this.pageSize });
-      }, error: (err) => {
-        this.toast.error(err.error.result.message);
-      }
-    })
+    });
+    this.manageComponentService
+      .deleteListRecordByListId(this.tableCode, request)
+      .subscribe({
+        next: (res) => {
+          this.toast.success(res.result.message);
+          this.setOfCheckedId = new Set<number>();
+          this.refreshCheckedStatus();
+          this.getData({ page: this.pageNumber, size: this.pageSize });
+        },
+        error: (err) => {
+          this.toast.error(err.error.result.message);
+        },
+      });
   }
-  
 
   configColumn() {}
   getColumnNames(): string[] {
@@ -425,21 +442,24 @@ export class ManageMachineComponent implements OnInit {
   headers: any[] = [];
 
   getHeaders() {
-    this.manageComponentService.getColummnByTableName(this.tableCode).subscribe({
-      next: (res) => {
-        this.columns = res.data; 
-        for(let i = 0; i < this.columns.length; i++) {
-          if(this.columns[i].isCode) {
-            this.columnKey = this.columns[i].keyName;
-            break;
+    this.manageComponentService
+      .getColummnByTableName(this.tableCode)
+      .subscribe({
+        next: (res) => {
+          this.columns = res.data;
+          for (let i = 0; i < this.columns.length; i++) {
+            if (this.columns[i].isCode) {
+              this.columnKey = this.columns[i].keyName;
+              break;
+            }
           }
-        }
-        this.getData({ page: this.pageNumber, size: this.pageSize });
-        this.handleSearchTreeOptions();
-      }, error: (err) => {
-        this.toast.error(err.error.result.message);
-      }
-    })
+          this.getData({ page: this.pageNumber, size: this.pageSize });
+          this.handleSearchTreeOptions();
+        },
+        error: (err) => {
+          this.toast.error(err.error.result.message);
+        },
+      });
   }
 
   async export() {
@@ -518,8 +538,8 @@ export class ManageMachineComponent implements OnInit {
   }
 
   async importConfirm($event: any) {
-    let res = this.http
-      .post(`${environment.api_end_point}/api/machines/import-excel`, $event)
+    this.manageComponentService
+      .importFormExcel(this.tableCode, $event)
       .subscribe({
         next: (res: any) => {
           this.toast.success('Import file thành công');
@@ -527,7 +547,6 @@ export class ManageMachineComponent implements OnInit {
         },
         error: (err: any) => {
           this.toast.error(err.error.result.message);
-
           this.getData({ page: this.pageNumber, size: this.pageSize });
         },
       });
@@ -602,7 +621,7 @@ export class ManageMachineComponent implements OnInit {
    * @param value : đây là thông tin từng bản ghi
    */
   onAllChecked(value: boolean): void {
-    this.listMachine.forEach(item => this.updateCheckedSet(item.id, value));
+    this.listMachine.forEach((item) => this.updateCheckedSet(item.id, value));
     this.refreshCheckedStatus();
   }
 
@@ -633,8 +652,12 @@ export class ManageMachineComponent implements OnInit {
    * Đây là hoàn bỏ check tất cả các bạn ghi hiện tại được chọn
    */
   refreshCheckedStatus(): void {
-    this.checked = this.listMachine.every(item => this.setOfCheckedId.has(item.id));
-    this.indeterminate = this.listMachine.some(item => this.setOfCheckedId.has(item.id)) && !this.checked;
+    this.checked = this.listMachine.every((item) =>
+      this.setOfCheckedId.has(item.id)
+    );
+    this.indeterminate =
+      this.listMachine.some((item) => this.setOfCheckedId.has(item.id)) &&
+      !this.checked;
   }
 
   /**
@@ -643,31 +666,36 @@ export class ManageMachineComponent implements OnInit {
    */
   async drop(event: CdkDragDrop<string[], string, any>) {
     moveItemInArray(this.listMachine, event.previousIndex, event.currentIndex);
-    if(event.previousIndex < event.currentIndex) {
-      this.listMachine[event.currentIndex].index = this.listMachine[event.currentIndex - 1].index;
-      this.manageComponentService.updateInforRecordById(
-        this.tableCode, 
-        this.listMachine[event.currentIndex].id, 
-        this.listMachine[event.currentIndex]
-      ).subscribe({
-        next: (res) => {
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
+    if (event.previousIndex < event.currentIndex) {
+      this.listMachine[event.currentIndex].index =
+        this.listMachine[event.currentIndex - 1].index;
+      this.manageComponentService
+        .updateInforRecordById(
+          this.tableCode,
+          this.listMachine[event.currentIndex].id,
+          this.listMachine[event.currentIndex]
+        )
+        .subscribe({
+          next: (res) => {},
+          error: (err) => {
+            this.toast.error(err.error.result.message);
+          },
+        });
     } else {
-      this.listMachine[event.currentIndex].index = this.listMachine[event.currentIndex + 1].index;
-      this.manageComponentService.updateInforRecordById(
-        this.tableCode, 
-        this.listMachine[event.currentIndex].id, 
-        this.listMachine[event.currentIndex]
-      ).subscribe({
-        next: (res) => {
-
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
+      this.listMachine[event.currentIndex].index =
+        this.listMachine[event.currentIndex + 1].index;
+      this.manageComponentService
+        .updateInforRecordById(
+          this.tableCode,
+          this.listMachine[event.currentIndex].id,
+          this.listMachine[event.currentIndex]
+        )
+        .subscribe({
+          next: (res) => {},
+          error: (err) => {
+            this.toast.error(err.error.result.message);
+          },
+        });
     }
   }
 
@@ -678,40 +706,43 @@ export class ManageMachineComponent implements OnInit {
     this.loader.start();
     let code = '';
     let request: any = [];
-    for(let i = 0; i < this.columns.length; i++) {
-      if(this.columns[i].isCode) {
+    for (let i = 0; i < this.columns.length; i++) {
+      if (this.columns[i].isCode) {
         code = this.columns[i].keyName;
         break;
       }
     }
     this.setOfCheckedId.forEach((item) => {
-      for(let i = 0; i < this.listMachine.length; i++) {
-        if(item == this.listMachine[i].id) {
+      for (let i = 0; i < this.listMachine.length; i++) {
+        if (item == this.listMachine[i].id) {
           request.push(this.listMachine[i]);
           break;
         }
       }
-    })
-    if(request.length > 0) {
-      if(code !== '') {
-        for(let i = 0; i < request.length; i++) {
-          request[i][code] = request[i][code] + "-" + this.makeid(4);
+    });
+    if (request.length > 0) {
+      if (code !== '') {
+        for (let i = 0; i < request.length; i++) {
+          request[i][code] = request[i][code] + '-' + this.makeid(4);
         }
       }
-      this.manageComponentService.addListRecord(this.tableCode, request).subscribe({
-        next: (res) => {
-          this.toast.success(res.result.message);
-          this.setOfCheckedId = new Set<number>();
-          this.refreshCheckedStatus();
-          this.getData({ page: this.pageNumber, size: this.pageSize });
-          this.loader.stop();
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-          this.setOfCheckedId = new Set<number>();
-          this.refreshCheckedStatus();
-          this.loader.stop();
-        }
-      })
+      this.manageComponentService
+        .addListRecord(this.tableCode, request)
+        .subscribe({
+          next: (res) => {
+            this.toast.success(res.result.message);
+            this.setOfCheckedId = new Set<number>();
+            this.refreshCheckedStatus();
+            this.getData({ page: this.pageNumber, size: this.pageSize });
+            this.loader.stop();
+          },
+          error: (err) => {
+            this.toast.error(err.error.result.message);
+            this.setOfCheckedId = new Set<number>();
+            this.refreshCheckedStatus();
+            this.loader.stop();
+          },
+        });
     } else {
       this.loader.stop();
     }
@@ -720,11 +751,12 @@ export class ManageMachineComponent implements OnInit {
   /**
    * Đây là hàm sinh ra mã ngẫu nhiên
    * @param length chiều dài chuỗi cần random
-   * @returns 
+   * @returns
    */
   makeid(length: number) {
     let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
     let counter = 0;
     while (counter < length) {
@@ -737,15 +769,18 @@ export class ManageMachineComponent implements OnInit {
   /**
    * Hàm gọi API và xử lý dữ liệu option cho select box
    */
-   handleOpenChangeDataTypeParam(data: any, column: any) {
-    if(data) {
-      this.manageComponentService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
-        next: (res) => {
-          this.valueSelectBox = res.data;
-        }, error: (err) => {
-          this.toast.error(err.error.result.message);
-        }
-      })
+  handleOpenChangeDataTypeParam(data: any, column: any) {
+    if (data) {
+      this.manageComponentService
+        .getParamByTableNameAndColumnName(column.tableName, column.keyName)
+        .subscribe({
+          next: (res) => {
+            this.valueSelectBox = res.data;
+          },
+          error: (err) => {
+            this.toast.error(err.error.result.message);
+          },
+        });
     }
   }
 
@@ -767,54 +802,52 @@ export class ManageMachineComponent implements OnInit {
    * Xử lý sự kiện double click trên dòng trong table
    */
   onDblClickOnRowTable(infor: any) {
-    if(this.isCheckRoles('view-detail')) {
+    if (this.isCheckRoles('view-detail')) {
       this.editMachine(infor);
     }
   }
 
-
   /**
    * Xử lý sự kiện nhấn phím tắt Shift + N để thêm mới bản ghi
-   * @param event 
+   * @param event
    */
   @HostListener('document:keydown.shift.n', ['$event'])
   handleAddNew(event: any) {
-    if(!this.isInputFocused) {
+    if (!this.isInputFocused) {
       this.addMachine();
     }
   }
 
   /**
    * Xử lý sự kiện nhấn phím tắt Delete để xoá nhiều bản ghi
-   * @param event 
+   * @param event
    */
   @HostListener('document:keydown.delete', ['$event'])
   handleDelete(event: any) {
-    if(this.setOfCheckedId.size > 0) {
+    if (this.setOfCheckedId.size > 0) {
       this.openPopupDeleteList();
     } else {
-      this.toast.warning("Vui lòng chọn bản ghi để sử dụng chức năng này!");
+      this.toast.warning('Vui lòng chọn bản ghi để sử dụng chức năng này!');
     }
   }
 
   /**
    * Xử lý sự kiện nhấn phím tắt F2 để cập nhật bản ghi
-   * @param event 
+   * @param event
    */
   @HostListener('document:keydown.F2', ['$event'])
-  handleUpdate(event: any) {
-  }
+  handleUpdate(event: any) {}
 
   /**
    * Xử lý sự kiện nhấn phím tắt Control + D để sao chép nhiều bản ghi
-   * @param event 
+   * @param event
    */
   @HostListener('document:keydown.shift.c', ['$event'])
   handleCopy(event: any) {
-    if(this.setOfCheckedId.size > 0) {
+    if (this.setOfCheckedId.size > 0) {
       this.openPopupCopy();
     } else {
-      this.toast.warning("Vui lòng chọn bản ghi để sử dụng chức năng này!");
+      this.toast.warning('Vui lòng chọn bản ghi để sử dụng chức năng này!');
     }
   }
 
@@ -826,7 +859,7 @@ export class ManageMachineComponent implements OnInit {
 
   /**
    * Hàm thay đổi checkbox trong cây tìm kiếm
-   * @param options 
+   * @param options
    */
   changeSearchTree(options: string[]) {
     this.selectedOptions = options;
@@ -840,15 +873,15 @@ export class ManageMachineComponent implements OnInit {
     if (this.treeVisible) {
       this.treeVisible = false;
       this.classList = {
-        searchTree: "search-tree-container-close",
-        content: "content-container-close",
-      }
+        searchTree: 'search-tree-container-close',
+        content: 'content-container-close',
+      };
     } else {
       this.treeVisible = true;
       this.classList = {
-        searchTree: "search-tree-container-open",
-        content: "content-container-open",
-      }
+        searchTree: 'search-tree-container-open',
+        content: 'content-container-open',
+      };
     }
   }
 
@@ -863,59 +896,64 @@ export class ManageMachineComponent implements OnInit {
         switch (column.dataType) {
           case this.dataType.PARAM:
             this.loader.start();
-            this.manageComponentService.getParamByTableNameAndColumnName(column.tableName, column.keyName).subscribe({
-              next: (res) => {
-                this.searchTreeOptions = res.data.map((item: any) => (
-                  {
+            this.manageComponentService
+              .getParamByTableNameAndColumnName(
+                column.tableName,
+                column.keyName
+              )
+              .subscribe({
+                next: (res) => {
+                  this.searchTreeOptions = res.data.map((item: any) => ({
                     value: item.value,
                     label: item.value,
-                    checked: false
-                  }
-                ));
-                this.loader.stop();
-              }, error: (err) => {
-                this.loader.stop();
-                this.toast.error(err.error.result.message);
-              }
-            });
+                    checked: false,
+                  }));
+                  this.loader.stop();
+                },
+                error: (err) => {
+                  this.loader.stop();
+                  this.toast.error(err.error.result.message);
+                },
+              });
             break;
           case this.dataType.RELATION:
             let request = {
               pageNumber: 0,
               pageSize: 0,
               filter: {},
-              sortOrder: "ASC",
+              sortOrder: 'ASC',
               sortProperty: column.relateColumn,
-            }
+            };
             this.loader.start();
-            this.manageComponentService.getDataDynamicTable(column.relateTable, request).subscribe({
-              next: (res) => {
-                this.searchTreeOptions = res.data.map((item: any) => (
-                  {
+            this.manageComponentService
+              .getDataDynamicTable(column.relateTable, request)
+              .subscribe({
+                next: (res) => {
+                  this.searchTreeOptions = res.data.map((item: any) => ({
                     value: item.id,
                     label: item[column.relateColumn],
-                    checked: false
-                  }
-                ));
-                this.loader.stop();
-              }, error: (err) => {
-                this.loader.stop();
-                this.toast.error(err.error.result.message);
-              }
-            });
+                    checked: false,
+                  }));
+                  this.loader.stop();
+                },
+                error: (err) => {
+                  this.loader.stop();
+                  this.toast.error(err.error.result.message);
+                },
+              });
             break;
           case this.dataType.BOOLEAN:
             this.searchTreeOptions = [
               {
                 value: true,
-                label: "True",
-                checked: false
+                label: 'True',
+                checked: false,
               },
               {
                 value: false,
-                label: "False",
-                checked: false
-              }
+                label: 'False',
+                checked: false,
+              },
             ];
             break;
         }
@@ -926,32 +964,39 @@ export class ManageMachineComponent implements OnInit {
   }
 
   async commonAutoComplete(value: string) {
-    this.manageComponentService.getCommonAutoComplete(this.tableCode, value).subscribe({
-      next: (res) => {
-        this.optionsComplete = res.data;
-      }, error: (err) => {
-        this.toast.error(err.error.result.message);
-      }
-    });
+    this.manageComponentService
+      .getCommonAutoComplete(this.tableCode, value)
+      .subscribe({
+        next: (res) => {
+          this.optionsComplete = res.data;
+        },
+        error: (err) => {
+          this.toast.error(err.error.result.message);
+        },
+      });
   }
 
   /**
    * Hàm kiểm tra tài khoản có quyền để thực hiện action hay không
-   * @param role 
-   * @returns 
+   * @param role
+   * @returns
    */
   isCheckRoles(action: string) {
-    if(this.baseService.isAuthorized('admin_business')) {
+    if (this.baseService.isAuthorized('admin_business')) {
       return true;
     } else {
       let tenant = '';
-      if(this.keyCloak.getKeycloakInstance().idTokenParsed != null && this.keyCloak.getKeycloakInstance().idTokenParsed != undefined) {
-        tenant = this.keyCloak.getKeycloakInstance().idTokenParsed!['groups'][0].slice(1);
+      if (
+        this.keyCloak.getKeycloakInstance().idTokenParsed != null &&
+        this.keyCloak.getKeycloakInstance().idTokenParsed != undefined
+      ) {
+        tenant = this.keyCloak
+          .getKeycloakInstance()
+          .idTokenParsed!['groups'][0].slice(1);
       }
       let role = tenant + '_mdm_' + this.tableCode + '_' + action;
       return this.baseService.isAuthorized(role);
     }
-
   }
 
   protected readonly dataType = DATA_TYPE;

@@ -1,21 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NzUploadXHRArgs } from 'ng-zorro-antd/upload';
 import { ToastrService } from 'ngx-toastr';
 import { ExportService } from 'src/app/services/export.service';
-import { ManageStageService } from 'src/app/services/manage-machine-line/manage-stage/manage-stage.service';
-import { environment } from 'src/environment/environment';
+import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
+import { saveAs } from 'file-saver';
+import * as ExcelJS from 'exceljs';
 
 @Component({
-  selector: 'app-popup-import',
-  templateUrl: './popup-import.component.html',
-  styleUrls: ['./popup-import.component.css'],
+  selector: 'app-popup-import-form-excel',
+  templateUrl: './popup-import-form-excel.component.html',
+  styleUrls: ['./popup-import-form-excel.component.css']
 })
-export class PopupImportComponent implements OnInit {
+export class PopupImportFormExcelComponent {
   constructor(
-    private toast: ToastrService,
     private exportService: ExportService,
-    private http: HttpClient
+    private manageService: ManageComponentService,
+    private toastr: ToastrService
   ) {}
 
   @Input() isvisible: boolean = false;
@@ -23,20 +23,24 @@ export class PopupImportComponent implements OnInit {
   @Input() header: any[] = [];
   @Input() TemplateName: string = '';
   @Input() entityType: number = 0;
+  @Input() tableCode: string = '';
   @Output() isvisibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() import: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {}
 
   downloadTemplate() {
-    console.log(this.header);
-    this.exportService.exportExcelTemplate(this.header, this.TemplateName);
+    this.manageService.downloadTemplateFileToImport(this.tableCode).subscribe({
+      next: (res) => {
+        saveAs(res, `${this.tableCode}.xlsx`);
+      }, error: (err) => {
+        this.toastr.error(err.error.result.message);
+      }
+    })
   }
 
   form = new FormData();
   handleChange = (item: any) => {
-    console.log(item);
-
     this.form.append('file', item.file.originFileObj);
   };
 

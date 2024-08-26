@@ -1,0 +1,195 @@
+/* Css dùng chung */
+.quoting-df {
+    display: flex;
+    align-items: center;
+  }
+  
+  .quoting-df-jus-around {
+    justify-content: space-around;
+  }
+  
+  .quoting-df-jus-between {
+    justify-content: space-between;
+  }
+  
+  .quoting-df-jus-evenly {
+    justify-content: space-evenly;
+  }
+  
+  .quoting-color-white {
+    color: #ffffff;
+  }
+  
+  .quoting-color-black {
+    color: #000000;
+  }
+  
+  .quoting-color-vnt {
+    color: #01aba8;
+  }
+  
+  .quoting-fz-12 {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .quoting-menu-width-10 {
+    width: 13%;
+  }
+  
+  .quoting-ml-10 {
+    margin-left: 10px;
+  }
+  
+  .quoting-text-align-right {
+    text-align: right;
+  }
+  
+  .quoting-border-left-right {
+    border-left: 1px solid #dddddd;
+  }
+  
+  .quoting-ml-32px {
+    margin-left: -32px;
+  }
+  
+  /* Css cho tung block */
+  .content-container-close {
+    height: 20px;
+  }
+  
+  .quoting-title {
+    text-align: center;
+  }
+  
+  .quoting-menu {
+    height: 46px;
+    background-color: #ebf6fe;
+    padding-left: 28px;
+  }
+  
+  .quoting-menu-line {
+    width: 3px;
+    height: 100%;
+    background-color: #01aba8;
+    margin-right: 6px;
+  }
+  
+  .quoting-menu-quoting {
+    cursor: pointer;
+  }
+  
+  .quoting-menu-util {
+    cursor: pointer;
+  }
+  
+  .quoting-menu-lib {
+    cursor: pointer;
+  }
+  
+  .quoting-header {
+    margin-bottom: 4px;
+    padding: 6px 2px;
+    background-color: #ffffff;
+  }
+  
+  .quoting-header-search {
+    width: 20%;
+  }
+  
+  .quoting-header-action {
+    width: 68%;
+  }
+  
+  .quoting-content {
+    display: flex;
+    flex-grow: 1;
+  }
+  
+  .tree-search {
+    height: 100%;
+    background-color: #ffffff;
+    overflow: auto;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow-y: scroll;
+  }
+  
+  .quoting-table {
+    padding-left: 6px;
+    height: calc(100vh - 245px);
+  }
+  
+  .header-tree {
+    display: flex;
+    justify-content: space-between;
+    color: #01aba8;
+  }
+  
+  .search-lable {
+    font-weight: 500;
+    color: #01aba8;
+  }
+  
+  .btn-close {
+    cursor: pointer;
+  }
+  
+  .fn-css-action-grid {
+    justify-content: space-between;
+  }
+  
+  .content-container-breadcrumb {
+    height: 20px;
+  }
+  
+  .truncate-text {
+    max-width: 75px;
+    white-space: nowrap; /* Ngăn không cho text ngắt xuống dòng */
+    overflow: hidden; /* Ẩn phần text vượt quá kích thước của ô */
+    text-overflow: ellipsis; /* Hiển thị ba chấm (...) khi text bị ẩn */
+  }
+
+  .example-viewport {
+    height: fit-content;
+    min-height: 40px;
+    width: 100%;
+  }
+  
+  /* Css của thư viện */
+  ::ng-deep .ant-input {
+    font-size: 13px;
+  }
+  
+  ::ng-deep .ant-tree {
+    font-size: 13px;
+  }
+  
+  .ant-table-tbody > tr > td {
+    height: 34px;
+    padding: 0 8px;
+    font-size: 13px;
+  }
+  
+  .table-tree-level0 {
+    margin-left: 0px;
+  }
+  .table-tree-level1 {
+    margin-left: 12px;
+  }
+  .table-tree-level2 {
+    margin-left: 24px;
+  }
+  .table-tree-level3 {
+    margin-left: 36px;
+  }
+  .table-tree-level4 {
+    margin-left: 48px;
+  }
+  .table-tree-level5 {
+    margin-left: 60px;
+  }
+  

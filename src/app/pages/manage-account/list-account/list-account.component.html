@@ -39,14 +39,14 @@
   <div class="fn-row fn-start">
     <button
       [class]="accListMode ? 'fn-button-solid' : 'fn-button'"
-      style="border-radius: 100px; font-size: 13px;"
+      style="border-radius: 100px; font-size: 13px"
       (click)="accList()"
     >
       {{ "user.account-list" | translate }}
     </button>
     <button
       [class]="!accListMode ? 'fn-button-solid' : 'fn-button'"
-      style="border-radius: 100px; font-size: 13px;"
+      style="border-radius: 100px; font-size: 13px"
       (click)="permissionList()"
     >
       {{ "user.permission-group-list" | translate }}
@@ -465,8 +465,6 @@
       [(isvisible)]="isvisibleUpdate"
       (isvisibleChange)="childOut()"
     ></app-infor-user>
-
-
   </ng-container>
   <ng-container *ngIf="!accListMode">
     <div nz-row nzGutter="24" nzAlign="bottom" nzJustify="end" class="mt-16">

@@ -36,7 +36,7 @@ export class ManageComponentService {
   /**
    * Lấy ra danh sách param theo tên column
    * @param param : Tên của column cần lấy ra param
-   * @returns 
+   * @returns
    */
   getParamsByCode(param: any): Observable<any> {
     return this.httpClient.get(`${this.url}/api/params/units/${param}`, {
@@ -50,7 +50,7 @@ export class ManageComponentService {
    * Lấy ra danh sách param theo tên bảng và tên column
    * @param tableName : Tên bảng cần lấy ra danh sách param
    * @param columnName : Tên cột cần lấy ra danh sách param
-   * @returns 
+   * @returns
    */
   getParamByTableNameAndColumnName(tableName: string, columnName: string): Observable<any> {
     return this.httpClient.get(`${this.url}/api/params/columns/${tableName}/${columnName}`, {
@@ -63,7 +63,7 @@ export class ManageComponentService {
   /**
    * Lấy ra danh sách cột theo tên bảng
    * @param tableName : Tên bảng cần lấy ra danh sách cột
-   * @returns 
+   * @returns
    */
   getColummnByTableName(tableName: string): Observable<any> {
     return this.httpClient.get(`${this.url}/api/columns/${tableName}`, {
@@ -76,7 +76,7 @@ export class ManageComponentService {
   /**
    * Lấy ra danh sách cột theo tên bảng
    * @param tableName : Tên bảng cần lấy ra danh sách cột
-   * @returns 
+   * @returns
    */
   async getColummnByTableNameOnInit(tableName: string): Promise<any> {
     return this.httpClient.get(`${this.url}/api/columns/${tableName}`, {
@@ -90,7 +90,7 @@ export class ManageComponentService {
    * Lấy ra danh sách các bản ghi theo bảng động
    * @param tableName : Tên bảng cần lấy ra danh sách bản ghi
    * @param request : Điều kiện tìm kiếm
-   * @returns 
+   * @returns
    */
   getDataDynamicTable(tableName: string, request: any): Observable<any> {
     return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}/search`, request, {
@@ -104,7 +104,7 @@ export class ManageComponentService {
    * Lấy ra danh sách các bản ghi theo bảng động
    * @param tableName : Tên bảng cần lấy ra danh sách bản ghi
    * @param request : Điều kiện tìm kiếm
-   * @returns 
+   * @returns
    */
   async getDataDynamicTableOnInit(tableName: string, request: any): Promise<any> {
     return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}/search`, request, {
@@ -118,7 +118,7 @@ export class ManageComponentService {
    * Thêm mới 1 bản ghi vào trong table đang truy cập
    * @param tableName Tên bảng cần thêm mới bản ghi
    * @param request Thông tin bản ghi cần thêm mới
-   * @returns 
+   * @returns
    */
   addNewRecord(tableName: string, request: any): Observable<any> {
     return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}`, request, {
@@ -132,7 +132,7 @@ export class ManageComponentService {
    * Thêm mới nhiều bản ghi vào trong table đang truy cập
    * @param tableName Tên bảng cần thêm mới bản ghi
    * @param request Thông tin các bản ghi cần thêm mới
-   * @returns 
+   * @returns
    */
   addListRecord(tableName: string, request: any): Observable<any> {
     return this.httpClient.post(`${this.url}/api/dynamic-tables/${tableName}/batch`, request, {
@@ -147,7 +147,7 @@ export class ManageComponentService {
    * @param tableName Tên bảng cần cập nhật bản ghi
    * @param id id bản ghi cần cập nhật
    * @param request Thông tin các bản ghi cần cập nhật
-   * @returns 
+   * @returns
    */
   updateInforRecordById(tableName: string, id: any, request: any): Observable<any> {
     return this.httpClient.put(`${this.url}/api/dynamic-tables/${tableName}/${id}`, request, {
@@ -161,7 +161,7 @@ export class ManageComponentService {
    * Xoá thông tin bản ghi trong table bằng id
    * @param tableName Tên bảng cần xoá bản ghi
    * @param id id bản ghi cần xoá
-   * @returns 
+   * @returns
    */
   deleteRecordById(tableName: string, id: any): Observable<any> {
     return this.httpClient.delete(`${this.url}/api/dynamic-tables/${tableName}/${id}`, {
@@ -175,7 +175,7 @@ export class ManageComponentService {
    * Xoá thông tin các bản ghi trong table bằng id
    * @param tableName Tên bảng cần xoá bản ghi
    * @param listId Danh sách id bản ghi cần xoá
-   * @returns 
+   * @returns
    */
   deleteListRecordByListId(tableName: string, listId: any): Observable<any> {
     return this.httpClient.put(`${this.url}/api/dynamic-tables/${tableName}/delete-batch`, listId, {
@@ -191,7 +191,7 @@ export class ManageComponentService {
    * @param columnName Tên cột cần lưu ảnh
    * @param id id của bản ghi cần lưu ảnh
    * @param request File ảnh cần lưu
-   * @returns 
+   * @returns
    */
   uploadImageInComponents(tableName: any, id: any ,request: any): Observable<any> {
     return this.httpClient.post(`${this.url}/api/system-storage/${tableName}/${id}`, request, {
@@ -207,7 +207,7 @@ export class ManageComponentService {
    * @param columnName Tên cột cần lấy ảnh ra
    * @param id id của bản ghi cần lấy ảnh ra
    * @param fileName Tên file ảnh cần lấy ra
-   * @returns 
+   * @returns
    */
   getImageInComponents(tableName: any, id: any): Observable<any> {
     return this.httpClient.get(`${this.url}/api/system-storage/${tableName}/${id}`, {
@@ -219,8 +219,8 @@ export class ManageComponentService {
 
   /**
    * API thêm mới giá trị trong bảng param
-   * @param request 
-   * @returns 
+   * @param request
+   * @returns
    */
   addValuesParam(request: any): Observable<any> {
     return this.httpClient.post(`${this.url}/api/params`, request, {
@@ -232,8 +232,8 @@ export class ManageComponentService {
 
   /**
    * API cập nhật thông tin giá trị trong bảng param
-   * @param request 
-   * @returns 
+   * @param request
+   * @returns
    */
   updateValuesParam(request: any): Observable<any> {
     return this.httpClient.put(`${this.url}/api/params`, request, {
@@ -246,7 +246,7 @@ export class ManageComponentService {
   /**
    * Xoá thông tin bản ghi param bằng id
    * @param id id bản ghi param cần xoá
-   * @returns 
+   * @returns
    */
    deleteValueParamById(id: any): Observable<any> {
     return this.httpClient.delete(`${this.url}/api/params/${id}`, {
@@ -271,7 +271,7 @@ export class ManageComponentService {
    * API lấy ra thông tin bản ghi theo id và mã bảng truyền vào
    * @param tableCode mã bảng cần lấy bản ghi
    * @param id id của bản ghi cần lấy
-   * @returns 
+   * @returns
    */
   getInforRecordById(tableCode: any, id: any): Observable<any> {
     return this.httpClient.get(`${this.url}/api/dynamic-tables/${tableCode}/${id}`, {
@@ -285,7 +285,7 @@ export class ManageComponentService {
    * API upload biểu mẫu
    * @param id bản ghi cần upload biểu mẫu
    * @param form file biểu mẫu
-   * @returns 
+   * @returns
    */
   uploadFileTemplate(id: number, form: any): Observable<any> {
     return this.httpClient.post(`${this.url}/api/template-form/template_form/${id}`, form, {
@@ -298,7 +298,7 @@ export class ManageComponentService {
   /**
    * API lấy ra file biểu mẫu
    * @param id bản ghi cần lấy ra biểu mẫu
-   * @returns 
+   * @returns
    */
   getFileTemplate(id: number): Observable<any> {
     return this.httpClient.get(`${this.url}/api/template-form/template_form/${id}/url`)
@@ -307,7 +307,7 @@ export class ManageComponentService {
   /**
    * API upload biểu mẫu
    * @param form file biểu mẫu
-   * @returns 
+   * @returns
    */
   uploadTemplate(form: any): Observable<any> {
     return this.httpClient.post(`${this.template_url}template/`, form,{
@@ -319,8 +319,8 @@ export class ManageComponentService {
 
   /**
    * Hàm lấy ra url template
-   * @param file_id 
-   * @returns 
+   * @param file_id
+   * @returns
    */
   getTemplateUrl(file_id: string): string {
     return `${this.template_url}template/${file_id}`;
@@ -355,7 +355,7 @@ export class ManageComponentService {
   /**
    * API upload icon
    * @param form file icon
-   * @returns 
+   * @returns
    */
   uploadIcon(form: any): Observable<any> {
     return this.httpClient.post(`${this.urlS3}api/storage/uploadFile/mdm/category/icons/url`, form, {
@@ -363,5 +363,138 @@ export class ManageComponentService {
         'Access-Control-Allow-Origin': '*'
       })
     })
+  }
+
+  /**
+   * API tải xuống file mẫu để người dùng chỉnh sửa và inport lại vào hệ thống
+   * @param tableCode mã bảng cần import excel
+   * @returns
+   */
+  downloadTemplateFileToImport(tableCode: string): Observable<any> {
+    return this.httpClient.get(
+      `${this.url}/api/excel/${tableCode}/export-to-import`, {
+        responseType: 'blob',
+      }
+    );
+  }
+
+  /**
+   * API import file excel trong bảng
+   * @param tableCode bảng cần import excel
+   * @param request file excel
+   * @returns
+   */
+  importFormExcel(tableCode: string, request: any) {
+    return this.httpClient.post(
+      `${this.url}/api/excel/${tableCode}/import-from-excel`,
+      request
+    );
+  }
+
+  /**
+   * API thêm mới hoặc cập nhật thông tin BOM
+   * @param request thông tin BOM
+   * @returns
+   */
+  createOrUpdateBom(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/add-bom`,
+      request
+    );
+  }
+
+  /**
+   * API cập nhật thông tin BOM
+   * @param request thông tin BOM
+   * @returns 
+   */
+  updateInforBom(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/update-bom`,
+      request
+    );
+  }
+
+  /**
+   * API thêm mới hoặc cập nhật thông tin chi tiết BOM
+   * @param request thông tin BOM chi tiết
+   * @returns
+   */
+  createOrUpdateBomDetail(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/add-bomdetail`,
+      request
+    );
+  }
+
+  /**
+   * API lấy ra danh sách BOM
+   * @param request thông tin search BOM
+   * @returns
+   */
+  getAllBom(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/get-all-bom`,
+      request
+    );
+  }
+
+  /**
+   * API lấy ra danh sách BOM chi tiết
+   * @param request thông tin search BOM chi tiết
+   * @returns
+   */
+  getAllBomDetail(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/get-all-bomdetail`,
+      request
+    );
+  }
+
+  /**
+   * API lấy ra thông tin bom BOM chi tiết theo ID
+   * @param request id Bom cần lấy ra thông tin
+   * @returns
+   */
+  getInforBom(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/get-bom-info`,
+      request
+    );
+  }
+
+  /**
+   * API xoá thông tin Bom và Bom detail
+   * @param request
+   * @returns
+   */
+  deleteBomAndBomDetail(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/delete-bom`,
+      request
+    );
+  }
+
+
+  /**
+   * Cập nhật thông tin bản ghi trong table đang truy cập
+   * @param tableName Tên bảng cần cập nhật bản ghi
+   * @param id id bản ghi cần cập nhật
+   * @param request Thông tin các bản ghi cần cập nhật
+   * @returns
+   */
+  updateListInforRecordByIdV2(
+    tableName: string,
+    request: any
+  ): Observable<any> {
+    return this.httpClient.put(
+      `${this.url}/api/dynamic-tables/${tableName}/batch-v2`,
+      request,
+      {
+        headers: new HttpHeaders({
+          'Accept-Language': this.accpetLanguage,
+        }),
+      }
+    );
   }
 }
