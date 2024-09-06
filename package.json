@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:vnt": "ng serve --configuration vietnhattan",
+    "start:avison": "ng serve --configuration avison",
     "build": "ng build --configuration production --base-href=/mdm-v2/",
     "build:prod": "ng build --configuration production --base-href=/mdm-v2/",
     "build:dev": "ng build --configuration development --base-href=/mdm-v2/",

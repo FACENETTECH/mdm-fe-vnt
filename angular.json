@@ -133,6 +133,9 @@
             },
             "vietnhattan": {
               "browserTarget": "project-base:build:vietnhattan"
+            },
+            "avison": {
+              "browserTarget": "project-base:build:avison"
             }
           },
           "options": { "port": 4300 },
