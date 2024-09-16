@@ -1,10 +1,12 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { KeycloakService } from 'keycloak-angular';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { BaseService } from 'src/app/services/base.service';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { ConfigService } from 'src/app/services/manage-config/config.service';
-import { DATA_TYPE } from 'src/app/utils/constrant';
+import { DATA_TYPE, ROLE_NAME } from 'src/app/utils/constrant';
 
 @Component({
   selector: 'app-popup-create-or-update-bom',
@@ -43,7 +45,9 @@ export class PopupCreateOrUpdateBomComponent {
     private loader: NgxUiLoaderService,
     private manageService: ManageComponentService,
     private toast: ToastrService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private baseService: BaseService,
+    private keyCloak: KeycloakService,
   ) {}
 
   ngOnInit() {
@@ -630,10 +634,59 @@ export class PopupCreateOrUpdateBomComponent {
       });
   }
 
+  handleChangeNumber($event: any, column: any) {
+    if (column.formula) {
+      const formulas = column.formula.split(',');
+
+      formulas.forEach((formula: any) => {
+        const formulaParts = formula.split('=');
+        const resultField = formulaParts[1].trim();
+        const expression = formulaParts[0].trim();
+
+        const expressionWithValues = expression.replace(/(\w+)/g, (match: any) => {
+          return this.convertStringToNumber(this.inforBOM[match]);
+        });
+        this.inforBOM[resultField] = Number(eval(expressionWithValues));
+      });
+    }
+  }
+  
+  convertStringToNumber(value: any): number {
+    if (value == null || value == '' || value == undefined) {
+      return 0;
+    }
+    let cleanedValue = value.replace(/,/g, '');
+    return Number(cleanedValue);
+  }
+
   ngOnDestroy() {}
+
+  /**
+   * Hàm kiểm tra tài khoản có quyền để thực hiện action hay không
+   * @param role
+   * @returns
+   */
+  isCheckRoles(action: string) {
+    if (this.baseService.isAuthorized('admin_business')) {
+      return true;
+    } else {
+      let tenant = '';
+      if (
+        this.keyCloak.getKeycloakInstance().idTokenParsed != null &&
+        this.keyCloak.getKeycloakInstance().idTokenParsed != undefined
+      ) {
+        tenant = this.keyCloak
+          .getKeycloakInstance()
+          .idTokenParsed!['groups'][0].slice(1);
+      }
+      let role = tenant + '_mdm_' + this.tableCode + '_' + action;
+      return this.baseService.isAuthorized(role);
+    }
+  }
 
   protected readonly dataType = DATA_TYPE;
   protected readonly TYPE_POPUP = typePopup;
+  protected readonly roleName = ROLE_NAME;
 }
 
 const typePopup = {
