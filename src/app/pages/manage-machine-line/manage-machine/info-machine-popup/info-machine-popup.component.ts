@@ -603,23 +603,37 @@ export class InfoMachinePopupComponent {
     this.listEntityByRelation = [];
     this.configService.getAllCategory().subscribe({
       next: (res) => {
-        for(let i = 0; i < res.data.length; i++) {
-          if(res.data[i].isEntity) {
-            this.listEntityByRelation.push(res.data[i])
-          }
-          if(res.data[i].children.length > 0) {
-            for(let j = 0; j < res.data[i].children.length; j++) {
-              if(res.data[i].children[j].isEntity) {
-                this.listEntityByRelation.push(res.data[i].children[j])
-              }
-            }
-          }
-        }
-        this.getParamsOnInit();
-      }, error: (err) => {
+        this.listEntityByRelation = this.getAllByIsEntity(res.data);
+        // for (let i = 0; i < res.data.length; i++) {
+        //   if (res.data[i].isEntity) {
+        //     this.listEntityByRelation.push(res.data[i]);
+        //   }
+        //   if (res.data[i].children.length > 0) {
+        //     for (let j = 0; j < res.data[i].children.length; j++) {
+        //       if (res.data[i].children[j].isEntity) {
+        //         this.listEntityByRelation.push(res.data[i].children[j]);
+        //       }
+        //     }
+        //   }
+        // }
+      },
+      error: (err) => {
         this.toast.error(err.error.result.message);
+      },
+    });
+  }
+
+  getAllByIsEntity(data : any){
+    let result : any = [];
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].isEntity) {
+        result.push(data[i]);
       }
-    })
+      if (data[i].children.length > 0) {
+        result = result.concat(this.getAllByIsEntity(data[i].children));
+      }
+    }
+    return result;
   }
 
   /**
