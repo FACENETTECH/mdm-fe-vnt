@@ -1,10 +1,12 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { KeycloakService } from 'keycloak-angular';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { BaseService } from 'src/app/services/base.service';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { ConfigService } from 'src/app/services/manage-config/config.service';
-import { DATA_TYPE } from 'src/app/utils/constrant';
+import { DATA_TYPE, ROLE_NAME } from 'src/app/utils/constrant';
 
 @Component({
   selector: 'app-popup-create-or-update-bom',
@@ -43,7 +45,9 @@ export class PopupCreateOrUpdateBomComponent {
     private loader: NgxUiLoaderService,
     private manageService: ManageComponentService,
     private toast: ToastrService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private baseService: BaseService,
+    private keyCloak: KeycloakService,
   ) {}
 
   ngOnInit() {
@@ -329,42 +333,49 @@ export class PopupCreateOrUpdateBomComponent {
    * Hàm gọi API và xử lý dữ liệu option cho select box với trường có kiểu dữ liệu là relation
    */
   handleOpenChangeRelation(event: any, column: any) {
-    // this.columnRelation = '';
-    if (this.listEntityByRelation.length > 0) {
-      let tableCode = '';
-      for (let i = 0; i < this.listEntityByRelation.length; i++) {
-        if (this.listEntityByRelation[i].name == column.relateTable) {
-          tableCode = this.listEntityByRelation[i].name;
+    if(event) {
+      // this.columnRelation = '';
+      if (this.listEntityByRelation.length > 0) {
+        let tableCode = '';
+        console.log('check: ', this.listEntityByRelation)
+        for (let i = 0; i < this.listEntityByRelation.length; i++) {
+          if (this.listEntityByRelation[i].name == column.relateTable) {
+            console.log('check')
+            tableCode = this.listEntityByRelation[i].name;
+            break;
+          }
         }
-      }
-      if (tableCode != '') {
-        let request = {
-          pageNumber: 0,
-          pageSize: 0,
-          common: '',
-          filter: {},
-          sortOrder: 'DESC',
-          sortProperty: 'index',
-          searchOptions: [],
-        };
-        this.manageService.getDataDynamicTable(tableCode, request).subscribe({
-          next: (res) => {
-            this.optionsRelation = res.data;
-            this.manageService.getColummnByTableName(tableCode).subscribe({
-              next: (res) => {
-                for (let i = 0; i < res.data.length; i++) {
-                  if (res.data[i].keyName == column.relateColumn) {
-                    this.columnRelation = res.data[i].keyName;
-                    break;
+        console.log(tableCode)
+        if (tableCode != '') {
+          let request = {
+            pageNumber: 0,
+            pageSize: 0,
+            common: '',
+            filter: {},
+            sortOrder: 'DESC',
+            sortProperty: 'index',
+            searchOptions: [],
+          };
+          this.manageService.getDataDynamicTable(tableCode, request).subscribe({
+            next: (res) => {
+              this.optionsRelation = res.data;
+              this.manageService.getColummnByTableName(tableCode).subscribe({
+                next: (res) => {
+                  for (let i = 0; i < res.data.length; i++) {
+                    if (res.data[i].keyName == column.relateColumn) {
+                      this.columnRelation = res.data[i].keyName;
+                      break;
+                    }
                   }
-                }
-              },
-            });
-          },
-          error: (err) => {
-            this.toast.error(err.error.result.message);
-          },
-        });
+                  console.log(this.columnRelation)
+                },
+              });
+            },
+            error: (err) => {
+              this.toast.error(err.error.result.message);
+            },
+          });
+        }
       }
     }
   }
@@ -444,24 +455,37 @@ export class PopupCreateOrUpdateBomComponent {
     this.listEntityByRelation = [];
     this.configService.getAllCategory().subscribe({
       next: (res) => {
-        for (let i = 0; i < res.data.length; i++) {
-          if (res.data[i].isEntity) {
-            this.listEntityByRelation.push(res.data[i]);
-          }
-          if (res.data[i].children.length > 0) {
-            for (let j = 0; j < res.data[i].children.length; j++) {
-              if (res.data[i].children[j].isEntity) {
-                this.listEntityByRelation.push(res.data[i].children[j]);
-              }
-            }
-          }
-        }
-        this.handleOpenChangeOperationCode(true, 'operation_code');
+        this.listEntityByRelation = this.getAllByIsEntity(res.data);
+        // for (let i = 0; i < res.data.length; i++) {
+        //   if (res.data[i].isEntity) {
+        //     this.listEntityByRelation.push(res.data[i]);
+        //   }
+        //   if (res.data[i].children.length > 0) {
+        //     for (let j = 0; j < res.data[i].children.length; j++) {
+        //       if (res.data[i].children[j].isEntity) {
+        //         this.listEntityByRelation.push(res.data[i].children[j]);
+        //       }
+        //     }
+        //   }
+        // }
       },
       error: (err) => {
         this.toast.error(err.error.result.message);
       },
     });
+  }
+
+  getAllByIsEntity(data : any){
+    let result : any = [];
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].isEntity) {
+        result.push(data[i]);
+      }
+      if (data[i].children.length > 0) {
+        result = result.concat(this.getAllByIsEntity(data[i].children));
+      }
+    }
+    return result;
   }
 
   addNewRow() {
@@ -630,10 +654,59 @@ export class PopupCreateOrUpdateBomComponent {
       });
   }
 
+  handleChangeNumber($event: any, column: any) {
+    if (column.formula) {
+      const formulas = column.formula.split(',');
+
+      formulas.forEach((formula: any) => {
+        const formulaParts = formula.split('=');
+        const resultField = formulaParts[1].trim();
+        const expression = formulaParts[0].trim();
+
+        const expressionWithValues = expression.replace(/(\w+)/g, (match: any) => {
+          return this.convertStringToNumber(this.inforBOM[match]);
+        });
+        this.inforBOM[resultField] = Number(eval(expressionWithValues));
+      });
+    }
+  }
+  
+  convertStringToNumber(value: any): number {
+    if (value == null || value == '' || value == undefined) {
+      return 0;
+    }
+    let cleanedValue = value.replace(/,/g, '');
+    return Number(cleanedValue);
+  }
+
   ngOnDestroy() {}
+
+  /**
+   * Hàm kiểm tra tài khoản có quyền để thực hiện action hay không
+   * @param role
+   * @returns
+   */
+  isCheckRoles(action: string) {
+    if (this.baseService.isAuthorized('admin_business')) {
+      return true;
+    } else {
+      let tenant = '';
+      if (
+        this.keyCloak.getKeycloakInstance().idTokenParsed != null &&
+        this.keyCloak.getKeycloakInstance().idTokenParsed != undefined
+      ) {
+        tenant = this.keyCloak
+          .getKeycloakInstance()
+          .idTokenParsed!['groups'][0].slice(1);
+      }
+      let role = tenant + '_mdm_' + this.tableCode + '_' + action;
+      return this.baseService.isAuthorized(role);
+    }
+  }
 
   protected readonly dataType = DATA_TYPE;
   protected readonly TYPE_POPUP = typePopup;
+  protected readonly roleName = ROLE_NAME;
 }
 
 const typePopup = {
