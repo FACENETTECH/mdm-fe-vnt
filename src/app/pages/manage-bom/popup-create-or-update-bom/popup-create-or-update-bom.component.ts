@@ -30,7 +30,7 @@ export class PopupCreateOrUpdateBomComponent {
   showErrorMachineType: boolean = false;
   valueSelectBox: any = []; // Lưu trữ các giá trị của những trường có type là select box
   listEntityByRelation: any[] = [];
-  optionsRelation: any[] = [];
+  optionsRelation: Map<string, any[]> = new Map<string, any[]>();
   columnRelation?: string;
   listChildrenBom: any[] = [];
   columnsStage: any[] = [];
@@ -53,15 +53,9 @@ export class PopupCreateOrUpdateBomComponent {
   ngOnInit() {
     this.getColumns();
     this.getColumnsStage();
-    this.getColumnsBomDetail();
     this.getAllEntity();
     this.getDataMaterials();
     this.getListStage();
-    if (Object.entries(this.inforBOM).length === 0) {
-    } else {
-      this.getDataStages();
-      this.getListBomDetailOfBom();
-    }
   }
 
   checkAction: boolean = false;
@@ -79,6 +73,17 @@ export class PopupCreateOrUpdateBomComponent {
       next: (res) => {
         this.loader.stop();
         this.columns = [...res.data];
+        if (Object.entries(this.inforBOM).length === 0) {
+        } else {
+          // this.getDataStages();
+          this.columns.forEach((column) => {
+            if (column.dataType == this.dataType.RELATION) {
+              this.optionsRelation.set(column.relateColumn, [ {...this.inforBOM[column.keyName]} ]);
+            }
+          });
+          // this.getListBomDetailOfBom();
+        }
+        this.getColumnsBomDetail();
       },
       error: (err) => {
         this.loader.stop();
@@ -92,6 +97,10 @@ export class PopupCreateOrUpdateBomComponent {
       next: (res) => {
         this.loader.stop();
         this.columnsBomDetail = [...res.data];
+        if (Object.entries(this.inforBOM).length === 0) {
+        } else {
+          this.getListBomDetailOfBom();
+        }
       },
       error: (err) => {
         this.loader.stop();
@@ -116,6 +125,7 @@ export class PopupCreateOrUpdateBomComponent {
   }
 
   getListBomDetailOfBom() {
+    console.log('check: ', this.inforBOM['id']);
     let request = {
       pageNumber: 0,
       pageSize: 0,
@@ -132,6 +142,20 @@ export class PopupCreateOrUpdateBomComponent {
       next: (res) => {
         this.loader.stop();
         this.listChildrenBom = res.data;
+        let arr: any = [];
+        this.listChildrenBom.forEach(record => {
+          arr = [];
+          this.columnsBomDetail.forEach((column) => {
+            if(column.dataType == this.dataType.RELATION) {
+              arr = this.optionsRelation.get(column.relateColumn);
+              arr?.push({
+                ...record[column.keyName]
+              });
+              this.optionsRelation.set(column.relateColumn, arr!);
+            }
+          });
+        })
+        console.log(this.optionsRelation);
       },
       error: (err) => {
         this.loader.stop();
@@ -142,7 +166,7 @@ export class PopupCreateOrUpdateBomComponent {
 
   getDataStages() {
     let technologyProcessCode = this.listStage.find(
-      (record) => record.id == this.inforBOM['mdm_technology_process_id']
+      (record) => record.id == this.inforBOM['routing_code'].id
     );
     if (technologyProcessCode) {
       this.technologyProcessCode =
@@ -219,6 +243,7 @@ export class PopupCreateOrUpdateBomComponent {
         next: (res) => {
           this.listStage = res.data;
           console.log(this.listStage);
+          this.getDataStages();
         },
         error: (err) => {
           console.error(err);
@@ -334,49 +359,68 @@ export class PopupCreateOrUpdateBomComponent {
    */
   handleOpenChangeRelation(event: any, column: any) {
     if(event) {
-      // this.columnRelation = '';
-      if (this.listEntityByRelation.length > 0) {
-        let tableCode = '';
-        console.log('check: ', this.listEntityByRelation)
-        for (let i = 0; i < this.listEntityByRelation.length; i++) {
-          if (this.listEntityByRelation[i].name == column.relateTable) {
-            console.log('check')
-            tableCode = this.listEntityByRelation[i].name;
-            break;
-          }
-        }
-        console.log(tableCode)
-        if (tableCode != '') {
-          let request = {
-            pageNumber: 0,
-            pageSize: 0,
-            common: '',
-            filter: {},
-            sortOrder: 'DESC',
-            sortProperty: 'index',
-            searchOptions: [],
-          };
-          this.manageService.getDataDynamicTable(tableCode, request).subscribe({
-            next: (res) => {
-              this.optionsRelation = res.data;
-              this.manageService.getColummnByTableName(tableCode).subscribe({
-                next: (res) => {
-                  for (let i = 0; i < res.data.length; i++) {
-                    if (res.data[i].keyName == column.relateColumn) {
-                      this.columnRelation = res.data[i].keyName;
-                      break;
-                    }
-                  }
-                  console.log(this.columnRelation)
-                },
-              });
-            },
-            error: (err) => {
-              this.toast.error(err.error.result.message);
-            },
-          });
-        }
-      }
+      let request = {
+        pageNumber: 0,
+        pageSize: 0,
+        common: '',
+        filter: {},
+        sortOrder: 'DESC',
+        sortProperty: 'index',
+        searchOptions: [],
+      };
+      this.manageService
+        .getDataDynamicTable(column.relateTable, request)
+        .subscribe({
+          next: (res) => {
+            this.optionsRelation.set(column.relateColumn, res.data);
+          },
+          error: (err) => {
+            this.toast.error(err.error.result.message);
+          },
+        });
+
+      // if (this.listEntityByRelation.length > 0) {
+      //   let tableCode = '';
+      //   console.log('check: ', this.listEntityByRelation)
+      //   for (let i = 0; i < this.listEntityByRelation.length; i++) {
+      //     if (this.listEntityByRelation[i].name == column.relateTable) {
+      //       console.log('check')
+      //       tableCode = this.listEntityByRelation[i].name;
+      //       break;
+      //     }
+      //   }
+      //   console.log(tableCode)
+      //   if (tableCode != '') {
+      //     let request = {
+      //       pageNumber: 0,
+      //       pageSize: 0,
+      //       common: '',
+      //       filter: {},
+      //       sortOrder: 'DESC',
+      //       sortProperty: 'index',
+      //       searchOptions: [],
+      //     };
+      //     this.manageService.getDataDynamicTable(tableCode, request).subscribe({
+      //       next: (res) => {
+      //         this.optionsRelation = res.data;
+      //         this.manageService.getColummnByTableName(tableCode).subscribe({
+      //           next: (res) => {
+      //             for (let i = 0; i < res.data.length; i++) {
+      //               if (res.data[i].keyName == column.relateColumn) {
+      //                 this.columnRelation = res.data[i].keyName;
+      //                 break;
+      //               }
+      //             }
+      //             console.log(this.columnRelation)
+      //           },
+      //         });
+      //       },
+      //       error: (err) => {
+      //         this.toast.error(err.error.result.message);
+      //       },
+      //     });
+      //   }
+      // }
     }
   }
 
@@ -386,49 +430,31 @@ export class PopupCreateOrUpdateBomComponent {
   handleOpenChangeOperationCode(event: any, columnName: string) {
     // this.columnRelation = '';
     if (event) {
-      if (this.listEntityByRelation.length > 0) {
-        let tableCode = '';
-        for (let i = 0; i < this.listEntityByRelation.length; i++) {
-          if (this.listEntityByRelation[i].name == 'operation') {
-            tableCode = this.listEntityByRelation[i].name;
-          }
-        }
-        if (tableCode != '') {
-          let request = {
-            pageNumber: 0,
-            pageSize: 0,
-            common: '',
-            filter: {},
-            sortOrder: 'DESC',
-            sortProperty: 'index',
-            searchOptions: [],
-          };
-          this.manageService.getDataDynamicTable(tableCode, request).subscribe({
-            next: (res) => {
-              this.optionsRelation = res.data;
-              this.manageService.getColummnByTableName(tableCode).subscribe({
-                next: (res) => {
-                  for (let i = 0; i < res.data.length; i++) {
-                    if (res.data[i].keyName == columnName) {
-                      this.columnRelation = res.data[i].keyName;
-                      break;
-                    }
-                  }
-                },
-              });
-            },
-            error: (err) => {
-              this.toast.error(err.error.result.message);
-            },
-          });
-        }
-      }
+       let request = {
+        pageNumber: 0,
+        pageSize: 0,
+        common: '',
+        filter: {},
+        sortOrder: 'DESC',
+        sortProperty: 'index',
+        searchOptions: [],
+      };
+      this.manageService
+        .getDataDynamicTable('operation', request)
+        .subscribe({
+          next: (res) => {
+            this.optionsRelation.set('operation_code', res.data);
+          },
+          error: (err) => {
+            this.toast.error(err.error.result.message);
+          },
+        });
     }
   }
 
   handleChangeValueOperationCode(event: any, index: number) {
-    let operation = this.optionsRelation.find(
-      (record) => record[this.columnRelation!] == event
+    let operation = this.optionsRelation.get('operation_code')!.find(
+      (record) => record['operation_code'] == event
     );
     this.columnsStage.forEach((column) => {
       this.listStageOfBom[index][column.keyName] = operation[column.keyName];
@@ -440,7 +466,6 @@ export class PopupCreateOrUpdateBomComponent {
 
   handleChangeValueMaterialId(event: any, index: number) {
     let record = this.listMaterial.find((record) => record['id'] == event);
-    console.log('changeValueMaterialId: ', record);
     this.columnsBomDetail.forEach((column) => {
       if (column.keyName != 'material_id') {
         this.listChildrenBom[index][column.keyName] = record[column.keyName];
@@ -697,6 +722,16 @@ export class PopupCreateOrUpdateBomComponent {
     let cleanedValue = value.replace(/,/g, '');
     return Number(cleanedValue);
   }
+
+  /**
+   * Hàm so sánh giá trị của select box
+   * @param object1
+   * @param object2
+   * @returns
+   */
+  compareFn = (object1: any, object2: any): boolean => {
+    return object1 && object2 ? object1.id === object2.id : object1 === object2;
+  };
 
   ngOnDestroy() {}
 
