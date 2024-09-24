@@ -468,21 +468,47 @@
                   >*</span
                 ></label
               >
-              <nz-select
-                style="width: 100%"
-                nzMode="default"
-                [(ngModel)]="inforBOM[col.keyName]"
-                (ngModelChange)="checkValid()"
-                (nzOpenChange)="handleOpenChangeRelation($event, col)"
-                nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
-                  col.keyTitle | translate
-                }} ----"
-                (ngModelChange)="checkAction = true"
-                [nzShowSearch]="true"
-                [disabled]="col.isDisable"
-              >
-                <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
-              </nz-select>
+              <ng-container *ngIf="col.keyName == 'routing_code'">
+                <nz-select
+                  [compareWith]="compareFn"
+                  style="width: 100%"
+                  nzMode="default"
+                  [(ngModel)]="inforBOM[col.keyName]"
+                  (ngModelChange)="getDataStages()"
+                  (ngModelChange)="checkValid()"
+                  (nzOpenChange)="handleOpenChangeRelation($event, col)"
+                  nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                    col.keyTitle | translate
+                  }} ----"
+                  (ngModelChange)="checkAction = true"
+                  [nzShowSearch]="true"
+                  [disabled]="col.isDisable"
+                >
+                  <nz-option *ngFor="let item of optionsRelation!.get(
+                    col.relateColumn
+                  )" [nzValue]="item" [nzLabel]="item[col.relateColumn]"></nz-option>
+                </nz-select>
+              </ng-container>
+              <ng-container *ngIf="col.keyName != 'routing_code'">
+                <nz-select
+                  [compareWith]="compareFn"
+                  style="width: 100%"
+                  nzMode="default"
+                  [(ngModel)]="inforBOM[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  (nzOpenChange)="handleOpenChangeRelation($event, col)"
+                  nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                    col.keyTitle | translate
+                  }} ----"
+                  (ngModelChange)="checkAction = true"
+                  [nzShowSearch]="true"
+                  [disabled]="col.isDisable"
+                >
+                  <nz-option *ngFor="let item of optionsRelation!.get(
+                    col.relateColumn
+                  )" [nzValue]="item" [nzLabel]="item[col.relateColumn]"></nz-option>
+                </nz-select>
+              </ng-container>
               <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                 checkMachine[col.keyName]
               }}</span>
@@ -1080,6 +1106,7 @@
                                         <ng-container *ngIf="col.dataType == dataType.RELATION">
                                             <td>
                                                 <nz-select
+                                                    [compareWith]="compareFn"
                                                     style="width: 100%"
                                                     nzMode="default"
                                                     [(ngModel)]="data[col.keyName]"
@@ -1090,7 +1117,9 @@
                                                     [nzShowSearch]="true"
                                                     [disabled]="col.isDisable"
                                                 >
-                                                    <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
+                                                    <nz-option *ngFor="let item of optionsRelation!.get(
+                                                      col.relateColumn
+                                                    )" [nzValue]="item" [nzLabel]="item[col.relateColumn]"></nz-option>
                                                 </nz-select>
                                             </td>
                                         </ng-container>
@@ -1248,7 +1277,9 @@
                                                             [nzShowSearch]="true"
                                                             [disabled]="col.isDisable"
                                                         >
-                                                            <nz-option *ngFor="let item of optionsRelation" [nzValue]="item[columnRelation!]" [nzLabel]="item[columnRelation!]"></nz-option>
+                                                            <nz-option *ngFor="let item of optionsRelation!.get(
+                                                              'operation_code'
+                                                            )" [nzValue]="item['operation_code']" [nzLabel]="item['operation_code']"></nz-option>
                                                         </nz-select>
                                                     </ng-container>
                                                     <ng-container *ngIf="col.keyName != 'operation_code'">
@@ -1296,6 +1327,7 @@
                                             <ng-container *ngIf="col.dataType == dataType.RELATION">
                                                 <td>
                                                     <nz-select
+                                                        [compareWith]="compareFn"
                                                         style="width: 100%"
                                                         nzMode="default"
                                                         [(ngModel)]="data[col.keyName]"
@@ -1306,7 +1338,9 @@
                                                         [nzShowSearch]="true"
                                                         [disabled]="col.isDisable"
                                                     >
-                                                        <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
+                                                        <nz-option *ngFor="let item of optionsRelation!.get(
+                                                          col.relateColumn
+                                                        )" [nzValue]="item" [nzLabel]="item[col.relateColumn]"></nz-option>
                                                     </nz-select>
                                                 </td>
                                             </ng-container>
