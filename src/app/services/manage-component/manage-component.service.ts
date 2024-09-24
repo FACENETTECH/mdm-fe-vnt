@@ -452,6 +452,18 @@ export class ManageComponentService {
   }
 
   /**
+   * API lấy ra danh sách BOM chi tiết
+   * @param request thông tin search BOM chi tiết
+   * @returns
+   */
+  getAllBomDetailInView(request: any): Observable<any> {
+    return this.httpClient.post(
+      `${this.url}/api/bom/get-all-bomdetail-view`,
+      request
+    );
+  }
+
+  /**
    * API lấy ra thông tin bom BOM chi tiết theo ID
    * @param request id Bom cần lấy ra thông tin
    * @returns

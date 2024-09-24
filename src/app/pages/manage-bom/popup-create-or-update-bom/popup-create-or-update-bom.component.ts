@@ -528,6 +528,13 @@ export class PopupCreateOrUpdateBomComponent {
   }
 
   async submit() {
+    for(let i = 0; i < this.columns.length; i++) {
+      if(this.columns[i].dataType == this.dataType.RELATION) {
+        if(this.inforBOM[this.columns[i].keyName] != null && this.inforBOM[this.columns[i].keyName] != '') {
+          this.inforBOM[this.columns[i].keyName] = this.inforBOM[this.columns[i].keyName].id;
+        }
+      }
+    }
     if (this.typePopup == this.TYPE_POPUP.copy || this.typePopup == this.TYPE_POPUP.create) {
       if (this.typePopup == this.TYPE_POPUP.copy) {
         this.inforBOM['id'] = undefined;
@@ -547,6 +554,12 @@ export class PopupCreateOrUpdateBomComponent {
                   col.keyName != 'material_id'
                 ) {
                   bom[col.keyName] = Number(bom[col.keyName]);
+                }
+                if (
+                  col.dataType == this.dataType.RELATION &&
+                  bom[col.keyName] != null && bom[col.keyName] != ''
+                ) {
+                  bom[col.keyName] = bom[col.keyName].id;
                 }
               });
             });
@@ -592,6 +605,12 @@ export class PopupCreateOrUpdateBomComponent {
                   col.keyName != 'material_id'
                 ) {
                   bom[col.keyName] = Number(bom[col.keyName]);
+                }
+                if (
+                  col.dataType == this.dataType.RELATION &&
+                  bom[col.keyName] != null && bom[col.keyName] != ''
+                ) {
+                  bom[col.keyName] = bom[col.keyName].id;
                 }
               });
             });
