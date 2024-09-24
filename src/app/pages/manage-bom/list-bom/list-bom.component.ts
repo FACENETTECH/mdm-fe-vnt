@@ -145,7 +145,6 @@ export class ListBomComponent {
     k: number,
     $event: boolean
   ) {
-    console.log('parent: ', parent);
     if($event) {
       let request = {
         pageNumber: 0,
@@ -160,7 +159,7 @@ export class ListBomComponent {
         searchOptions: [],
       };
       this.loader.start();
-      this.componentService.getAllBomDetail(request).subscribe({
+      this.componentService.getAllBomDetailInView(request).subscribe({
         next: (res) => {
           this.loader.stop();
           // this.setOfDataChildren.set(parent.id, res.data);
