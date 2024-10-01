@@ -155,6 +155,10 @@ p {
   padding-left: 20px;
   flex-direction: row;
   gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  text-wrap: nowrap;
 }
 
 .quoting-menu-line {
