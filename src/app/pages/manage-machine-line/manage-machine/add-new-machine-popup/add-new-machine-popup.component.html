@@ -9,11 +9,7 @@
   <ng-template #modalTitle>
     <div
       class="fn-bg-header-default"
-      style="
-        display: flex;
-        align-items: center;
-        padding: 5px 0px 10px 16px;
-      "
+      style="display: flex; align-items: center; padding: 5px 0px 10px 16px"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +36,7 @@
         </defs>
       </svg>
       <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Thêm mới thông tin ' + inforTable.label | translate }}
+        {{ "Thêm mới thông tin " + inforTable.label | translate }}
       </p>
     </div>
   </ng-template>
@@ -48,7 +44,12 @@
   <ng-template #modalContent>
     <div class="form-group">
       <div
-        style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 70%;"
+        style="
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          width: 70%;
+        "
       >
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.hasUnit && col.keyName != 'status'">
@@ -62,17 +63,25 @@
                     ></label
                   >
                   <br />
-                  <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
-                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
-                  (ngModelChange)="checkAction = true"/>
+                  <input
+                    style="text-align: right; width: 100%"
+                    nz-input
+                    nz-input
+                    (input)="formatNumber($event.target)"
+                    type="text"
+                    [(ngModel)]="inforMachine[col.keyName]"
+                    (ngModelChange)="checkValid()"
+                    (ngModelChange)="checkAction = true"
+                    (ngModelChange)="handleChangeNumber($event, col)"
+                  />
                   <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
                 <div class="block-item-unit-right">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -82,10 +91,17 @@
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                     [nzDropdownRender]="renderTemplate"
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                   <ng-template #renderTemplate>
-                    <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
+                    <div
+                      class="container"
+                      *ngIf="isCheckRoles(roleName.CREATE_PARAM)"
+                    >
                       <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
@@ -95,7 +111,8 @@
                         class="error-message"
                         *ngIf="showErrorMachineType"
                       >
-                        Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                        Loại {{ inforMachine[col.keyTitle] }} không được để
+                        trống hoặc chứa ký tự đặc biệt
                       </div>
                     </div>
                   </ng-template>
@@ -124,9 +141,9 @@
                   }}</span>
                 </div>
                 <div class="block-item-unit-right">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -136,10 +153,17 @@
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                     [nzDropdownRender]="renderTemplate"
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                   <ng-template #renderTemplate>
-                    <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
+                    <div
+                      class="container"
+                      *ngIf="isCheckRoles(roleName.CREATE_PARAM)"
+                    >
                       <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
@@ -149,7 +173,8 @@
                         class="error-message"
                         *ngIf="showErrorMachineType"
                       >
-                        Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                        Loại {{ inforMachine[col.keyTitle] }} không được để
+                        trống hoặc chứa ký tự đặc biệt
                       </div>
                     </div>
                   </ng-template>
@@ -182,9 +207,9 @@
                   }}</span>
                 </div>
                 <div class="block-item-unit-right">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -194,10 +219,17 @@
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                     [nzDropdownRender]="renderTemplate"
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                   <ng-template #renderTemplate>
-                    <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
+                    <div
+                      class="container"
+                      *ngIf="isCheckRoles(roleName.CREATE_PARAM)"
+                    >
                       <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
@@ -207,7 +239,8 @@
                         class="error-message"
                         *ngIf="showErrorMachineType"
                       >
-                        Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                        Loại {{ inforMachine[col.keyTitle] }} không được để
+                        trống hoặc chứa ký tự đặc biệt
                       </div>
                     </div>
                   </ng-template>
@@ -240,9 +273,9 @@
                   }}</span>
                 </div>
                 <div class="block-item-unit-right">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -252,10 +285,17 @@
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                     [nzDropdownRender]="renderTemplate"
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                   <ng-template #renderTemplate>
-                    <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
+                    <div
+                      class="container"
+                      *ngIf="isCheckRoles(roleName.CREATE_PARAM)"
+                    >
                       <a class="add-item" (click)="addItem(false, col)">
                         <span nz-icon nzType="plus"></span>
                         {{ "add.btn" | translate }}
@@ -265,7 +305,8 @@
                         class="error-message"
                         *ngIf="showErrorMachineType"
                       >
-                        Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                        Loại {{ inforMachine[col.keyTitle] }} không được để
+                        trống hoặc chứa ký tự đặc biệt
                       </div>
                     </div>
                   </ng-template>
@@ -286,9 +327,17 @@
                 <!-- <input style="text-align: right; width:100%" nz-input nz-input
                   type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"/> -->
-                <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
-                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
-                  (ngModelChange)="checkAction = true"/>
+                <input
+                  style="text-align: right; width: 100%"
+                  nz-input
+                  nz-input
+                  (input)="formatNumber($event.target)"
+                  type="text"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true"
+                  (ngModelChange)="handleChangeNumber($event, col)"
+                />
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
                 }}</span>
@@ -307,7 +356,8 @@
                   [(ngModel)]="inforMachine[col.keyName]"
                   (ngModelChange)="checkValid()"
                   (ngModelChange)="checkAction = true"
-                  nzFormat="dd/MM/yyyy">
+                  nzFormat="dd/MM/yyyy"
+                >
                 </nz-date-picker>
                 <span
                   style="color: red"
@@ -382,10 +432,17 @@
                   }} ----"
                   (ngModelChange)="checkAction = true"
                 >
-                  <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                  <nz-option
+                    *ngFor="let item of valueSelectBox"
+                    [nzValue]="item.value"
+                    [nzLabel]="item.value"
+                  ></nz-option>
                 </nz-select>
                 <ng-template #renderTemplate>
-                  <div class="container" *ngIf="isCheckRoles(roleName.CREATE_PARAM)">
+                  <div
+                    class="container"
+                    *ngIf="isCheckRoles(roleName.CREATE_PARAM)"
+                  >
                     <a class="add-item" (click)="addItem(true, col)">
                       <span nz-icon nzType="plus"></span>
                       {{ "add.btn" | translate }}
@@ -395,7 +452,8 @@
                       class="error-message"
                       *ngIf="showErrorMachineType"
                     >
-                      Loại {{ inforMachine[col.keyTitle] }} không được để trống hoặc chứa ký tự đặc biệt
+                      Loại {{ inforMachine[col.keyTitle] }} không được để trống
+                      hoặc chứa ký tự đặc biệt
                     </div>
                   </div>
                 </ng-template>
@@ -416,16 +474,20 @@
                   nz-col
                   nzSpan="24"
                   [(ngModel)]="inforMachine[col.keyName]"
-                  style="margin-top: 6px; display: flex; justify-content: space-between;"
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    justify-content: space-between;
+                  "
                 >
                   <label
-                    style="width: 50%; margin: 0; font-size: 13px;"
+                    style="width: 50%; margin: 0; font-size: 13px"
                     nz-radio
                     [nzValue]="true"
                     >{{ "Có" | translate }}</label
                   >
                   <label
-                    style="width: 45%; margin: 0; font-size: 13px;"
+                    style="width: 45%; margin: 0; font-size: 13px"
                     nz-radio
                     [nzValue]="false"
                     >{{ "Không" | translate }}</label
@@ -456,8 +518,29 @@
                   (ngModelChange)="checkAction = true"
                   [nzShowSearch]="true"
                 >
-                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
+                  <nz-option
+                    *ngFor="let item of optionsRelation"
+                    [nzValue]="item"
+                    [nzLabel]="item[columnRelation!]"
+                  ></nz-option>
                 </nz-select>
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.COLOR">
+              <div
+                class="block-item-unit"
+                style="display: flex; flex-direction: column"
+              >
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <input type="color" [(ngModel)]="inforMachine[col.keyName]" />
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
                 }}</span>
@@ -466,26 +549,53 @@
           </ng-container>
         </ng-container>
       </div>
-      <div style="width: 30%;">
+      <div style="width: 30%">
         <ng-container *ngFor="let col of columns">
-          <ng-container *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'">
-            <div style="width: 100%; margin-bottom: 20px;" class="fn-df fn-df-justify-center">
+          <ng-container
+            *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'"
+          >
+            <div
+              style="width: 100%; margin-bottom: 20px"
+              class="fn-df fn-df-justify-center"
+            >
               <div class="fn-pd-8 fn-df-column">
-                <label [for]="'fileInput' + col.keyName" class="fn-text-align-center">
-                  <img *ngIf="imagesByColumn[col.keyName] == null || imagesByColumn[col.keyName] == undefined" class="fn-css-img-form-add" src="./assets/icons/no-image.png" alt="No image" (click)="handleImageClick()">
-                  <img *ngIf="imagesByColumn[col.keyName] != null && imagesByColumn[col.keyName] != undefined" class="fn-css-img-form-add" [src]="imagesByColumn[col.keyName]" alt="No image" (click)="handleImageClick()"><br/>
-                  <span style="color: #01aba8">{{ inforMachine[col.keyName] }}</span>
-                </label>
-                <label class="fn-label"
-                  >{{ col.keyTitle | translate }}</label
+                <label
+                  [for]="'fileInput' + col.keyName"
+                  class="fn-text-align-center"
                 >
-                <input 
+                  <img
+                    *ngIf="
+                      imagesByColumn[col.keyName] == null ||
+                      imagesByColumn[col.keyName] == undefined
+                    "
+                    class="fn-css-img-form-add"
+                    src="./assets/icons/no-image.png"
+                    alt="No image"
+                    (click)="handleImageClick()"
+                  />
+                  <img
+                    *ngIf="
+                      imagesByColumn[col.keyName] != null &&
+                      imagesByColumn[col.keyName] != undefined
+                    "
+                    class="fn-css-img-form-add"
+                    [src]="imagesByColumn[col.keyName]"
+                    alt="No image"
+                    (click)="handleImageClick()"
+                  /><br />
+                  <span style="color: #01aba8">{{
+                    inforMachine[col.keyName]
+                  }}</span>
+                </label>
+                <label class="fn-label">{{ col.keyTitle | translate }}</label>
+                <input
                   [id]="'fileInput' + col.keyName"
                   (change)="checkActionImage = true"
                   type="file" 
                   (change)="handleChange($event, col)"
                   style="display: none"
-                  accept=".png,.jpg,.jpeg"/>
+                  accept=".png,.jpg,.jpeg"
+                />
               </div>
             </div>
           </ng-container>
@@ -512,14 +622,14 @@
       class="btn btn-save"
       #saveBtn
     ></app-button> -->
-      <button
-        nz-button
-        (click)="submitDemo()"
-        class="fn-bg-default"
-        style="border-radius: 4px;width: 86px; text-align: center;"
-      >
-        <span>{{ 'Thêm mới' | translate }}</span>
-      </button>
+    <button
+      nz-button
+      (click)="submitDemo()"
+      class="fn-bg-default"
+      style="border-radius: 4px; width: 86px; text-align: center"
+    >
+      <span>{{ "Thêm mới" | translate }}</span>
+    </button>
   </ng-template>
   <app-popup-cancel
     [(isvisible)]="isvisibleCancel"
@@ -537,9 +647,9 @@
     (add)="submit()"
   ></app-popup-add>
   <app-popup-manage-param
-  *ngIf="isVisibleManageParam"
-  [(isvisible)]="isVisibleManageParam"
-  [requestAddNewParam]="requestAddNewParam"
+    *ngIf="isVisibleManageParam"
+    [(isvisible)]="isVisibleManageParam"
+    [requestAddNewParam]="requestAddNewParam"
   >
   </app-popup-manage-param>
 </nz-modal>

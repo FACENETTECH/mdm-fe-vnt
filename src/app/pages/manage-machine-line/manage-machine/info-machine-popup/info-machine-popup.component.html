@@ -9,11 +9,7 @@
   <ng-template #modalTitle>
     <div
       class="fn-bg-header-default"
-      style="
-        display: flex;
-        align-items: center;
-        padding: 5px 0px 10px 16px;
-      "
+      style="display: flex; align-items: center; padding: 5px 0px 10px 16px"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +36,7 @@
         </defs>
       </svg>
       <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Xem chi tiết thông tin ' + inforTable.label | translate }}
+        {{ "Xem chi tiết thông tin " + inforTable.label | translate }}
       </p>
     </div>
   </ng-template>
@@ -48,7 +44,12 @@
   <ng-template #modalContent>
     <div class="form-group">
       <div
-        style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 70%;"
+        style="
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          width: 70%;
+        "
       >
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.hasUnit && col.keyName != 'status'">
@@ -79,9 +80,9 @@
                   }}</span>
                 </div>
                 <div class="block-item-unit-right">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -91,7 +92,11 @@
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                     disabled
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                 </div>
               </div>
@@ -119,9 +124,9 @@
                   }}</span>
                 </div>
                 <div class="block-item-unit-right">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -131,7 +136,11 @@
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                     disabled
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                 </div>
               </div>
@@ -163,9 +172,9 @@
                   }}</span>
                 </div>
                 <div class="block-item-unit-right">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -175,7 +184,11 @@
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                     disabled
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                 </div>
               </div>
@@ -207,9 +220,9 @@
                   }}</span>
                 </div>
                 <div class="block-item-unit-right">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -219,7 +232,11 @@
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                     disabled
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                 </div>
               </div>
@@ -235,9 +252,16 @@
                   ></label
                 >
                 <br />
-                <input style="text-align: right; width:100%" nz-input nz-input (input)="formatNumber($event.target)"
-                  type="text" [(ngModel)]="inforMachine[col.keyName]" (ngModelChange)="checkValid()"
-                  (ngModelChange)="checkAction = true" disabled
+                <input
+                  style="text-align: right; width: 100%"
+                  nz-input
+                  nz-input
+                  (input)="formatNumber($event.target)"
+                  type="text"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                  (ngModelChange)="checkAction = true"
+                  disabled
                 />
                 <!-- <nz-input-number
                   [nzMin]="0"
@@ -347,7 +371,11 @@
                   (ngModelChange)="checkAction = true"
                   disabled
                 >
-                  <nz-option *ngFor="let item of valueSelectBox" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                  <nz-option
+                    *ngFor="let item of valueSelectBox"
+                    [nzValue]="item.value"
+                    [nzLabel]="item.value"
+                  ></nz-option>
                 </nz-select>
                 <!-- <ng-template #renderTemplate>
                   <div class="container">
@@ -382,17 +410,21 @@
                   nz-col
                   nzSpan="24"
                   [(ngModel)]="inforMachine[col.keyName]"
-                  style="margin-top: 6px; display: flex; justify-content: space-between;"
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    justify-content: space-between;
+                  "
                   disabled
                 >
                   <label
-                    style="width: 50%; margin: 0; font-size: 13px;"
+                    style="width: 50%; margin: 0; font-size: 13px"
                     nz-radio
                     [nzValue]="true"
                     >{{ "Có" | translate }}</label
                   >
                   <label
-                    style="width: 45%; margin: 0; font-size: 13px;"
+                    style="width: 45%; margin: 0; font-size: 13px"
                     nz-radio
                     [nzValue]="false"
                     >{{ "Không" | translate }}</label
@@ -424,8 +456,33 @@
                   (ngModelChange)="checkAction = true"
                   disabled
                 >
-                  <nz-option *ngFor="let item of optionsRelation" [nzValue]="item" [nzLabel]="item[columnRelation!]"></nz-option>
+                  <nz-option
+                    *ngFor="let item of optionsRelation"
+                    [nzValue]="item"
+                    [nzLabel]="item[columnRelation!]"
+                  ></nz-option>
                 </nz-select>
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.COLOR">
+              <div
+                class="block-item-unit"
+                style="display: flex; flex-direction: column"
+              >
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <input
+                  type="color"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  disabled
+                />
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
                 }}</span>
@@ -434,27 +491,56 @@
           </ng-container>
         </ng-container>
       </div>
-      <div style="width: 30%;">
-        <div style="display: flex; flex-direction: column;">
+      <div style="width: 30%">
+        <div style="display: flex; flex-direction: column">
           <div id="QR" style="text-align: center">
-              <nz-qrcode [nzValue]="strQr"></nz-qrcode>
-              <a #download></a>
+            <nz-qrcode [nzValue]="strQr"></nz-qrcode>
+            <a #download></a>
           </div>
-          <span style="text-align: center;">{{ 'Mã QR' | translate }}</span>
+          <span style="text-align: center">{{ "Mã QR" | translate }}</span>
         </div>
         <ng-container *ngFor="let col of columns">
-          <ng-container *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'">
-            <div style="width: 100%; margin-bottom: 20px;" class="fn-df fn-df-justify-center">
+          <ng-container
+            *ngIf="col.dataType == dataType.IMAGE && col.keyName != 'status'"
+          >
+            <div
+              style="width: 100%; margin-bottom: 20px"
+              class="fn-df fn-df-justify-center"
+            >
               <div class="fn-pd-8 fn-df-column fn-css-image">
-                <span class="overlay" (click)="handleImageClick(inforImage[col.keyName], inforMachine[col.keyName])">
-                  <span nz-icon nzType="download" nzTheme="outline" style="position: absolute; top: 40%; left: 43%; font-size: 30px; color: #00AEEE"></span>
+                <span
+                  class="overlay"
+                  (click)="
+                    handleImageClick(
+                      inforImage[col.keyName],
+                      inforMachine[col.keyName]
+                    )
+                  "
+                >
+                  <span
+                    nz-icon
+                    nzType="download"
+                    nzTheme="outline"
+                    style="
+                      position: absolute;
+                      top: 40%;
+                      left: 43%;
+                      font-size: 30px;
+                      color: #00aeee;
+                    "
+                  ></span>
                 </span>
-                <label [for]="'fileInput' + col.keyName" class="fn-text-align-center">
-                    <img class="fn-css-img-form-add" [src]="'data:image/png;base64, ' + inforImage[col.keyName]" alt="No image"><br>
-                  </label>
-                  <label class="fn-label"
-                    >{{ col.keyTitle | translate }}</label
-                  >
+                <label
+                  [for]="'fileInput' + col.keyName"
+                  class="fn-text-align-center"
+                >
+                  <img
+                    class="fn-css-img-form-add"
+                    [src]="'data:image/png;base64, ' + inforImage[col.keyName]"
+                    alt="No image"
+                  /><br />
+                </label>
+                <label class="fn-label">{{ col.keyTitle | translate }}</label>
               </div>
             </div>
           </ng-container>
@@ -478,9 +564,14 @@
       nz-button
       class="fn-bg-default"
       (click)="downloadImg()"
-      style="border-radius: 4px;width: 86px; text-align: center; margin-left: 30px;"
+      style="
+        border-radius: 4px;
+        width: 86px;
+        text-align: center;
+        margin-left: 30px;
+      "
     >
-      <span>{{ 'In QR' | translate }}</span>
+      <span>{{ "In QR" | translate }}</span>
     </button>
   </ng-template>
   <app-popup-cancel

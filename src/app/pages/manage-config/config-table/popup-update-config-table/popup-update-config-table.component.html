@@ -9,11 +9,7 @@
   <ng-template #modalTitle>
     <div
       class="fn-bg-header-default"
-      style="
-        display: flex;
-        align-items: center;
-        padding: 5px 0px 10px 16px;
-      "
+      style="display: flex; align-items: center; padding: 5px 0px 10px 16px"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +36,7 @@
         </defs>
       </svg>
       <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Cập nhật thông tin chức năng' | translate }}
+        {{ "Cập nhật thông tin chức năng" | translate }}
       </p>
     </div>
   </ng-template>
@@ -48,13 +44,13 @@
   <ng-template #modalContent>
     <div class="form-group">
       <div
-        style="display: flex; flex-wrap: wrap; justify-content: space-between;"
+        style="display: flex; flex-wrap: wrap; justify-content: space-between"
       >
         <ng-container *ngFor="let col of columns">
           <ng-container *ngIf="col.hasUnit && col.keyName != 'status'">
             <ng-container *ngIf="col.dataType == dataType.NUMBER">
-              <div style="width: 45%; margin-bottom: 20px;" class="fn-df-center">
-                <div style="width: 50%;">
+              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+                <div style="width: 50%">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
                     }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -73,10 +69,10 @@
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
-                <div style="width: 45%;">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                <div style="width: 45%">
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -85,14 +81,18 @@
                     [(ngModel)]="inforMachine[col.keyName + '_u']"
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                 </div>
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.DATE_TIME">
               <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
-                <div style="width: 50%;">
+                <div style="width: 50%">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
                     }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -115,10 +115,10 @@
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
-                <div style="width: 45%;">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                <div style="width: 45%">
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -127,14 +127,18 @@
                     [(ngModel)]="inforMachine[col.keyName + '_u']"
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                 </div>
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.STRING">
               <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
-                <div style="width: 50%;">
+                <div style="width: 50%">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
                     }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -157,10 +161,10 @@
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
-                <div style="width: 45%;">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                <div style="width: 45%">
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -169,14 +173,18 @@
                     [(ngModel)]="inforMachine[col.keyName + '_u']"
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                 </div>
               </div>
             </ng-container>
             <ng-container *ngIf="col.dataType == dataType.LONG_STRING">
               <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
-                <div style="width: 50%;">
+                <div style="width: 50%">
                   <label class="fn-label"
                     >{{ col.keyTitle | translate
                     }}<span *ngIf="col.isRequired == true" style="color: red"
@@ -199,10 +207,10 @@
                     checkMachine[col.keyName]
                   }}</span>
                 </div>
-                <div style="width: 45%;">
-                  <label class="fn-label"
-                    >{{ "Đơn vị tính" | translate }}</label
-                  >
+                <div style="width: 45%">
+                  <label class="fn-label">{{
+                    "Đơn vị tính" | translate
+                  }}</label>
                   <br />
                   <nz-select
                     style="width: 100%"
@@ -211,7 +219,11 @@
                     [(ngModel)]="inforMachine[col.keyName + '_u']"
                     (nzOpenChange)="handleOpenChangeUnit($event, col)"
                   >
-                    <nz-option *ngFor="let item of valueTypeParam" [nzValue]="item.value" [nzLabel]="item.value"></nz-option>
+                    <nz-option
+                      *ngFor="let item of valueTypeParam"
+                      [nzValue]="item.value"
+                      [nzLabel]="item.value"
+                    ></nz-option>
                   </nz-select>
                 </div>
               </div>
@@ -364,16 +376,20 @@
                   nz-col
                   nzSpan="24"
                   [(ngModel)]="inforMachine[col.keyName]"
-                  style="margin-top: 6px; display: flex; justify-content: space-between;"
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    justify-content: space-between;
+                  "
                 >
                   <label
-                    style="width: 50%; margin: 0;"
+                    style="width: 50%; margin: 0"
                     nz-radio
                     [nzValue]="true"
                     >{{ "Có" | translate }}</label
                   >
                   <label
-                    style="width: 45%; margin: 0;"
+                    style="width: 45%; margin: 0"
                     nz-radio
                     [nzValue]="false"
                     >{{ "Không" | translate }}</label
@@ -393,7 +409,31 @@
                   ></label
                 >
                 <br />
-                <input type="file" accept="image/png, image/jpeg, .svg" id="file-input" (change)="handleChangeValueImage($event)">
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg, .svg"
+                  id="file-input"
+                  (change)="handleChangeValueImage($event)"
+                />
+                <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                  checkMachine[col.keyName]
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.COLOR">
+              <div style="width: 45%; margin-bottom: 20px">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <br />
+                <input
+                  type="color"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  (ngModelChange)="checkValid()"
+                />
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
                 }}</span>
@@ -404,149 +444,184 @@
       </div>
     </div>
     <div *ngIf="inforMachine['isEntity']">
-        <nz-table 
-            #nzTable 
-            [nzData]="listColumnInFunction" 
-            nzTableLayout="fixed" 
-            nzShowPagination="false"
-        >
-            <thead>
-              <tr>
-                <ng-container *ngFor="let column of columnsFunction">
-                    <th [nzWidth]="column.width">{{ column.keyTitle }}</th>
+      <nz-table
+        #nzTable
+        [nzData]="listColumnInFunction"
+        nzTableLayout="fixed"
+        nzShowPagination="false"
+      >
+        <thead>
+          <tr>
+            <ng-container *ngFor="let column of columnsFunction">
+              <th [nzWidth]="column.width">{{ column.keyTitle }}</th>
+            </ng-container>
+            <th nzWidth="86px">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container
+            *ngFor="let item of listColumnInFunction; let i = index"
+          >
+            <tr>
+              <ng-container *ngFor="let column of columnsFunction">
+                <ng-container *ngIf="column.dataType == dataType.STRING">
+                  <td>
+                    <input
+                      type="text"
+                      nz-input
+                      [(ngModel)]="item[column.keyName]"
+                      (ngModelChange)="checkValid()"
+                      style="width: 100%"
+                      [nz-tooltip]="item[column.keyName]"
+                    />
+                  </td>
                 </ng-container>
-                <th nzWidth="86px">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let item of listColumnInFunction; let i = index">
-                    <tr>
-                        <ng-container *ngFor="let column of columnsFunction">
-                            <ng-container *ngIf="column.dataType == dataType.STRING">
-                                <td>
-                                    <input type="text" nz-input
-                                    [(ngModel)]="item[column.keyName]"
-                                    (ngModelChange)="checkValid()" style="width: 100%;"
-                                    [nz-tooltip]="item[column.keyName]"
-                                    />
-                                </td>
-                            </ng-container>
-                            <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
-                                <td>
-                                    <nz-select
-                                        style="width: 100%"
-                                        nzMode="default"
-                                        [(ngModel)]="item[column.keyName]"
-                                        (ngModelChange)="checkValid()"
-                                        [nz-tooltip]="item[column.keyName]"
-                                        >
-                                        <nz-option [nzValue]="true" [nzLabel]="'Có'"></nz-option>
-                                        <nz-option [nzValue]="false" [nzLabel]="'Không'"></nz-option>
-                                    </nz-select>
-                                </td>
-                            </ng-container>
-                            <ng-container *ngIf="column.dataType == dataType.PARAM">
-                                <td>
-                                    <nz-select
-                                        style="width: 100%"
-                                        nzMode="default"
-                                        [(ngModel)]="item[column.keyName]"
-                                        (ngModelChange)="checkValid()"
-                                        [nz-tooltip]="item[column.keyName]"
-                                        (ngModelChange)="showPopoverRelation(item, column.keyName)"
-                                        >
-                                        <nz-option [nzValue]="1" [nzLabel]="'Number'"></nz-option>
-                                        <nz-option [nzValue]="2" [nzLabel]="'String'"></nz-option>
-                                        <nz-option [nzValue]="3" [nzLabel]="'Long String'"></nz-option>
-                                        <nz-option [nzValue]="4" [nzLabel]="'Date Time'"></nz-option>
-                                        <nz-option [nzValue]="5" [nzLabel]="'Boolean'"></nz-option>
-                                        <nz-option [nzValue]="6" [nzLabel]="'Image'"></nz-option>
-                                        <nz-option [nzValue]="7" [nzLabel]="'Relation'"></nz-option>
-                                        <nz-option [nzValue]="8" [nzLabel]="'Table'"></nz-option>
-                                        <nz-option [nzValue]="9" [nzLabel]="'Param'"></nz-option>
-                                    </nz-select>
-                                    <span
-                                        nz-popover
-                                        nzPopoverTitle="Chọn bảng quan hệ"
-                                        [nzPopoverContent]="contentTemplateRelation"
-                                        nzPopoverPlacement="bottomLeft"
-                                        [nzPopoverVisible]="item.showPopoverRelation"
-                                        (nzPopoverVisibleChange)="popoverVisibleChangeRelation($event, item)"
-                                        >
-                                    </span>
-                                    <ng-template #contentTemplateRelation>
-                                        <div style="display: flex; justify-content: space-between;">
-                                            <div style="width: 45%;">
-                                                <label class="fn-label"
-                                                  >{{ 'Bảng quan hệ' | translate
-                                                  }}<span style="color: red"
-                                                    >*</span
-                                                  ></label
-                                                >
-                                                <nz-select
-                                                  style="width: 100%"
-                                                  nzMode="default"
-                                                  nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
-                                                    'bảng cần quan hệ' | translate
-                                                  }} ----"
-                                                  [(ngModel)]="item.relateTable"
-                                                  (nzOpenChange)="getAllEntity()"
-                                                >
-                                                  <nz-option *ngFor="let option of listEntityByRelation" [nzValue]="option.name" [nzLabel]="option.label"></nz-option>
-                                                </nz-select>
-                                            </div>
-                                            <div style="width: 45%;">
-                                                <label class="fn-label"
-                                                  >{{ 'Cột quan hệ' | translate
-                                                  }}<span style="color: red"
-                                                    >*</span
-                                                  ></label
-                                                >
-                                                <nz-select
-                                                  style="width: 100%"
-                                                  nzMode="default"
-                                                  nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
-                                                    'cột cần quan hệ' | translate
-                                                  }} ----"
-                                                  [(ngModel)]="item.relateColumn"
-                                                  (nzOpenChange)="getAllColumnByEntityName(item)"
-                                                >
-                                                  <nz-option *ngFor="let option of listColumnByRelation" [nzValue]="option.keyName" [nzLabel]="option.keyTitle"></nz-option>
-                                                </nz-select>
-                                            </div>
-                                        </div>
-                                    </ng-template>
-                                </td>
-                            </ng-container>
-                        </ng-container>
-                        <td nzAlign="center">
-                            <div class="fn-css-action-grid">
-                              <button
-                                nz-button
-                                nzType="link"
-                                (click)="deleteRowTable(item, i)"
-                                nz-tooltip="{{ 'btn.delete' | translate }}"
-                              >
-                              <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
-                              </button>
-                            </div>
-                          </td>
-                    </tr>
+                <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
+                  <td>
+                    <nz-select
+                      style="width: 100%"
+                      nzMode="default"
+                      [(ngModel)]="item[column.keyName]"
+                      (ngModelChange)="checkValid()"
+                      [nz-tooltip]="item[column.keyName]"
+                    >
+                      <nz-option [nzValue]="true" [nzLabel]="'Có'"></nz-option>
+                      <nz-option
+                        [nzValue]="false"
+                        [nzLabel]="'Không'"
+                      ></nz-option>
+                    </nz-select>
+                  </td>
                 </ng-container>
-            </tbody>
-        </nz-table>
+                <ng-container *ngIf="column.dataType == dataType.PARAM">
+                  <td>
+                    <nz-select
+                      style="width: 100%"
+                      nzMode="default"
+                      [(ngModel)]="item[column.keyName]"
+                      (ngModelChange)="checkValid()"
+                      [nz-tooltip]="item[column.keyName]"
+                      (ngModelChange)="
+                        showPopoverRelation(item, column.keyName)
+                      "
+                    >
+                      <nz-option [nzValue]="1" [nzLabel]="'Number'"></nz-option>
+                      <nz-option [nzValue]="2" [nzLabel]="'String'"></nz-option>
+                      <nz-option
+                        [nzValue]="3"
+                        [nzLabel]="'Long String'"
+                      ></nz-option>
+                      <nz-option
+                        [nzValue]="4"
+                        [nzLabel]="'Date Time'"
+                      ></nz-option>
+                      <nz-option
+                        [nzValue]="5"
+                        [nzLabel]="'Boolean'"
+                      ></nz-option>
+                      <nz-option [nzValue]="6" [nzLabel]="'Image'"></nz-option>
+                      <nz-option
+                        [nzValue]="7"
+                        [nzLabel]="'Relation'"
+                      ></nz-option>
+                      <nz-option [nzValue]="8" [nzLabel]="'Table'"></nz-option>
+                      <nz-option [nzValue]="9" [nzLabel]="'Param'"></nz-option>
+                      <nz-option [nzValue]="13" [nzLabel]="'Color'"></nz-option>
+                    </nz-select>
+                    <span
+                      nz-popover
+                      nzPopoverTitle="Chọn bảng quan hệ"
+                      [nzPopoverContent]="contentTemplateRelation"
+                      nzPopoverPlacement="bottomLeft"
+                      [nzPopoverVisible]="item.showPopoverRelation"
+                      (nzPopoverVisibleChange)="
+                        popoverVisibleChangeRelation($event, item)
+                      "
+                    >
+                    </span>
+                    <ng-template #contentTemplateRelation>
+                      <div
+                        style="display: flex; justify-content: space-between"
+                      >
+                        <div style="width: 45%">
+                          <label class="fn-label"
+                            >{{ "Bảng quan hệ" | translate
+                            }}<span style="color: red">*</span></label
+                          >
+                          <nz-select
+                            style="width: 100%"
+                            nzMode="default"
+                            nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                              'bảng cần quan hệ' | translate
+                            }} ----"
+                            [(ngModel)]="item.relateTable"
+                            (nzOpenChange)="getAllEntity()"
+                          >
+                            <nz-option
+                              *ngFor="let option of listEntityByRelation"
+                              [nzValue]="option.name"
+                              [nzLabel]="option.label"
+                            ></nz-option>
+                          </nz-select>
+                        </div>
+                        <div style="width: 45%">
+                          <label class="fn-label"
+                            >{{ "Cột quan hệ" | translate
+                            }}<span style="color: red">*</span></label
+                          >
+                          <nz-select
+                            style="width: 100%"
+                            nzMode="default"
+                            nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                              'cột cần quan hệ' | translate
+                            }} ----"
+                            [(ngModel)]="item.relateColumn"
+                            (nzOpenChange)="getAllColumnByEntityName(item)"
+                          >
+                            <nz-option
+                              *ngFor="let option of listColumnByRelation"
+                              [nzValue]="option.keyName"
+                              [nzLabel]="option.keyTitle"
+                            ></nz-option>
+                          </nz-select>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </td>
+                </ng-container>
+              </ng-container>
+              <td nzAlign="center">
+                <div class="fn-css-action-grid">
+                  <button
+                    nz-button
+                    nzType="link"
+                    (click)="deleteRowTable(item, i)"
+                    nz-tooltip="{{ 'btn.delete' | translate }}"
+                  >
+                    <img
+                      width="16px"
+                      height="16px"
+                      src="./assets/icons/Delete-VNT.svg"
+                    />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </nz-table>
     </div>
     <div *ngIf="inforMachine['isEntity']">
-        <button
-          style="color: #01aba8"
-          nz-button
-          nzType="text"
-          (click)="addRowTable()"
-          class="mb-24"
-        >
-          <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
-          {{ "add.btn" | translate }}
-        </button>
+      <button
+        style="color: #01aba8"
+        nz-button
+        nzType="text"
+        (click)="addRowTable()"
+        class="mb-24"
+      >
+        <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+        {{ "add.btn" | translate }}
+      </button>
     </div>
   </ng-template>
 
@@ -562,14 +637,14 @@
       [buttonType]="'text'"
       title="{{ 'Hủy bỏ' | translate }}"
     ></app-button>
-      <button
-        nz-button
-        (click)="submitDemo()"
-        class="fn-bg-default"
-        style="border-radius: 4px;width: 86px; text-align: center;"
-      >
-        <span>{{ 'Cập nhật' | translate }}</span>
-      </button>
+    <button
+      nz-button
+      (click)="submitDemo()"
+      class="fn-bg-default"
+      style="border-radius: 4px; width: 86px; text-align: center"
+    >
+      <span>{{ "Cập nhật" | translate }}</span>
+    </button>
   </ng-template>
   <app-popup-cancel
     [(isvisible)]="isvisibleCancel"

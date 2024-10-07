@@ -10,11 +10,7 @@
   <ng-template #modalTitle>
     <div
       class="fn-bg-header-default"
-      style="
-        display: flex;
-        align-items: center;
-        padding: 5px 0px 10px 16px;
-      "
+      style="display: flex; align-items: center; padding: 5px 0px 10px 16px"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -41,149 +37,176 @@
         </defs>
       </svg>
       <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Quản lý tham số' | translate }}
+        {{ "Quản lý tham số" | translate }}
       </p>
     </div>
   </ng-template>
 
   <ng-template #modalContent>
     <div>
-        <div style="display: flex; float: right; gap: 12px;">
-            <div nz-col style="display: flex; align-items: center">
-              <button
-                style="color: #01aba8"
-                nz-button
-                nzType="text"
-                class="mb-6"
-                (click)="openModalAddParam()"
-              >
-                <span nz-icon nzType="plus-circle" nzTheme="outline" class="fn-icon-style"></span>
-                {{ "add.btn" | translate }}
-              </button>
-            </div>
+      <div style="display: flex; float: right; gap: 12px">
+        <div nz-col style="display: flex; align-items: center">
+          <button
+            style="color: #01aba8"
+            nz-button
+            nzType="text"
+            class="mb-6"
+            (click)="openModalAddParam()"
+          >
+            <span
+              nz-icon
+              nzType="plus-circle"
+              nzTheme="outline"
+              class="fn-icon-style"
+            ></span>
+            {{ "add.btn" | translate }}
+          </button>
         </div>
-        <nz-table
-            nzBordered
-            nzShowPagination="false"
-            [nzScroll]="{ x: 'auto' }"
-            [nzData]="listParam"
-            #MachineTable
-            [nzSize]="'small'"
-            >
-            <thead class="color-header-row">
-                <tr>
-                <ng-container *ngFor="let column of columns; let i = index">
-                    <ng-container *ngIf="column.localCheck">
-                    <th
-                        nz-resizable
-                        [nzWidth]="column.width"
-                        (nzResize)="onResize($event, i)"
-                        [nzAlign]="'center'"
-                        (nzSortOrderChange)="customSortFunction($event, column.keyName)"
-                    >
-                        <div class="editable-cell">
-                        {{ column.keyTitle | translate}}
-                        <nz-resize-handle nzDirection="right">
-                            <div class="resize-trigger"></div>
-                        </nz-resize-handle>
-                        </div>
-                    </th>
-                    </ng-container>
-                </ng-container>
-                <th nzWidth="100px" nzAlign="center" [nzRight]="true">
-                    {{ "Thao tác" | translate }}
+      </div>
+      <nz-table
+        nzBordered
+        nzShowPagination="false"
+        [nzScroll]="{ x: 'auto' }"
+        [nzData]="listParam"
+        #MachineTable
+        [nzSize]="'small'"
+      >
+        <thead class="color-header-row">
+          <tr>
+            <ng-container *ngFor="let column of columns; let i = index">
+              <ng-container *ngIf="column.localCheck">
+                <th
+                  nz-resizable
+                  [nzWidth]="column.width"
+                  (nzResize)="onResize($event, i)"
+                  [nzAlign]="'center'"
+                  (nzSortOrderChange)="
+                    customSortFunction($event, column.keyName)
+                  "
+                >
+                  <div class="editable-cell">
+                    {{ column.keyTitle | translate }}
+                    <nz-resize-handle nzDirection="right">
+                      <div class="resize-trigger"></div>
+                    </nz-resize-handle>
+                  </div>
                 </th>
-                </tr>
-            </thead>
-            <tbody class="striped-tr">
-                <ng-container *ngFor="let infor of listParam; let i = index">
-                <tr>
-                    <ng-container *ngFor="let column of columns">
-                    <ng-container *ngIf="column.localCheck">
-                        <ng-container [ngSwitch]="column.keyName">
-                        <ng-container *ngSwitchCase="'status'">
-                            <td>
-                            <div [ngSwitch]="infor[column.keyName]" nzAlign="center">
-                                <div
-                                class="border-element bordered-element__status_1"
-                                *ngSwitchCase="'1'"
-                                >
-                                {{ "Hoạt động" | translate }}
-                                </div>
-                                <div
-                                class="border-element bordered-element__status_2"
-                                *ngSwitchCase="'0'"
-                                >
-                                {{ "Ngừng hoạt động" | translate }}
-                                </div>
-                            </div>
-                            </td>
-                        </ng-container>
-                        <ng-container *ngSwitchDefault>
-                            <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
-                            <td
-                            class="table-cell-ellipsis"
-                            [ngStyle]="{'max-width': column.width}"
-                            [nz-tooltip]="infor[column.keyName]"
-                            >
-                                {{ infor[column.keyName] }}
-                            </td>
-                            </ng-container>
-                            <ng-container *ngIf="column.dataType == dataType.NUMBER">
-                            <td
-                            class="table-cell-ellipsis fn-text-al-right"
-                            [ngStyle]="{'max-width': column.width}"
-                            [nz-tooltip]="infor[column.keyName] | number : '1.0-2'"
-                            >
-                                {{ infor[column.keyName] | number : "1.0-2" }}
-                            </td>
-                            </ng-container>
-                            <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
-                            <td
-                            class="table-cell-ellipsis fn-text-al-right"
-                            [ngStyle]="{'max-width': column.width}"
-                            [nz-tooltip]="infor[column.keyName]"
-                            >
-                                {{ infor[column.keyName] | date: 'dd-MM-yyyy' }}
-                            </td>
-                            </ng-container>
-                            <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
-                            <td
-                            class="table-cell-ellipsis fn-text-al-center"
-                            [ngStyle]="{'max-width': column.width}"
-                            [nz-tooltip]="infor[column.keyName]"
-                            >
-                                <label nz-checkbox [(ngModel)]="infor[column.keyName]"></label>
-                            </td>
-                            </ng-container>
-                        </ng-container>
-                        </ng-container>
-                    </ng-container>
-                    </ng-container>
-                    <td nzAlign="center" [nzRight]="true">
-                    <div class="fn-css-action-grid">
-                        <button
-                        nz-button
-                        nzType="link"
-                        nz-tooltip="{{ 'btn.edit' | translate }}"
-                        (click)="openModalUpdateParam(infor)"
+              </ng-container>
+            </ng-container>
+            <th nzWidth="100px" nzAlign="center" [nzRight]="true">
+              {{ "Thao tác" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="striped-tr">
+          <ng-container *ngFor="let infor of listParam; let i = index">
+            <tr>
+              <ng-container *ngFor="let column of columns">
+                <ng-container *ngIf="column.localCheck">
+                  <ng-container [ngSwitch]="column.keyName">
+                    <ng-container *ngSwitchCase="'status'">
+                      <td>
+                        <div
+                          [ngSwitch]="infor[column.keyName]"
+                          nzAlign="center"
                         >
-                        <img src="./assets/icons/Edit-VNT.svg">
-                        </button>
-                        <button
-                        nz-button
-                        nzType="link"
-                        nz-tooltip="{{ 'btn.delete' | translate }}"
-                        (click)="openModalDeleteParam(infor)"
+                          <div
+                            class="border-element bordered-element__status_1"
+                            *ngSwitchCase="'1'"
+                          >
+                            {{ "Hoạt động" | translate }}
+                          </div>
+                          <div
+                            class="border-element bordered-element__status_2"
+                            *ngSwitchCase="'0'"
+                          >
+                            {{ "Ngừng hoạt động" | translate }}
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <ng-container
+                        *ngIf="
+                          column.dataType != dataType.NUMBER &&
+                          column.dataType != dataType.DATE_TIME &&
+                          column.dataType != dataType.BOOLEAN
+                        "
+                      >
+                        <td
+                          class="table-cell-ellipsis"
+                          [ngStyle]="{ 'max-width': column.width }"
+                          [nz-tooltip]="infor[column.keyName]"
                         >
-                        <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
-                        </button>
-                    </div>
-                    </td>
-                </tr>
+                          {{ infor[column.keyName] }}
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="column.dataType == dataType.NUMBER">
+                        <td
+                          class="table-cell-ellipsis fn-text-al-right"
+                          [ngStyle]="{ 'max-width': column.width }"
+                          [nz-tooltip]="
+                            infor[column.keyName] | number : '1.0-2'
+                          "
+                        >
+                          {{ infor[column.keyName] | number : "1.0-2" }}
+                        </td>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="column.dataType == dataType.DATE_TIME"
+                      >
+                        <td
+                          class="table-cell-ellipsis fn-text-al-right"
+                          [ngStyle]="{ 'max-width': column.width }"
+                          [nz-tooltip]="infor[column.keyName]"
+                        >
+                          {{ infor[column.keyName] | date : "dd-MM-yyyy" }}
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
+                        <td
+                          class="table-cell-ellipsis fn-text-al-center"
+                          [ngStyle]="{ 'max-width': column.width }"
+                          [nz-tooltip]="infor[column.keyName]"
+                        >
+                          <label
+                            nz-checkbox
+                            [(ngModel)]="infor[column.keyName]"
+                          ></label>
+                        </td>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
                 </ng-container>
-            </tbody>
-            </nz-table>
+              </ng-container>
+              <td nzAlign="center" [nzRight]="true">
+                <div class="fn-css-action-grid">
+                  <button
+                    nz-button
+                    nzType="link"
+                    nz-tooltip="{{ 'btn.edit' | translate }}"
+                    (click)="openModalUpdateParam(infor)"
+                  >
+                    <img src="./assets/icons/Edit-VNT.svg" />
+                  </button>
+                  <button
+                    nz-button
+                    nzType="link"
+                    nz-tooltip="{{ 'btn.delete' | translate }}"
+                    (click)="openModalDeleteParam(infor)"
+                  >
+                    <img
+                      width="16px"
+                      height="16px"
+                      src="./assets/icons/Delete-VNT.svg"
+                    />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </nz-table>
     </div>
   </ng-template>
 
@@ -202,11 +225,7 @@
   <ng-template #modalTitleAddParam>
     <div
       class="fn-bg-header-default"
-      style="
-        display: flex;
-        align-items: center;
-        padding: 5px 0px 10px 16px;
-      "
+      style="display: flex; align-items: center; padding: 5px 0px 10px 16px"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -233,42 +252,79 @@
         </defs>
       </svg>
       <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Thêm mới tham số' | translate }}
+        {{ "Thêm mới tham số" | translate }}
       </p>
     </div>
   </ng-template>
 
   <ng-template #modalContentAddParam>
     <div class="block-modal-add-param">
-        <div class="block-modal-add-param-item">
-            <label class="fn-label">{{ columns[1].keyTitle | translate}}<span *ngIf="columns[1].isRequired == true" style="color: red">*</span></label>
-            <br />
-            <input style="width:100%" nz-input nz-input (ngModelChange)="checkValid(columns[1].keyName, columns[1].keyTitle, columns[1].isRequired)"
-                type="text" [(ngModel)]="inforParamAddNew[columns[1].keyName]"/>
-            <span style="color: red" *ngIf="checkMachine[columns[1].keyName]">{{checkMachine[columns[1].keyName]}}</span>
-        </div>
-        <div class="block-modal-add-param-item">
-            <label class="fn-label">{{ columns[2].keyTitle | translate}}<span *ngIf="columns[2].isRequired == true" style="color: red">*</span></label>
-            <br />
-            <input style="width:100%" nz-input nz-input (ngModelChange)="checkValid(columns[2].keyName, columns[2].keyTitle, columns[2].isRequired)"
-                type="text" [(ngModel)]="inforParamAddNew[columns[2].keyName]"/>
-            <span style="color: red" *ngIf="checkMachine[columns[2].keyName]">{{checkMachine[columns[2].keyName]}}</span>
-        </div>
+      <div class="block-modal-add-param-item">
+        <label class="fn-label"
+          >{{ columns[1].keyTitle | translate
+          }}<span *ngIf="columns[1].isRequired == true" style="color: red"
+            >*</span
+          ></label
+        >
+        <br />
+        <input
+          style="width: 100%"
+          nz-input
+          nz-input
+          (ngModelChange)="
+            checkValid(
+              columns[1].keyName,
+              columns[1].keyTitle,
+              columns[1].isRequired
+            )
+          "
+          type="text"
+          [(ngModel)]="inforParamAddNew[columns[1].keyName]"
+        />
+        <span style="color: red" *ngIf="checkMachine[columns[1].keyName]">{{
+          checkMachine[columns[1].keyName]
+        }}</span>
+      </div>
+      <div class="block-modal-add-param-item">
+        <label class="fn-label"
+          >{{ columns[2].keyTitle | translate
+          }}<span *ngIf="columns[2].isRequired == true" style="color: red"
+            >*</span
+          ></label
+        >
+        <br />
+        <input
+          style="width: 100%"
+          nz-input
+          nz-input
+          (ngModelChange)="
+            checkValid(
+              columns[2].keyName,
+              columns[2].keyTitle,
+              columns[2].isRequired
+            )
+          "
+          type="text"
+          [(ngModel)]="inforParamAddNew[columns[2].keyName]"
+        />
+        <span style="color: red" *ngIf="checkMachine[columns[2].keyName]">{{
+          checkMachine[columns[2].keyName]
+        }}</span>
+      </div>
     </div>
   </ng-template>
 
   <ng-template #modalFooterAddParam>
     <button
-        nz-button
-        (click)="submitAddNewParam()"
-        class="fn-bg-default"
-        style="border-radius: 4px;width: 86px; text-align: center;"
-      >
-        <span>{{ 'Thêm mới' | translate }}</span>
+      nz-button
+      (click)="submitAddNewParam()"
+      class="fn-bg-default"
+      style="border-radius: 4px; width: 86px; text-align: center"
+    >
+      <span>{{ "Thêm mới" | translate }}</span>
     </button>
   </ng-template>
 </nz-modal>
-
 
 <!-- Dưới đây là popup cập nhật param -->
 <nz-modal
@@ -282,11 +338,7 @@
   <ng-template #modalTitleUpdateParam>
     <div
       class="fn-bg-header-default"
-      style="
-        display: flex;
-        align-items: center;
-        padding: 5px 0px 10px 16px;
-      "
+      style="display: flex; align-items: center; padding: 5px 0px 10px 16px"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -313,42 +365,79 @@
         </defs>
       </svg>
       <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Cập nhật tham số' | translate }}
+        {{ "Cập nhật tham số" | translate }}
       </p>
     </div>
   </ng-template>
 
   <ng-template #modalContentUpdateParam>
     <div class="block-modal-add-param">
-        <div class="block-modal-add-param-item">
-            <label class="fn-label">{{ columns[1].keyTitle | translate}}<span *ngIf="columns[1].isRequired == true" style="color: red">*</span></label>
-            <br />
-            <input style="width:100%" nz-input nz-input (ngModelChange)="checkValid(columns[1].keyName, columns[1].keyTitle, columns[1].isRequired)"
-                type="text" [(ngModel)]="inforParamAddNew[columns[1].keyName]"/>
-            <span style="color: red" *ngIf="checkMachine[columns[1].keyName]">{{checkMachine[columns[1].keyName]}}</span>
-        </div>
-        <div class="block-modal-add-param-item">
-            <label class="fn-label">{{ columns[2].keyTitle | translate}}<span *ngIf="columns[2].isRequired == true" style="color: red">*</span></label>
-            <br />
-            <input style="width:100%" nz-input nz-input (ngModelChange)="checkValid(columns[2].keyName, columns[2].keyTitle, columns[2].isRequired)"
-                type="text" [(ngModel)]="inforParamAddNew[columns[2].keyName]"/>
-            <span style="color: red" *ngIf="checkMachine[columns[2].keyName]">{{checkMachine[columns[2].keyName]}}</span>
-        </div>
+      <div class="block-modal-add-param-item">
+        <label class="fn-label"
+          >{{ columns[1].keyTitle | translate
+          }}<span *ngIf="columns[1].isRequired == true" style="color: red"
+            >*</span
+          ></label
+        >
+        <br />
+        <input
+          style="width: 100%"
+          nz-input
+          nz-input
+          (ngModelChange)="
+            checkValid(
+              columns[1].keyName,
+              columns[1].keyTitle,
+              columns[1].isRequired
+            )
+          "
+          type="text"
+          [(ngModel)]="inforParamAddNew[columns[1].keyName]"
+        />
+        <span style="color: red" *ngIf="checkMachine[columns[1].keyName]">{{
+          checkMachine[columns[1].keyName]
+        }}</span>
+      </div>
+      <div class="block-modal-add-param-item">
+        <label class="fn-label"
+          >{{ columns[2].keyTitle | translate
+          }}<span *ngIf="columns[2].isRequired == true" style="color: red"
+            >*</span
+          ></label
+        >
+        <br />
+        <input
+          style="width: 100%"
+          nz-input
+          nz-input
+          (ngModelChange)="
+            checkValid(
+              columns[2].keyName,
+              columns[2].keyTitle,
+              columns[2].isRequired
+            )
+          "
+          type="text"
+          [(ngModel)]="inforParamAddNew[columns[2].keyName]"
+        />
+        <span style="color: red" *ngIf="checkMachine[columns[2].keyName]">{{
+          checkMachine[columns[2].keyName]
+        }}</span>
+      </div>
     </div>
   </ng-template>
 
   <ng-template #modalFooterUpdateParam>
     <button
-        nz-button
-        (click)="submitUpdateParam()"
-        class="fn-bg-default"
-        style="border-radius: 4px;width: 86px; text-align: center;"
-      >
-        <span>{{ 'Cập nhật' | translate }}</span>
+      nz-button
+      (click)="submitUpdateParam()"
+      class="fn-bg-default"
+      style="border-radius: 4px; width: 86px; text-align: center"
+    >
+      <span>{{ "Cập nhật" | translate }}</span>
     </button>
   </ng-template>
 </nz-modal>
-
 
 <!-- Dưới đây là popup delete param -->
 <nz-modal
@@ -362,11 +451,7 @@
   <ng-template #modalTitleDeleteParam>
     <div
       class="fn-bg-header-default"
-      style="
-        display: flex;
-        align-items: center;
-        padding: 5px 0px 10px 16px;
-      "
+      style="display: flex; align-items: center; padding: 5px 0px 10px 16px"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -393,48 +478,48 @@
         </defs>
       </svg>
       <p style="line-height: 38px; padding: 0; margin: 0; margin-left: 12px">
-        {{ 'Xoá tham số' | translate }}
+        {{ "Xoá tham số" | translate }}
       </p>
     </div>
   </ng-template>
 
   <ng-template #modalContentDeleteParam>
     <div>
+      <p>
+        {{ "popup.cancel.ask" | translate }}
+        <span style="font-weight: 600">{{ inforParamAddNew["value"] }}</span>
+        ?
+      </p>
+      <div
+        style="
+          width: 100%;
+          background-color: #fcd9dc;
+          padding: 12px;
+          border-left: 4px solid #ec0000;
+          border-radius: 3px;
+        "
+      >
+        <h3 style="color: black">
+          <span nz-icon nzType="warning" nzTheme="outline"></span>
+          {{ "popup.attention" | translate }}
+        </h3>
         <p>
-            {{ "popup.cancel.ask" | translate }}
-            <span style="font-weight: 600">{{inforParamAddNew['value']}}</span>
-            ?
-          </p>
-          <div
-            style="
-              width: 100%;
-              background-color: #fcd9dc;
-              padding: 12px;
-              border-left: 4px solid #ec0000;
-              border-radius: 3px;
-            "
-          >
-            <h3 style="color: black">
-              <span nz-icon nzType="warning" nzTheme="outline"></span>
-              {{ "popup.attention" | translate }}
-            </h3>
-            <p>
-              {{ "popup.ifYou" | translate }} xoá 
-              <span style="font-weight: 600">{{inforParamAddNew['value']}}</span>
-              {{ "popup.delete.then" | translate }}
-            </p>
-          </div>
+          {{ "popup.ifYou" | translate }} xoá
+          <span style="font-weight: 600">{{ inforParamAddNew["value"] }}</span>
+          {{ "popup.delete.then" | translate }}
+        </p>
+      </div>
     </div>
   </ng-template>
 
   <ng-template #modalFooterDeleteParam>
     <button
-        nz-button
-        (click)="submitDeleteParam()"
-        class="fn-bg-default"
-        style="border-radius: 4px;width: 86px; text-align: center;"
-      >
-        <span>{{ 'Xoá' | translate }}</span>
+      nz-button
+      (click)="submitDeleteParam()"
+      class="fn-bg-default"
+      style="border-radius: 4px; width: 86px; text-align: center"
+    >
+      <span>{{ "Xoá" | translate }}</span>
     </button>
   </ng-template>
 </nz-modal>
