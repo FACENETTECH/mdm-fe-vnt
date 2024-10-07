@@ -1,7 +1,7 @@
 export const SCROLL_TABLE = {
   SCROLL_X: '2000px',
-  SCROLL_Y: '750px'
-}
+  SCROLL_Y: '750px',
+};
 
 export const DATA_TYPE = {
   NUMBER: 1,
@@ -12,8 +12,9 @@ export const DATA_TYPE = {
   IMAGE: 6,
   RELATION: 7,
   TABLE: 8,
-  PARAM: 9
-}
+  PARAM: 9,
+  COLOR: 13,
+};
 
 export const ROLE_NAME = {
   CREATE: 'create',
@@ -24,8 +25,7 @@ export const ROLE_NAME = {
   DELETE: 'delete',
   CREATE_PARAM: 'create-param',
   IMPORT_FILE: 'import-file',
-}
-
+};
 
 export const QR_TYPE = {
   employee_qr: 1,
