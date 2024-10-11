@@ -366,6 +366,29 @@
                 >
               </div>
             </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.MONTH">
+              <div class="block-item-unit">
+                <label class="fn-label"
+                  >{{ col.keyTitle | translate
+                  }}<span *ngIf="col.isRequired == true" style="color: red"
+                    >*</span
+                  ></label
+                >
+                <nz-date-picker
+                  style="width: 100%"
+                  nzMode="month"
+                  [(ngModel)]="inforMachine[col.keyName]"
+                  nzFormat="yyyy/MM"
+                  [nzDisabled]="col.isDisable"
+                >
+                </nz-date-picker>
+                <span
+                  style="color: red"
+                  *ngIf="col.isRequired == true && checkMachine[col.keyName]"
+                  >{{ checkMachine[col.keyName] }}</span
+                >
+              </div>
+            </ng-container>
             <ng-container *ngIf="col.dataType == dataType.STRING">
               <div class="block-item-unit">
                 <label class="fn-label"

@@ -13,6 +13,9 @@ export const DATA_TYPE = {
   RELATION: 7,
   TABLE: 8,
   PARAM: 9,
+  ANY: 10,
+  OBJECT: 11,
+  MONTH: 12,
   COLOR: 13,
 };
 

@@ -286,7 +286,8 @@
                 column.localCheck &&
                 column.keyName != 'status' &&
                 column.dataType != dataType.DATE_TIME &&
-                column.dataType != dataType.PARAM
+                column.dataType != dataType.PARAM &&
+                column.dataType != dataType.MONTH
               "
             >
               <td [nzLeft]="column.isFixed == 1 ? true : false">
@@ -419,7 +420,7 @@
               </td>
             </ng-container>
             <ng-container
-              *ngIf="column.localCheck && column.dataType == dataType.DATE_TIME"
+              *ngIf="column.localCheck && column.dataType == dataType.DATE_TIME ||column.dataType == dataType.MONTH "
             >
               <td [nzLeft]="column.isFixed == 1 ? true : false">
                 <i
@@ -499,6 +500,7 @@
                       *ngIf="
                         column.dataType != dataType.NUMBER &&
                         column.dataType != dataType.DATE_TIME &&
+                        column.dataType != dataType.MONTH &&
                         column.dataType != dataType.BOOLEAN &&
                         column.dataType != dataType.COLOR
                       "
@@ -535,6 +537,19 @@
                         (dblclick)="onDblClickOnRowTable(infor)"
                       >
                         {{ infor[column.keyName] | date : "dd/MM/yyyy" }}
+                      </td>
+                    </ng-container>
+                    <ng-container *ngIf="column.dataType == dataType.MONTH">
+                      <td
+                        [nzLeft]="column.isFixed == 1 ? true : false"
+                        class="table-cell-ellipsis fn-text-al-right"
+                        [ngStyle]="{ 'max-width': column.width }"
+                        [nz-tooltip]="
+                          infor[column.keyName] | date : 'MM/yyyy'
+                        "
+                        (dblclick)="onDblClickOnRowTable(infor)"
+                      >
+                        {{ infor[column.keyName] | date : "MM/yyyy" }}
                       </td>
                     </ng-container>
                     <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
