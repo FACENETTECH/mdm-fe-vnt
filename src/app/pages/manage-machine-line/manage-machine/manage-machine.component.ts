@@ -941,7 +941,7 @@ export class ManageMachineComponent implements OnInit {
    * @returns 
    */
   isCheckRoles(action: string) {
-    if(this.baseService.isAuthorized('admin_business')) {
+    if(this.baseService.isAuthorized('admin_business') || this.baseService.isAuthorized('admin_mdm')) {
       return true;
     } else {
       let tenant = '';
