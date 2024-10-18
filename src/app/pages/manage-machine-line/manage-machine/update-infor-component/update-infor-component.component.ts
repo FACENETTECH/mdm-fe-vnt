@@ -716,6 +716,31 @@ export class UpdateInforComponentComponent {
     return object1 && object2 ? object1.compareBy === object2.compareBy : object1 === object2;
   }
 
+  convertStringToNumber(value: any): number {
+    if (value == null || value == '' || value == undefined) {
+      return 0;
+    }
+    let cleanedValue = value.replace(/,/g, '');
+    return Number(cleanedValue);
+  }
+
+  handleChangeNumber($event: any, column: any) {
+    if (column.formula) {
+      const formulas = column.formula.split(',');
+
+      formulas.forEach((formula: any) => {
+        const formulaParts = formula.split('=');
+        const resultField = formulaParts[1].trim();
+        const expression = formulaParts[0].trim();
+
+        const expressionWithValues = expression.replace(/(\w+)/g, (match: any) => {
+          return this.convertStringToNumber(this.inforMachine[match]);
+        });
+        this.inforMachine[resultField] = Number(eval(expressionWithValues));
+      });
+    }
+  }
+
   /**
    * Xử lý sự kiện nhấn phím tắt ESC để đóng popup
    * @param event 
