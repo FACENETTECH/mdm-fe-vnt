@@ -492,20 +492,6 @@
                         class="table-cell-ellipsis fn-text-al-center"
                         [ngStyle]="{ 'max-width': column.width }"
                         [nz-tooltip]="infor[column.keyName]"
-                        (dblclick)="onDblClickOnRowTable(infor)"
-                      >
-                        <label
-                          nz-checkbox
-                          [(ngModel)]="infor[column.keyName]"
-                        ></label>
-                      </td>
-                    </ng-container>
-                    <ng-container *ngIf="column.dataType == dataType.COLOR">
-                      <td
-                        [nzLeft]="column.isFixed == 1 ? true : false"
-                        class="table-cell-ellipsis fn-text-al-center"
-                        [ngStyle]="{ 'max-width': column.width }"
-                        [nz-tooltip]="infor[column.keyName]"
                         style="padding-top: 6px; padding-bottom: 6px"
                       >
                         <div
