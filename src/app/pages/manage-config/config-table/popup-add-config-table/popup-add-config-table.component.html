@@ -4,7 +4,7 @@
   [nzContent]="modalContent"
   [nzFooter]="modalFooter"
   (nzOnCancel)="handleCancel()"
-  [nzWidth]="1160"
+  [nzWidth]="1360"
 >
   <ng-template #modalTitle>
     <div
@@ -449,11 +449,13 @@
         [nzData]="listColumnInFunction"
         nzTableLayout="fixed"
         nzShowPagination="false"
+        [nzScroll]="{ x: 'auto', y: '550px' }"
+        [nzSize]="'small'"
       >
         <thead>
           <tr>
             <ng-container *ngFor="let column of columnsFunction">
-              <th [nzWidth]="column.width">{{ column.keyTitle }}</th>
+              <th [nzWidth]="column.width" nzAlign="center">{{ column.keyTitle }}</th>
             </ng-container>
             <th nzWidth="86px">Thao tác</th>
           </tr>
@@ -556,6 +558,7 @@
                             }} ----"
                             [(ngModel)]="item.relateTable"
                             (nzOpenChange)="getAllEntity()"
+                            nzShowSearch
                           >
                             <nz-option
                               *ngFor="let option of listEntityByRelation"
@@ -577,6 +580,7 @@
                             }} ----"
                             [(ngModel)]="item.relateColumn"
                             (nzOpenChange)="getAllColumnByEntityName(item)"
+                            nzShowSearch
                           >
                             <nz-option
                               *ngFor="let option of listColumnByRelation"

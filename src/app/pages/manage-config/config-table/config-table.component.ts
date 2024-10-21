@@ -77,6 +77,7 @@ export class ConfigTableComponent {
   tableName: string = ''; // Lưu trữ giá trị tên bảng viết hoa
   columnKey: string = ''; // Lưu trữ column được coi là khoá của bảng
   isInputFocused: boolean = false; // Lưu trữ giá trị khi focus hoặc blur ra khỏi ô input
+  inforSearch: Record<string, any> = {};
 
   breadcrumbs = [
     {
@@ -109,7 +110,7 @@ export class ConfigTableComponent {
   }
 
   async addColumnConfirm() {
-    this.getData({ page: this.pageNumber, size: this.pageSize });
+    this.getData();
   }
 
   noDataFound: boolean = false;
@@ -127,16 +128,16 @@ export class ConfigTableComponent {
         size: this.pageSize,
       };
 
-      this.getData(searchData);
+      this.getData();
     }
   }
 
-  searchSelectBox($event: any) {
+  searchSelectBox() {
     const searchData = {
       page: this.pageNumber,
       size: this.pageSize,
     };
-    this.getData(searchData);
+    this.getData();
   }
 
   async searchCommon() {
@@ -193,7 +194,7 @@ export class ConfigTableComponent {
     }
     this.propertySort = sortColumn;
 
-    this.getData({ page: this.pageNumber, size: this.pageSize });
+    this.getData();
   }
   async getColumn() {
     this.inforMachine['machineType'] = {};
@@ -223,8 +224,18 @@ export class ConfigTableComponent {
     }
     return null;
   }
-  async getData(page: { page: number; size: number }) {
-    this.configService.getAllCategory().subscribe({
+  async getData() {
+    let request = {
+      pageSize: 0,
+      pageNumber: 0,
+      filter: {
+        ...this.inforSearch
+      },
+      common: "",
+      sortOrder: "DESC",
+      sortProperty: "index"
+    }
+    this.configService.getCategorysByFilter(request).subscribe({
       next: (res) => {
         console.log(res);
         this.listFunction = res.data;
@@ -313,7 +324,7 @@ export class ConfigTableComponent {
   }
 
   childOut() {
-    this.getData({ page: this.pageNumber, size: this.pageSize });
+    this.getData();
   }
 
   inforComponent(infor: any) {
@@ -355,7 +366,7 @@ export class ConfigTableComponent {
     this.configService.deleteCategory(this.currentMachine.name).subscribe({
       next: (res) => {
         this.toast.success(res.result.message);
-        this.getData({ page: this.pageNumber, size: this.pageSize });
+        this.getData();
         this.loader.stop();
       }, error: (err) => {
         this.toast.error(err.error.result.message);
@@ -374,7 +385,7 @@ export class ConfigTableComponent {
         this.toast.success(res.result.message);
         this.setOfCheckedId = new Set<number>();
         this.refreshCheckedStatus();
-        this.getData({ page: this.pageNumber, size: this.pageSize });
+        this.getData();
       }, error: (err) => {
         this.toast.error(err.error.result.message);
       }
@@ -410,7 +421,7 @@ export class ConfigTableComponent {
     //   }
     // })
     this.columns = dummyColumn;
-    this.getData({ page: this.pageNumber, size: this.pageSize });
+    this.getData();
   }
 
   onClickIcon(element: any) {
@@ -558,7 +569,7 @@ export class ConfigTableComponent {
             this.toast.success(res.result.message);
             this.setOfCheckedId = new Set<number>();
             this.refreshCheckedStatus();
-            this.getData({ page: this.pageNumber, size: this.pageSize });
+            this.getData();
             this.loader.stop();
           }, error: (err) => {
             this.toast.error(err.result.message);
@@ -705,7 +716,7 @@ const dummyColumn = [
     relateColumn: null,
     note: null,
     addition: null,
-    width: "200px",
+    width: "300px",
     isCode: true,
     localCheck: true
   },
@@ -722,7 +733,7 @@ const dummyColumn = [
     relateColumn: null,
     note: null,
     addition: null,
-    width: "200px",
+    width: "300px",
     isCode: true,
     localCheck: true
   },
@@ -739,7 +750,7 @@ const dummyColumn = [
     relateColumn: null,
     note: null,
     addition: null,
-    width: "200px",
+    width: "350px",
     isCode: true,
     localCheck: true
   },

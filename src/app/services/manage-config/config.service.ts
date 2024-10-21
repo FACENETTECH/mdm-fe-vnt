@@ -65,6 +65,17 @@ export class ConfigService {
   }
 
   /**
+   * API lấy ra danh sách chức năng
+   */
+  getCategorysByFilter(request: any): Observable<any> {
+    return this.httpClient.post(`${this.url}/api/categories/search`, request, {
+      headers: new HttpHeaders({
+        'Accept-Language': this.accpetLanguage,
+      }),
+    });
+  }
+
+  /**
    * API lấy ra chức năng theo Name
    */
   getCategoryByName(tableName: any): Observable<any> {
