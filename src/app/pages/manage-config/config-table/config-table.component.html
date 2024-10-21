@@ -111,181 +111,211 @@
     </div>
   </div>
 
-  <nz-table
-    nzBordered
-    nzShowPagination="false"
-    [nzScroll]="{ x: 'auto', y: '550px' }"
-    [nzData]="listFunction"
-    #MachineTable
-    [nzSize]="'small'"
-  >
-    <thead class="color-header-row">
-      <tr>
-        <th></th>
-        <ng-container *ngFor="let column of columns; let i = index">
-          <ng-container *ngIf="column.localCheck">
-            <th
-              nz-resizable
-              [nzWidth]="column.width"
-              (nzResize)="onResize($event, i)"
-              [nzAlign]="'center'"
-              (nzSortOrderChange)="customSortFunction($event, column.keyName)"
-            >
-              <div class="editable-cell">
-                {{ column.keyTitle | translate}}
-                <nz-resize-handle nzDirection="right">
-                  <div class="resize-trigger"></div>
-                </nz-resize-handle>
-              </div>
-              
-            </th>
-          </ng-container>
-        </ng-container>
-        <th nzWidth="86px" nzAlign="center" [nzRight]="true">
-          {{ "Thao tác" | translate }}
-        </th>
-      </tr>
-    </thead>
-    <tbody class="striped-tr" cdkDropList (cdkDropListDropped)="drop($event)">
-      <tr>
-        <td></td>
-        <ng-container *ngFor="let column of columns">
-          <ng-container *ngIf="column.localCheck">
-            <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
-              <td>
-                <input
-                    type="text"
-                    nz-input
-                    [(ngModel)]="inforSearch[column.keyName]"
-                    placeholder=" {{ 'Nhập' | translate }} {{
-                    column.keyTitle | translate
-                    }} "
-                    (keydown)="search($event)"
-                    [disabled]="column.isDisable"
-                />
-              </td>
-            </ng-container>
-            <ng-container *ngIf="column.dataType == dataType.NUMBER">
-              <td class="fn-text-al-right">
-                <input 
-                  style="text-align: right; width:100%" 
-                  nz-input 
-                  type="number" 
-                  [(ngModel)]="inforSearch[column.keyName]" 
-                  placeholder="---- {{ 'Nhập' | translate }} {{
-                    column.keyTitle | translate
-                    }} ----" 
-                  (keydown)="search($event)" 
-                  [disabled]="column.isDisable"/>
-              </td>
-            </ng-container>
-            <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
-              <td class="fn-text-al-right">
-                <nz-date-picker
-                    style="width: 100%"
-                    [(ngModel)]="inforSearch[column.keyName]"
-                    (ngModelChange)="searchSelectBox()"
-                    nzFormat="dd/MM/yyyy"
-                    [disabled]="column.isDisable">
-                </nz-date-picker>
-              </td>
-            </ng-container>
-            <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
-              <td class="fn-text-al-center">
-                <nz-select
-                    style="width: 100%"
-                    nzMode="default"
-                    [(ngModel)]="inforSearch[column.keyName]"
-                    nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
-                    column.keyTitle | translate
-                    }} ----" 
-                    (ngModelChange)="searchSelectBox()" 
-                    [disabled]="column.isDisable"
+  <div class="fn-df">
+    <div style="width: 20%;">
+      <nz-tree
+        [nzData]="nodes"
+        nzCheckable
+        nzMultiple
+        nzShowIcon
+        (nzClick)="nzEvent($event)"
+        (nzExpandChange)="nzEvent($event)"
+        (nzCheckBoxChange)="nzEvent($event)"
+      >
+        <ng-template #multiExpandedIconTpl let-node let-origin="origin">
+          <span
+            *ngIf="!origin.isLeaf"
+            nz-icon
+            [nzType]="node.isExpanded ? 'folder-open' : 'folder'"
+            class="ant-tree-switcher-line-icon"
+          ></span>
+          <span
+            *ngIf="origin.isLeaf"
+            nz-icon
+            nzType="file"
+            class="ant-tree-switcher-line-icon"
+          ></span>
+        </ng-template>
+      </nz-tree>
+    </div>
+    <div style="width: 80%;">
+      <nz-table
+        nzBordered
+        nzShowPagination="false"
+        [nzScroll]="{ x: 'auto', y: '550px' }"
+        [nzData]="listFunction"
+        #MachineTable
+        [nzSize]="'small'"
+      >
+        <thead class="color-header-row">
+          <tr>
+            <th></th>
+            <ng-container *ngFor="let column of columns; let i = index">
+              <ng-container *ngIf="column.localCheck">
+                <th
+                  nz-resizable
+                  [nzWidth]="column.width"
+                  (nzResize)="onResize($event, i)"
+                  [nzAlign]="'center'"
+                  (nzSortOrderChange)="customSortFunction($event, column.keyName)"
                 >
-                    <nz-option [nzValue]="true" [nzLabel]="'Có'"></nz-option>
-                    <nz-option [nzValue]="false" [nzLabel]="'Không'"></nz-option>
-                </nz-select>
-              </td>
+                  <div class="editable-cell">
+                    {{ column.keyTitle | translate}}
+                    <nz-resize-handle nzDirection="right">
+                      <div class="resize-trigger"></div>
+                    </nz-resize-handle>
+                  </div>
+                  
+                </th>
+              </ng-container>
             </ng-container>
-          </ng-container>
-        </ng-container>
-        <td nzAlign="center" [nzRight]="true"></td>
-      </tr>
-      <ng-container *ngFor="let infor of listFunction; let i = index">
-        <tr cdkDrag cdkDragLockAxis="y">
-          <td cdkDragHandle>
-            <img src="./assets/icons/changePositionRow.svg">
-          </td>
-          <ng-container *ngFor="let column of columns">
-            <ng-container *ngIf="column.localCheck">
-              <ng-container [ngSwitch]="column.keyName">
-                <ng-container *ngSwitchCase="'status'">
+            <th nzWidth="86px" nzAlign="center" [nzRight]="true">
+              {{ "Thao tác" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="striped-tr" cdkDropList (cdkDropListDropped)="drop($event)">
+          <tr>
+            <td></td>
+            <ng-container *ngFor="let column of columns">
+              <ng-container *ngIf="column.localCheck">
+                <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
                   <td>
-                    <div [ngSwitch]="infor[column.keyName]" nzAlign="center">
-                      <div
-                        class="border-element bordered-element__status_1"
-                        *ngSwitchCase="'1'"
-                      >
-                        {{ "Hoạt động" | translate }}
-                      </div>
-                      <div
-                        class="border-element bordered-element__status_2"
-                        *ngSwitchCase="'0'"
-                      >
-                        {{ "Ngừng hoạt động" | translate }}
-                      </div>
-                    </div>
+                    <input
+                        type="text"
+                        nz-input
+                        [(ngModel)]="inforSearch[column.keyName]"
+                        placeholder=" {{ 'Nhập' | translate }} {{
+                        column.keyTitle | translate
+                        }} "
+                        (keydown)="search($event)"
+                        [disabled]="column.isDisable"
+                    />
                   </td>
                 </ng-container>
-                <ng-container *ngSwitchDefault>
-                  <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
-                    <td>
-                      {{ infor[column.keyName] }}
-                    </td>
-                  </ng-container>
-                  <ng-container *ngIf="column.dataType == dataType.NUMBER">
-                    <td class="fn-text-al-right">
-                        {{ infor[column.keyName] | number : "1.0-0" }}
-                    </td>
-                  </ng-container>
-                  <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
-                    <td class="fn-text-al-right">
-                      {{ infor[column.keyName] | date: 'dd-MM-yyyy' }}
-                    </td>
-                  </ng-container>
-                  <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
-                    <td class="fn-text-al-center">
-                      <label nz-checkbox [(ngModel)]="infor[column.keyName]"></label>
-                    </td>
-                  </ng-container>
+                <ng-container *ngIf="column.dataType == dataType.NUMBER">
+                  <td class="fn-text-al-right">
+                    <input 
+                      style="text-align: right; width:100%" 
+                      nz-input 
+                      type="number" 
+                      [(ngModel)]="inforSearch[column.keyName]" 
+                      placeholder="---- {{ 'Nhập' | translate }} {{
+                        column.keyTitle | translate
+                        }} ----" 
+                      (keydown)="search($event)" 
+                      [disabled]="column.isDisable"/>
+                  </td>
+                </ng-container>
+                <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
+                  <td class="fn-text-al-right">
+                    <nz-date-picker
+                        style="width: 100%"
+                        [(ngModel)]="inforSearch[column.keyName]"
+                        (ngModelChange)="searchSelectBox()"
+                        nzFormat="dd/MM/yyyy"
+                        [disabled]="column.isDisable">
+                    </nz-date-picker>
+                  </td>
+                </ng-container>
+                <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
+                  <td class="fn-text-al-center">
+                    <nz-select
+                        style="width: 100%"
+                        nzMode="default"
+                        [(ngModel)]="inforSearch[column.keyName]"
+                        nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                        column.keyTitle | translate
+                        }} ----" 
+                        (ngModelChange)="searchSelectBox()" 
+                        [disabled]="column.isDisable"
+                    >
+                        <nz-option [nzValue]="true" [nzLabel]="'Có'"></nz-option>
+                        <nz-option [nzValue]="false" [nzLabel]="'Không'"></nz-option>
+                    </nz-select>
+                  </td>
                 </ng-container>
               </ng-container>
             </ng-container>
+            <td nzAlign="center" [nzRight]="true"></td>
+          </tr>
+          <ng-container *ngFor="let infor of listFunction; let i = index">
+            <tr cdkDrag cdkDragLockAxis="y">
+              <td cdkDragHandle>
+                <img src="./assets/icons/changePositionRow.svg">
+              </td>
+              <ng-container *ngFor="let column of columns">
+                <ng-container *ngIf="column.localCheck">
+                  <ng-container [ngSwitch]="column.keyName">
+                    <ng-container *ngSwitchCase="'status'">
+                      <td>
+                        <div [ngSwitch]="infor[column.keyName]" nzAlign="center">
+                          <div
+                            class="border-element bordered-element__status_1"
+                            *ngSwitchCase="'1'"
+                          >
+                            {{ "Hoạt động" | translate }}
+                          </div>
+                          <div
+                            class="border-element bordered-element__status_2"
+                            *ngSwitchCase="'0'"
+                          >
+                            {{ "Ngừng hoạt động" | translate }}
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <ng-container *ngIf="column.dataType != dataType.NUMBER && column.dataType != dataType.DATE_TIME && column.dataType != dataType.BOOLEAN">
+                        <td>
+                          {{ infor[column.keyName] }}
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="column.dataType == dataType.NUMBER">
+                        <td class="fn-text-al-right">
+                            {{ infor[column.keyName] | number : "1.0-0" }}
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="column.dataType == dataType.DATE_TIME">
+                        <td class="fn-text-al-right">
+                          {{ infor[column.keyName] | date: 'dd-MM-yyyy' }}
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="column.dataType == dataType.BOOLEAN">
+                        <td class="fn-text-al-center">
+                          <label nz-checkbox [(ngModel)]="infor[column.keyName]"></label>
+                        </td>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              <td nzAlign="center" [nzRight]="true">
+                <div class="fn-css-action-grid">
+                  <button
+                    nz-button
+                    nzType="link"
+                    (click)="editMachine(infor)"
+                    nz-tooltip="{{ 'btn.edit' | translate }}"
+                  >
+                    <img src="./assets/icons/Edit-VNT.svg">
+                  </button>
+                  <button
+                    nz-button
+                    nzType="link"
+                    (click)="deleteMachine(infor)"
+                    nz-tooltip="{{ 'btn.delete' | translate }}"
+                  >
+                  <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
+                  </button>
+                </div>
+              </td>
+            </tr>
           </ng-container>
-          <td nzAlign="center" [nzRight]="true">
-            <div class="fn-css-action-grid">
-              <button
-                nz-button
-                nzType="link"
-                (click)="editMachine(infor)"
-                nz-tooltip="{{ 'btn.edit' | translate }}"
-              >
-                <img src="./assets/icons/Edit-VNT.svg">
-              </button>
-              <button
-                nz-button
-                nzType="link"
-                (click)="deleteMachine(infor)"
-                nz-tooltip="{{ 'btn.delete' | translate }}"
-              >
-              <img width="16px" height="16px" src="./assets/icons/Delete-VNT.svg">
-              </button>
-            </div>
-          </td>
-        </tr>
-      </ng-container>
-    </tbody>
-  </nz-table>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
 
   <!-- <app-pagination
     *ngIf="total"

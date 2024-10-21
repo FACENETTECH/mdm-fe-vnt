@@ -20,4 +20,8 @@ td.numeric-value {
     display: flex;
     justify-content: space-around;
   }
+
+  .fn-df {
+    display: flex;
+  }
   

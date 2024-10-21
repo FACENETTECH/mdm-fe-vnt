@@ -16,6 +16,7 @@ import { DATA_TYPE } from 'src/app/utils/constrant';
 import { InforColumnComponent } from 'src/app/shared/components/infor-column/infor-column.component';
 import { ManageComponentService } from 'src/app/services/manage-component/manage-component.service';
 import { ConfigService } from 'src/app/services/manage-config/config.service';
+import { NzFormatEmitEvent } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'app-config-table',
@@ -78,6 +79,7 @@ export class ConfigTableComponent {
   columnKey: string = ''; // Lưu trữ column được coi là khoá của bảng
   isInputFocused: boolean = false; // Lưu trữ giá trị khi focus hoặc blur ra khỏi ô input
   inforSearch: Record<string, any> = {};
+  nodes: any[] = [];
 
   breadcrumbs = [
     {
@@ -224,6 +226,11 @@ export class ConfigTableComponent {
     }
     return null;
   }
+
+  nzEvent(event: NzFormatEmitEvent): void {
+    this.getData();
+  }
+
   async getData() {
     let request = {
       pageSize: 0,
@@ -233,7 +240,8 @@ export class ConfigTableComponent {
       },
       common: "",
       sortOrder: "DESC",
-      sortProperty: "index"
+      sortProperty: "index",
+      searchTree: this.nodes,
     }
     this.configService.getCategorysByFilter(request).subscribe({
       next: (res) => {
@@ -250,47 +258,6 @@ export class ConfigTableComponent {
         this.toast.error(err.error.result.message);
       }
     })
-    // this.pageNumber = page.page;
-    // this.pageSize = page.size;
-    // let request = {
-    //   pageNumber: page.page - 1,
-    //   pageSize: page.size,
-    //   common: this.common.trim(),
-    //   filter: this.inforMachine,
-    //   sortOrder: this.orderSort,
-    //   sortProperty: this.propertySort,
-    // };
-
-    // this.loader.start();
-    // this.manageComponentService.getDataDynamicTable(this.inforTable.name, request).subscribe({
-    //   next: (res) => {
-    //     console.log(res);
-    //     // this.listFunction = res.data;
-    //     this.listFunction = dummyData;
-    //     this.total = this.listFunction.length;
-    //     for (let j = 0; j < this.columns.length; j++) {
-    //       let compare: Record<string, any> = {};
-    //       compare[this.columns[j].keyName] = this.columns[j].keyName;
-    //       compare['compare'] = (a: any, b: any) =>
-    //         a[this.columns[j].keyName].localeCompare(b[this.columns[j].keyName]);
-    //       this.columnSort.push(compare);
-    //     }
-    
-    //     this.total = res.dataCount;
-    //     this.columns.map((x: any) => {
-    //       this.stageTemplate[x.keyTitle] = '';
-    //     });
-    //     this.listMachineToExport = [];
-    //     this.listMachineTemplate.push(this.stageTemplate);
-    //     if (this.listFunction.length == 0) {
-    //       this.noDataFound = true;
-    //     } else {
-    //       this.noDataFound = false;
-    //     }
-    //     this.loader.stop();
-    //     console.log('List Manchine: ', this.listFunction);
-    //   }
-    // })
   }
   changeColumn() {
     localStorage.setItem('machine', JSON.stringify(this.columns));
@@ -716,7 +683,7 @@ const dummyColumn = [
     relateColumn: null,
     note: null,
     addition: null,
-    width: "300px",
+    width: "200px",
     isCode: true,
     localCheck: true
   },
@@ -733,7 +700,7 @@ const dummyColumn = [
     relateColumn: null,
     note: null,
     addition: null,
-    width: "300px",
+    width: "200px",
     isCode: true,
     localCheck: true
   },
@@ -750,7 +717,7 @@ const dummyColumn = [
     relateColumn: null,
     note: null,
     addition: null,
-    width: "350px",
+    width: "250px",
     isCode: true,
     localCheck: true
   },
@@ -767,47 +734,76 @@ const dummyColumn = [
     relateColumn: null,
     note: null,
     addition: null,
-    width: "300px",
+    width: "200px",
     isCode: true,
     localCheck: true
-  }
-]
-
-
-const dummyData = [
-  {
-    id: 1,
-    configCode: "F01",
-    configName: "Quản lý nguyên công",
-    status: 1,
-    configDesc: "Note"
-  },
-  {
-    id: 2,
-    configCode: "F02",
-    configName: "Quản lý vật tư",
-    status: 1,
-    configDesc: "Note"
-  },
-  {
-    id: 3,
-    configCode: "F03",
-    configName: "Quản lý nhà cung cấp",
-    status: 0,
-    configDesc: "Note"
   },
   {
     id: 4,
-    configCode: "F04",
-    configName: "Quản lý nhân viên",
-    status: 0,
-    configDesc: "Note"
+    index: 1,
+    tableName: "config_table",
+    keyName: "createdAt",
+    keyTitle: "Ngày tạo",
+    isRequired: true,
+    dataType: 4,
+    hasUnit: false,
+    relateTable: null,
+    relateColumn: null,
+    note: null,
+    addition: null,
+    width: "200px",
+    isCode: true,
+    localCheck: true
   },
   {
-    id: 5,
-    configCode: "F05",
-    configName: "Quản lý công đoạn",
-    status: 0,
-    configDesc: "Note"
+    id: 4,
+    index: 1,
+    tableName: "config_table",
+    keyName: "createdBy",
+    keyTitle: "Người tạo",
+    isRequired: true,
+    dataType: 2,
+    hasUnit: false,
+    relateTable: null,
+    relateColumn: null,
+    note: null,
+    addition: null,
+    width: "200px",
+    isCode: true,
+    localCheck: true
+  },
+  {
+    id: 4,
+    index: 1,
+    tableName: "config_table",
+    keyName: "updatedAt",
+    keyTitle: "Ngày cập nhật",
+    isRequired: true,
+    dataType: 4,
+    hasUnit: false,
+    relateTable: null,
+    relateColumn: null,
+    note: null,
+    addition: null,
+    width: "200px",
+    isCode: true,
+    localCheck: true
+  },
+  {
+    id: 4,
+    index: 1,
+    tableName: "config_table",
+    keyName: "updatedBy",
+    keyTitle: "Người cập nhật",
+    isRequired: true,
+    dataType: 2,
+    hasUnit: false,
+    relateTable: null,
+    relateColumn: null,
+    note: null,
+    addition: null,
+    width: "200px",
+    isCode: true,
+    localCheck: true
   }
 ]
