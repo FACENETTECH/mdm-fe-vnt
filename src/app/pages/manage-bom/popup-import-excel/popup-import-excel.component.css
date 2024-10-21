@@ -1,0 +1,10 @@
+.link{
+    color: #2C73EB;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.template{
+    text-align: center;
+    position: relative;
+    top: -35px;
+}

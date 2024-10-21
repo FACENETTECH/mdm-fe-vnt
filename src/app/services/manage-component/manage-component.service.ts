@@ -379,6 +379,19 @@ export class ManageComponentService {
   }
 
   /**
+   * API tải xuống file mẫu để người dùng chỉnh sửa và inport lại vào hệ thống
+   * @param tableCode mã bảng cần import excel
+   * @returns
+   */
+  downloadTemplateBOMFileToImport(): Observable<any> {
+    return this.httpClient.get(
+      `${this.url}/api/bom/export-to-import`, {
+        responseType: 'blob',
+      }
+    );
+  }
+
+  /**
    * API import file excel trong bảng
    * @param tableCode bảng cần import excel
    * @param request file excel
@@ -387,6 +400,19 @@ export class ManageComponentService {
   importFormExcel(tableCode: string, request: any) {
     return this.httpClient.post(
       `${this.url}/api/excel/${tableCode}/import-from-excel`,
+      request
+    );
+  }
+
+  /**
+   * API import file excel trong bảng BOM
+   * @param tableCode bảng cần import excel
+   * @param request file excel
+   * @returns
+   */
+  importFormExcelBOMFile(request: any) {
+    return this.httpClient.post(
+      `${this.url}/api/bom/import-from-excel`,
       request
     );
   }

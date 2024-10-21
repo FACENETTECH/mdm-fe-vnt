@@ -85,12 +85,14 @@ import { ManageBomRoutingModule } from './manage-bom-routing.module';
 import { ListBomComponent } from './list-bom/list-bom.component';
 import { PopupCreateOrUpdateBomComponent } from './popup-create-or-update-bom/popup-create-or-update-bom.component';
 import { ManageMachineLineModule } from '../manage-machine-line/manage-machine-line.module';
+import { PopupImportExcelComponent } from './popup-import-excel/popup-import-excel.component';
 
 
 @NgModule({
   declarations: [
     ListBomComponent,
-    PopupCreateOrUpdateBomComponent
+    PopupCreateOrUpdateBomComponent,
+    PopupImportExcelComponent
   ],
   imports: [
     CommonModule,

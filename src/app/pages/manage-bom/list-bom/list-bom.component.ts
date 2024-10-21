@@ -55,6 +55,7 @@ export class ListBomComponent {
   blueprintCodeSelected: string = '';
   recordIdSelected?: number;
   isvisiblePopupCreateOrUpdate: boolean = false;
+  isvisiblePopupImportExcel: boolean = false;
   isvisiblePopupDelete: boolean = false;
   isvisiblePopupDeleteList: boolean = false;
   widthColumn: any[] = [];
@@ -394,6 +395,10 @@ export class ListBomComponent {
     this.isvisiblePopupCreateOrUpdate = true;
   }
 
+  openPopupImportExcel() {
+    this.isvisiblePopupImportExcel = true;
+  }
+
   widthContent: string = '100%';
 
   loadingAfterFinish(event: boolean) {
@@ -623,6 +628,21 @@ export class ListBomComponent {
         this.toast.warning('Không tìm thấy thông tin BOM!');
       }
     })
+  }
+
+  async importConfirm($event: any) {
+    this.componentService
+      .importFormExcelBOMFile($event)
+      .subscribe({
+        next: (res: any) => {
+          this.toast.success('Import file thành công');
+          this.getData({ page: this.pageNumber, size: this.pageSize });
+        },
+        error: (err: any) => {
+          this.toast.error(err.error.result.message);
+          this.getData({ page: this.pageNumber, size: this.pageSize });
+        },
+      });
   }
 
   /**

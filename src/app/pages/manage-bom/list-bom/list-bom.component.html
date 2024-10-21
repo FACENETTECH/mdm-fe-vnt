@@ -30,6 +30,27 @@
             {{ "Tạo BOM" | translate }}
           </button>
         </div>
+        <div
+          nz-col
+          style="display: flex; align-items: center; padding: 0 12px"
+        >
+          <button
+            style="color: #01aba8"
+            nz-button
+            nzType="text"
+            class="mb-6 quoting-fz-12"
+            nz-tooltip="{{ 'Import Excel' | translate }}"
+            (click)="openPopupImportExcel()"
+          >
+            <span
+              nz-icon
+              nzType="import"
+              nzTheme="outline"
+              class="fn-icon-style"
+            ></span>
+            {{ "Import Excel" | translate }}
+          </button>
+        </div>
       </div>
     </div>
     <div class="quoting-content">
@@ -341,4 +362,11 @@
     (delete)="deleteRecordBom()"
     >
   </app-popup-delete>
+
+  <app-popup-import-excel 
+    *ngIf="isvisiblePopupImportExcel" 
+    [(isvisible)]="isvisiblePopupImportExcel"
+    (import)="importConfirm($event)"
+    >
+  </app-popup-import-excel>
   
