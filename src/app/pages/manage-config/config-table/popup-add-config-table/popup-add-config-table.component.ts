@@ -55,6 +55,7 @@ export class PopupAddConfigTableComponent {
   columnsFunction: any = [];
   listEntityByRelation: any[] = [];
   listColumnByRelation: any[] = [];
+  categoriesIsParent: any[] = [];
 
   onSubmit(): void {}
 
@@ -139,8 +140,28 @@ export class PopupAddConfigTableComponent {
 
     return this.machineTypeList;
   }
-  isvisibleCancel: boolean = false;
 
+  getCategoriesIsParent() {
+    let request = {
+      pageSize: 0,
+      pageNumber: 0,
+      filter: {
+        isEntity: false
+      },
+      common: "",
+      sortOrder: "DESC",
+      sortProperty: "index",
+    }
+    this.configService.getCategorysByFilter(request).subscribe({
+      next: (res) => {
+        this.categoriesIsParent = [ ...res.data ];
+      }, error: (err) => {
+        this.toast.error(err.error.result.message);
+      }
+    })
+  }
+
+  isvisibleCancel: boolean = false;
   checkAction: boolean = false;
   handleCancel() {
     if (this.checkAction) {
@@ -607,7 +628,7 @@ const dummyColumns = [
     "keyName": "parent",
     "keyTitle": "Cha của nó",
     "isRequired": false,
-    "dataType": 2,
+    "dataType": 7,
     "hasUnit": false,
     "relateTable": null,
     "relateColumn": null,

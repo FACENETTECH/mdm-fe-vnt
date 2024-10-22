@@ -52,6 +52,7 @@ export class PopupUpdateConfigTableComponent {
   columnsFunction: any = [];
   listEntityByRelation: any[] = [];
   listColumnByRelation: any[] = [];
+  categoriesIsParent: any[] = [];
 
   onSubmit(): void {}
 
@@ -136,8 +137,28 @@ export class PopupUpdateConfigTableComponent {
 
     return this.machineTypeList;
   }
-  isvisibleCancel: boolean = false;
 
+  getCategoriesIsParent() {
+    let request = {
+      pageSize: 0,
+      pageNumber: 0,
+      filter: {
+        isEntity: false
+      },
+      common: "",
+      sortOrder: "DESC",
+      sortProperty: "index",
+    }
+    this.configService.getCategorysByFilter(request).subscribe({
+      next: (res) => {
+        this.categoriesIsParent = [ ...res.data ];
+      }, error: (err) => {
+        this.toast.error(err.error.result.message);
+      }
+    })
+  }
+
+  isvisibleCancel: boolean = false;
   checkAction: boolean = false;
   handleCancel() {
     if (this.checkAction) {
@@ -349,6 +370,11 @@ export class PopupUpdateConfigTableComponent {
       next: (res) => {
         console.log(res);
         this.inforMachine = res.data;
+        this.columns.forEach(col => {
+          if(col.dataType == this.dataType.RELATION) {
+            this.categoriesIsParent = [{ name: this.inforMachine[col.keyName] }]
+          }
+        })
         this.getColumnByTableName();
         this.loader.stop();
       }, error: (err) => {
@@ -621,7 +647,7 @@ const dummyColumns = [
     "keyName": "parent",
     "keyTitle": "Cha của nó",
     "isRequired": false,
-    "dataType": 2,
+    "dataType": 7,
     "hasUnit": false,
     "relateTable": null,
     "relateColumn": null,

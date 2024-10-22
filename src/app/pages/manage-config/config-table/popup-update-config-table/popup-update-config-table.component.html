@@ -228,6 +228,40 @@
                 </div>
               </div>
             </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.RELATION">
+              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+                <div style="width: 100%">
+                  <label class="fn-label"
+                    >{{ col.keyTitle | translate
+                    }}<span *ngIf="col.isRequired == true" style="color: red"
+                      >*</span
+                    ></label
+                  >
+                  <br />
+                  <nz-select
+                    style="width: 100%"
+                    [(ngModel)]="inforMachine[col.keyName]"
+                    (nzOpenChange)="getCategoriesIsParent()"
+                    nzMode="default"
+                    nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                      col.keyTitle | translate
+                    }} ----"
+                  >
+                    <ng-container
+                      *ngFor="let item of categoriesIsParent"
+                    >
+                      <nz-option
+                        [nzValue]="item['name']"
+                        [nzLabel]="item['name']"
+                      ></nz-option>
+                    </ng-container>
+                  </nz-select>
+                  <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                    checkMachine[col.keyName]
+                  }}</span>
+                </div>
+              </div>
+            </ng-container>
           </ng-container>
           <ng-container *ngIf="!col.hasUnit && col.keyName != 'status'">
             <ng-container *ngIf="col.dataType == dataType.NUMBER">
@@ -437,6 +471,40 @@
                 <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
                   checkMachine[col.keyName]
                 }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="col.dataType == dataType.RELATION">
+              <div style="width: 45%; margin-bottom: 20px" class="fn-df-center">
+                <div style="width: 100%">
+                  <label class="fn-label"
+                    >{{ col.keyTitle | translate
+                    }}<span *ngIf="col.isRequired == true" style="color: red"
+                      >*</span
+                    ></label
+                  >
+                  <br />
+                  <nz-select
+                    style="width: 100%"
+                    [(ngModel)]="inforMachine[col.keyName]"
+                    (nzOpenChange)="getCategoriesIsParent()"
+                    nzMode="default"
+                    nzPlaceHolder="---- {{ 'Chọn' | translate }} {{
+                      col.keyTitle | translate
+                    }} ----"
+                  >
+                    <ng-container
+                      *ngFor="let item of categoriesIsParent"
+                    >
+                      <nz-option
+                        [nzValue]="item['name']"
+                        [nzLabel]="item['name']"
+                      ></nz-option>
+                    </ng-container>
+                  </nz-select>
+                  <span style="color: red" *ngIf="checkMachine[col.keyName]">{{
+                    checkMachine[col.keyName]
+                  }}</span>
+                </div>
               </div>
             </ng-container>
           </ng-container>

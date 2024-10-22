@@ -243,9 +243,10 @@ export class ConfigTableComponent {
       sortProperty: "index",
       searchTree: this.nodes,
     }
+    this.loader.start();
     this.configService.getCategorysByFilter(request).subscribe({
       next: (res) => {
-        console.log(res);
+        this.loader.stop();
         this.listFunction = res.data;
         for(let i = 0; i < res.data.length; i++) {
           if(res.data[i].children.length > 0) {
@@ -255,6 +256,7 @@ export class ConfigTableComponent {
           }
         }
       }, error: (err) => {
+        this.loader.stop();
         this.toast.error(err.error.result.message);
       }
     })
@@ -368,27 +370,8 @@ export class ConfigTableComponent {
   headers: any[] = [];
 
   getHeaders() {
-    // this.manageComponentService.getColummnByTableName(this.inforTable.name).subscribe({
-    //   next: (res) => {
-        // console.log(res);
-        // this.columns = res.data;
-        // for(let i = 0; i < this.columns.length; i++) {
-        //   this.columns[i].localCheck = true;
-        // }
-        // for(let i = 0; i < this.columns.length; i++) {
-        //   if(this.columns[i].isCode) {
-        //     this.columnKey = this.columns[i].keyName;
-        //     break;
-        //   }
-        // }
-    //     this.columns = dummyColumn;
-    //     this.getData({ page: this.pageNumber, size: this.pageSize });
-    //   }, error: (err) => {
-    //     console.log(err);
-    //   }
-    // })
     this.columns = dummyColumn;
-    this.getData();
+    this.getTreeSearch();
   }
 
   onClickIcon(element: any) {
@@ -597,6 +580,20 @@ export class ConfigTableComponent {
    */
   onInputBlur() {
     this.isInputFocused = false;
+  }
+
+  getTreeSearch() {
+    this.loader.start();
+    this.configService.getTreeConfigTable().subscribe({
+      next: (res) => {
+        this.loader.stop();
+        this.nodes = res.data;
+        this.getData();
+      }, error: (err) => {
+        this.loader.stop();
+        this.toast.error(err.error.result.message);
+      }
+    })
   }
 
 

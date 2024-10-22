@@ -130,4 +130,11 @@ export class ConfigService {
    getAllFunction(): Observable<any> {
     return this.httpClient.get(`${this.url}/api/categories`)
   }
+
+  /**
+   * Đây là hàm lấy ra tree menu màn hình cấu hình bảng
+   */
+  getTreeConfigTable(): Observable<any> {
+    return this.httpClient.get(`${this.url}/api/categories/search-tree`)
+  }
 }
