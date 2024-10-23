@@ -453,25 +453,40 @@ export class PopupUpdateConfigTableComponent {
    */
   getAllEntity() {
     this.listEntityByRelation = [];
-    this.configService.getAllCategory().subscribe({
+    let request = {
+      pageSize: 0,
+      pageNumber: 0,
+      filter: {},
+      common: "",
+      sortOrder: "DESC",
+      sortProperty: "index",
+    }
+    this.configService.getCategorysByFilter(request).subscribe({
       next: (res) => {
-        for(let i = 0; i < res.data.length; i++) {
-          if(res.data[i].isEntity) {
-            this.listEntityByRelation.push(res.data[i])
-          }
-          if(res.data[i].children.length > 0) {
-            for(let j = 0; j < res.data[i].children.length; j++) {
-              if(res.data[i].children[j].isEntity) {
-                this.listEntityByRelation.push(res.data[i].children[j])
-              }
-            }
-          }
-        }
-        console.log(this.listEntityByRelation);
+        this.listEntityByRelation = [ ...res.data ];
       }, error: (err) => {
-        this.toast.error(err.result.message);
+        this.toast.error(err.error.result.message);
       }
     })
+    // this.configService.getAllCategory().subscribe({
+    //   next: (res) => {
+    //     for(let i = 0; i < res.data.length; i++) {
+    //       if(res.data[i].isEntity) {
+    //         this.listEntityByRelation.push(res.data[i])
+    //       }
+    //       if(res.data[i].children.length > 0) {
+    //         for(let j = 0; j < res.data[i].children.length; j++) {
+    //           if(res.data[i].children[j].isEntity) {
+    //             this.listEntityByRelation.push(res.data[i].children[j])
+    //           }
+    //         }
+    //       }
+    //     }
+    //     console.log(this.listEntityByRelation);
+    //   }, error: (err) => {
+    //     this.toast.error(err.result.message);
+    //   }
+    // })
   }
 
   /**
@@ -515,7 +530,12 @@ export class PopupUpdateConfigTableComponent {
         hasUnit: false,
         note: null,
         isRequired: false,
-        width: null
+        width: '200px',
+        localCheck: true,
+        isEdit: true,
+        filterSearchTree: false,
+        searchTree: false,
+        isStatus: false,
       }
     )
   }
@@ -680,6 +700,22 @@ const dummyColumns = [
     "keyTitle": "Icon upload",
     "isRequired": false,
     "dataType": 6,
+    "hasUnit": false,
+    "relateTable": null,
+    "relateColumn": null,
+    "note": null,
+    "addition": null,
+    "width": "200px",
+    "isCode": false
+  },
+  {
+    "id": 5,
+    "index": 1,
+    "tableName": "operation",
+    "keyName": "isVisible",
+    "keyTitle": "Hiển thị",
+    "isRequired": false,
+    "dataType": 9,
     "hasUnit": false,
     "relateTable": null,
     "relateColumn": null,
